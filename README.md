@@ -1,0 +1,2 @@
+adapt-contrib-confidenceSlider
+==============================
