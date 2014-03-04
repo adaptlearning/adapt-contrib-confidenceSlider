@@ -81,7 +81,7 @@ define(function(require) {
 
         listenToLinkedModel: function() {
             this.listenTo(this.model.get('_firstPart'), 'change:_confidence', this.onLinkedConfidenceChanged);
-            this.listenTo(this.model.get('_firstPart'), 'change:_isComplete', this.onLinkedCompletionChanged);
+            this.listenTo(this.model.get('_firstPart'), 'change:_isSubmitted', this.onLinkedSubmittedChanged);
         },
 
         onLinkedConfidenceChanged: function(linkedModel) {
@@ -91,8 +91,8 @@ define(function(require) {
             this.updateLinkedConfidenceIndicator();
         },
 
-        onLinkedCompletionChanged: function(linkedModel) {
-            if(linkedModel.get('_isComplete')) {
+        onLinkedSubmittedChanged: function(linkedModel) {
+            if(linkedModel.get('_isSubmitted')) {
                 this.enableSelf();
             }
         },
@@ -339,13 +339,14 @@ define(function(require) {
             if(this.model.get('_isFirstPart')) return;
             var confidence = this.model.get('_confidence'),
                 linkedConfidence = this.model.get('_firstPart').get('_confidence'),
+                confidenceDifference = confidence - linkedConfidence,
                 feedbackString;
-            if (confidence < linkedConfidence) {
+            if (confidenceDifference < -0.01) {
                 feedbackString = this.model.get('_feedback')._comparison.lower;
-            } else if (confidence === linkedConfidence) {
-                feedbackString = this.model.get('_feedback')._comparison.same;
-            } else {
+            } else if (confidenceDifference > 0.01) {
                 feedbackString = this.model.get('_feedback')._comparison.higher;
+            } else {
+                feedbackString = this.model.get('_feedback')._comparison.same;
             }
             return feedbackString;
         },
