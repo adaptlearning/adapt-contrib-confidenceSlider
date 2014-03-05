@@ -23,7 +23,6 @@ define(function(require) {
         },
         
         animateToPosition: function(newPosition) {
-            console.log("Animate to : " + newPosition);
             this.$('.confidenceSlider-item-handle').stop(true).animate({
                 left: newPosition + 'px'
             }, 300, _.bind(function(){
@@ -55,7 +54,7 @@ define(function(require) {
             }
             Slider.prototype.preRender.apply(this);
             if(firstPart) {
-                this.model.set('_isEnabled', firstPart.get('_isComplete'));
+                this.model.set('_isEnabled', firstPart.get('_isSubmitted'));
             }
         },
 
@@ -71,7 +70,9 @@ define(function(require) {
             this.showAppropriateNumbers();
             if(!this.model.get('_isFirstPart')) {
                 this.listenToLinkedModel();
-                if(!this.model.get('_firstPart').get('_isComplete')) {
+                if(this.model.get('_firstPart').get('_isSubmitted')) {
+                    this.onLinkedConfidenceChanged(this.model.get('_firstPart'));
+                } else {
                     this.$('.confidenceSlider-body').html(this.model.get('disabledBody'));
                 }
             }
@@ -101,6 +102,16 @@ define(function(require) {
             this.model.set('_isEnabled', true);
             this.$('.confidenceSlider-widget').removeClass('disabled');
             this.$('.confidenceSlider-body').html(this.model.get('body'));
+        },
+
+        resetQuestion: function(properties) {
+            Slider.prototype.resetQuestion.apply(this, arguments);
+            if(this.model.get('_isEnabled')) {
+                this.model.set({
+                    _confidence: 0,
+                    _linkedConfidence: 0
+                });
+            }
         },
 
         updateLinkedConfidenceIndicator: function() {
