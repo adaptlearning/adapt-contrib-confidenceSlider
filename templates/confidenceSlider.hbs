@@ -1,7 +1,7 @@
 {{! Maintainers - Kev Adsett}}
 <div class="confidenceSlider-inner component-inner">
     {{> component this}}
-    <div class="confidenceSlider-widget component-widget{{#if _isEnabled}}{{#unless _isFirstPart}} disabled{{/unless}}{{else}} disabled{{#if _isComplete}} complete{{/if}}{{/if}}">
+    <div class="confidenceSlider-widget component-widget{{#unless _isEnabled}} disabled{{#if _isComplete}} complete{{/if}}{{/unless}}">
         <div class="confidenceSlider-container clearfix">
             {{#if axisLabel}}<div class="confidenceSlider-label-axis">{{{axisLabel}}}</div>{{/if}}
             <div class="confidenceSlider-scale clearfix">
