@@ -14,7 +14,6 @@ define(function(require) {
             'click .confidenceSlider-item-outer-bar': 'onItemBarSelected',
             'click .confidenceSlider-item-bar-background': 'onItemBarSelected',
             'click .confidenceSlider-item-indicator-bar': 'onItemBarSelected',
-            'click .confidenceSlider-item-linked-confidence-bar': 'onItemBarSelected',
             'click .confidenceSlider-item-handle': 'preventEvent',
             'touchstart .confidenceSlider-item-handle':'onHandlePressed',
             'mousedown .confidenceSlider-item-handle': 'onHandlePressed',
@@ -46,78 +45,21 @@ define(function(require) {
             return Math.floor(this.mapValue(itemValue, scale._low, scale._high, 0, this.model.get('items').length - 1));
         },
 
-        preRender: function() {
-            var firstPart;
-            if(!this.model.get('_isFirstPart')) {
-                this.setupLinkedModel();
-                firstPart = this.model.get('_firstPart');
-            }
-            Slider.prototype.preRender.apply(this);
-            if(firstPart) {
-                this.model.set('_isEnabled', firstPart.get('_isSubmitted'));
-            }
-        },
-
-        setupLinkedModel: function() {
-            var linkedModel = Adapt.components.findWhere({_id: this.model.get('_firstPartId')});
-            this.model.set('_scale', _.clone(linkedModel.get('_scale')));
-            this.model.set('axisLabel', linkedModel.get('axisLabel'));
-            this.model.set('_firstPart', linkedModel);
-        },
-
         postRender: function() {
             this.setScalePositions();
             this.showAppropriateNumbers();
-            if(!this.model.get('_isFirstPart')) {
-                this.listenToLinkedModel();
-                if(this.model.get('_firstPart').get('_isSubmitted')) {
-                    this.onLinkedConfidenceChanged(this.model.get('_firstPart'));
-                } else {
-                    this.$('.confidenceSlider-body').html(this.model.get('disabledBody'));
-                }
-            }
             this.setNormalisedHandlePosition();
             Slider.prototype.postRender.apply(this);
         },
 
-        listenToLinkedModel: function() {
-            this.listenTo(this.model.get('_firstPart'), 'change:_confidence', this.onLinkedConfidenceChanged);
-            this.listenTo(this.model.get('_firstPart'), 'change:_isSubmitted', this.onLinkedSubmittedChanged);
-        },
-
-        onLinkedConfidenceChanged: function(linkedModel) {
-            this.model.set({
-                _linkedConfidence: linkedModel.get('_confidence')
-            });
-            this.updateLinkedConfidenceIndicator();
-        },
-
-        onLinkedSubmittedChanged: function(linkedModel) {
-            if(linkedModel.get('_isSubmitted')) {
-                this.enableSelf();
-            }
-        },
-
-        enableSelf: function() {
-            this.model.set('_isEnabled', true);
-            this.$('.confidenceSlider-widget').removeClass('disabled');
-            this.$('.confidenceSlider-body').html(this.model.get('body'));
-        },
 
         resetQuestion: function(properties) {
             Slider.prototype.resetQuestion.apply(this, arguments);
             if(this.model.get('_isEnabled')) {
                 this.model.set({
-                    _confidence: 0,
-                    _linkedConfidence: 0
+                    _confidence: 0
                 });
             }
-        },
-
-        updateLinkedConfidenceIndicator: function() {
-            this.$('.confidenceSlider-item-linked-confidence-bar').css({
-                width: this.$('.confidenceSlider-item-bar').width() * this.model.get('_linkedConfidence')
-            })
         },
 
         mapIndexToPixels: function(value) {
@@ -248,9 +190,6 @@ define(function(require) {
             this.$('.confidenceSlider-item-indicator-bar').css({
                 width: handlePosition
             });
-            if(!this.model.get('_isFirstPart') && this.model.get('_linkedConfidence') !== undefined) {
-                this.updateLinkedConfidenceIndicator();
-            }
         },
         
         selectItem: function(itemIndex) {
@@ -308,18 +247,12 @@ define(function(require) {
         getFeedbackString: function() {
             var feedbackSeparator = this.model.get('_feedback').feedbackSeparator,
                 genericFeedback = this.getGenericFeedback(),
-                comparisonFeedback = this.getComparisonFeedback(),
                 thresholdFeedback = this.getThresholdFeedback(),
                 needsSeparator = false,
                 feedbackString = "";
 
             if(genericFeedback) {
                 feedbackString += genericFeedback;
-                needsSeparator = true;
-            }
-            if(comparisonFeedback) {
-                if(needsSeparator) feedbackString += feedbackSeparator;
-                feedbackString += comparisonFeedback;
                 needsSeparator = true;
             }
             if(thresholdFeedback) {
@@ -346,22 +279,6 @@ define(function(require) {
             return appropriateFeedback[0].text;
         },
 
-        getComparisonFeedback: function() {
-            if(this.model.get('_isFirstPart')) return;
-            var confidence = this.model.get('_confidence'),
-                linkedConfidence = this.model.get('_firstPart').get('_confidence'),
-                confidenceDifference = confidence - linkedConfidence,
-                feedbackString;
-            if (confidenceDifference < -0.01) {
-                feedbackString = this.model.get('_feedback')._comparison.lower;
-            } else if (confidenceDifference > 0.01) {
-                feedbackString = this.model.get('_feedback')._comparison.higher;
-            } else {
-                feedbackString = this.model.get('_feedback')._comparison.same;
-            }
-            return feedbackString;
-        },
-
         onUserAnswerShown: function() {
             if(this.model.get('_userAnswer').length > 0) {
                 Slider.prototype.onUserAnswerShown.apply(this);
@@ -371,4 +288,5 @@ define(function(require) {
     
     Adapt.register("confidenceSlider", ConfidenceSlider);
     
+    return ConfidenceSlider;
 });

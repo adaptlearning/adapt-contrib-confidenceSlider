@@ -16,7 +16,6 @@
 
     .disabledControls {
         .confidenceSlider-item-bar-background,
-        .confidenceSlider-item-linked-confidence-bar, 
         .confidenceSlider-item-indicator-bar,
         .confidenceSlider-item-outer-bar {
             cursor: default;
@@ -144,7 +143,6 @@
     }
 
     .confidenceSlider-item-indicator-bar, 
-    .confidenceSlider-item-linked-confidence-bar,
     .confidenceSlider-item-bar-background {
         height: 6px;
         float: left;
@@ -156,11 +154,6 @@
     .confidenceSlider-item-indicator-bar {
         background-color: darken(@item-color, 20%);
         z-index: 3;
-    }
-
-    .confidenceSlider-item-linked-confidence-bar {
-        background-color: lighten(@item-color, 20%);
-        z-index: 2;
     }
 
     .confidenceSlider-item-bar-background {
