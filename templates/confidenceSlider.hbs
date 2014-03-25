@@ -1,0 +1,39 @@
+{{! Maintainers - Kev Adsett}}
+<div class="confidenceSlider-inner component-inner">
+    {{> component this}}
+    <div class="confidenceSlider-widget component-widget{{#unless _isEnabled}} disabled{{#if _isComplete}} complete{{/if}}{{/unless}}">
+        <div class="confidenceSlider-container clearfix">
+            {{#if axisLabel}}<div class="confidenceSlider-label-axis">{{{axisLabel}}}</div>{{/if}}
+            <div class="confidenceSlider-scale clearfix">
+                <div class="confidenceSlider-scale-labels clearfix">
+                    {{#if _scale.labels.low}}<div class="confidenceSlider-scale-label confidenceSlider-scale-label-low">{{{_scale.labels.low}}}</div>{{/if}}
+                    {{#if _scale.labels.high}}<div class="confidenceSlider-scale-label confidenceSlider-scale-label-high">{{{_scale.labels.high}}}</div>{{/if}}
+                </div>
+                <div class="confidenceSlider-scale-numbers clearfix">
+                    {{#each items}}
+                        <div class="confidenceSlider-scale-number display-none">{{value}}</div>
+                    {{/each}}
+                </div>
+                <div class="confidenceSlider-scale-notches clearfix">
+                    {{#each items}}
+                        <div class="confidenceSlider-scale-notch display-none"></div>
+                    {{/each}}
+                    <div class="confidenceSlider-scale-background"></div>
+                </div>
+            </div>
+            <div class="confidenceSlider-item item clearfix">
+                <div class="confidenceSlider-item-bar">
+                    <div class="confidenceSlider-item-bar-background"></div>
+                    <div class="confidenceSlider-item-indicator-bar"></div>
+                    <a href="#" class="confidenceSlider-item-handle"></a>
+                </div>
+                <div class="confidenceSlider-item-outer-bar"></div>
+            </div>
+        </div>
+        <a href="#" class="button submit">
+            <span>  
+                {{{buttons.submit}}}
+            </span>
+        </a>
+    </div>
+</div>
