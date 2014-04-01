@@ -1,0 +1,111 @@
+{
+  "type":"object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "id": "http://jsonschema.net",
+  "$ref": "http://localhost/plugins/content/component/model.schema",
+  "properties":{
+    "_feedback": {
+      "type":"object",
+      "required":true,
+      "properties":{
+        "_threshold": {
+          "type":"array",
+          "required":true,
+          "items":
+            {
+              "type":"object",
+              "required":true,
+              "properties":{
+                "_values": {
+                  "type":"object",
+                  "required":true,
+                  "properties":{
+                    "_high": {
+                      "type":"number",
+                      "required":true
+                    },
+                    "_low": {
+                      "type":"number",
+                      "required":true
+                    }
+                  }
+                },
+                "text": {
+                  "type":"string",
+                  "required":true
+                }
+              }
+            }
+        },
+        "feedbackSeparator": {
+          "type":"string",
+          "required":false
+        },
+        "generic": {
+          "type":"string",
+          "required":false
+        }
+      }
+    },
+    "_pageLevelProgress": {
+      "type":"object",
+      "required":false,
+      "properties":{
+        "_isEnabled": {
+          "type":"boolean",
+          "required":false
+        }
+      }
+    },
+    "_scale": {
+      "type":"object",
+      "required":true,
+      "properties":{
+        "_high": {
+          "type":"number",
+          "required":true
+        },
+        "_low": {
+          "type":"number",
+          "required":true
+        },
+        "_showNumberValues": {
+          "type":"string",
+          "required":true
+        },
+        "_snapToNumbers": {
+          "type":"boolean",
+          "required":true
+        },
+        "labels": {
+          "type":"object",
+          "required":false,
+          "properties":{
+            "high": {
+              "type":"string",
+              "required":false
+            },
+            "low": {
+              "type":"string",
+              "required":false
+            }
+          }
+        }
+      }
+    },
+    "axisLabel": {
+      "type":"string",
+      "required":false
+    },
+    "buttons": {
+      "type":"object",
+      "required":false,
+      "properties":{
+        "submit": {
+          "type":"string",
+          "required":false
+        }
+      }
+    }
+  }
+}
