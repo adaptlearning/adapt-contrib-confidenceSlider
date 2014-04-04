@@ -1,12 +1,14 @@
 {
   "name": "adapt-contrib-confidenceSlider",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-confidenceSlider",
   "authors": [
     "Kev Adsett <kev.adsett@kineo.com>"
   ],
   "description": "A contributed two-part component that measures user confidence, using a sliding scale.",
   "main": "/js/adapt-contrib-confidenceSlider.js",
+  "displayName" : "Confidence slider",
+  "component" : "confidenceSlider",
   "keywords": [
     "adapt-plugin",
     "adapt-component"
