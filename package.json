@@ -1,6 +1,6 @@
 {
   "name": "adapt-contrib-confidenceSlider",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A two-part component that measures user confidence, using a sliding scale.",
   "main": "",
   "scripts": {
@@ -16,7 +16,7 @@
     "url": "https://github.com/adaptlearning/adapt-contrib-confidenceSlider/issues"
   },
   "devDependencies": {
-    "karma": "~0.9",
+    "karma": "~0.10",
     "karma-mocha": "*",
     "karma-expect": "*",
     "adapt-contrib-slider": "*"
