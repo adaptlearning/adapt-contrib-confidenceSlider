@@ -18,6 +18,7 @@
         "_snapToNumbers": false
     },
     "title": "Confidence Slider – Part 1",
+    "displayText":"Confidence Slider – Part 1",
     "body": "The confidence slider allows you to change the way your scale appears. Here's an example of something a little more objective, and less quantifiable.<br/><br/>The confidence slider is a good component.",
     "_feedback": {
         "feedbackSeparator": " ",
@@ -39,7 +40,7 @@
             }
         ]
     },
-    "buttons": {
+    "_buttons": {
         "submit": ""
     },
     "_pageLevelProgress": {
@@ -56,6 +57,7 @@
     "_isFirstPart": false,
     "_firstPartId": "c-135",
     "title": "Confidence Slider – Part 2",
+    "displayText":"Confidence Slider – Part 2",
     "disabledBody": "You need to finish part one before you can do this part.",
     "body": "The second part will automatically use the scale from the first part. How do you feel now about the following statement?<br/><br/>The confidence slider is a good component.",
     "_feedback": {
@@ -83,7 +85,7 @@
             }
         ]
     },
-    "buttons": {
+    "_buttons": {
         "submit": ""
     },
     "_pageLevelProgress": {
