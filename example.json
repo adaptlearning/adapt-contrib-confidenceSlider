@@ -18,7 +18,7 @@
         "_snapToNumbers": false
     },
     "title": "Confidence Slider – Part 1",
-    "displayText":"Confidence Slider – Part 1",
+    "displayTitle":"Confidence Slider – Part 1",
     "body": "The confidence slider allows you to change the way your scale appears. Here's an example of something a little more objective, and less quantifiable.<br/><br/>The confidence slider is a good component.",
     "_feedback": {
         "feedbackSeparator": " ",
