@@ -17,6 +17,7 @@
         "_snapToNumbers": true
     },
     "title": "Confidence Slider",
+    "displayTitle":"Confidence Slider",
     "body": "Although presented like a question component, this component is actually a way to guage user confidence, rather than getting a right/wrong answer. Measure your starting confidence, and then select Submit.",
     "_feedback": {
         "feedbackSeparator": " ",
@@ -38,7 +39,7 @@
             }
         ]
     },
-    "buttons": {
+    "_buttons": {
         "submit": ""
     },
     "_pageLevelProgress": {
