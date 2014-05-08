@@ -1,87 +1,41 @@
 {
-    "_id":"c-135",
-    "_parentId":"b-70",
+    "_id":"c-125",
+    "_parentId":"b-53",
     "_type":"component",
     "_component":"confidenceSlider",
     "_classes":"",
-    "_layout":"left",
-    "_isFirstPart": true,
-    "axisLabel":  "",
+    "_layout":"full",
+    "axisLabel":  "Confidence",
     "_scale": {
         "labels": {
-            "low": "Strongly disagree",
-            "high": "Strongly agree"
+            "low": "Not confident",
+            "high": "Totally confident"
         },
         "_low": 1,
         "_high": 10,
-        "_showNumberValues": "none",
-        "_snapToNumbers": false
+        "_showNumberValues": "all",
+        "_snapToNumbers": true
     },
     "title": "Confidence Slider – Part 1",
     "displayTitle":"Confidence Slider – Part 1",
     "body": "The confidence slider allows you to change the way your scale appears. Here's an example of something a little more objective, and less quantifiable.<br/><br/>The confidence slider is a good component.",
     "_feedback": {
         "feedbackSeparator": " ",
-        "generic": "",
+        "generic": "Thanks for measuring your confidence.",
         "_threshold": [
             {
                 "_values": {
                     "_low": 1,
                     "_high": 5
                 },
-                "text": "We hope we can change your mind."
+                "text": "So you're not that confident eh? Don't worry, you will be soon."
             },
             {
                 "_values": {
                     "_low": 6,
                     "_high": 10
                 },
-                "text": "Great, we think it's good too!"
-            }
-        ]
-    },
-    "_buttons": {
-        "submit": ""
-    },
-    "_pageLevelProgress": {
-        "_isEnabled": true
-    }
-},
-{
-    "_id":"c-140",
-    "_parentId":"b-70",
-    "_type":"component",
-    "_component":"confidenceSlider",
-    "_classes":"",
-    "_layout":"right",
-    "_isFirstPart": false,
-    "_firstPartId": "c-135",
-    "title": "Confidence Slider – Part 2",
-    "displayText":"Confidence Slider – Part 2",
-    "disabledBody": "You need to finish part one before you can do this part.",
-    "body": "The second part will automatically use the scale from the first part. How do you feel now about the following statement?<br/><br/>The confidence slider is a good component.",
-    "_feedback": {
-        "feedbackSeparator": " ",
-        "generic": "Thanks for completing this exercise.",
-        "_comparison": {
-            "lower": "Oh you like it less? That's a shame.",
-            "same": "Well, at least you don't like it less.",
-            "higher": "It looks like you're seeing the benefits more and more!"
-        },
-        "_threshold": [
-            {
-                "_values": {
-                    "_low": 1,
-                    "_high": 5
-                },
-                "text": "Perhaps you still need convincing overall."
-            },
-            {
-                "_values": {
-                    "_low": 6,
-                    "_high": 10
-                },
-                "text": "We're glad you like it."
+                "text": "Feeling pretty confident huh? Let's see how you get on."
             }
         ]
     },
