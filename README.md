@@ -19,7 +19,7 @@ This component can be used as part of an assessment.
 
 ##Settings overview
  
-An complete example of this components settings can be found in the [example.json](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/blob/master/example.json) file. A description of the core settings can be found at: [Core model attributes](https://github.com/adaptlearning/adapt_framework/wiki/Core-model-attributes)
+A complete example of this components settings can be found in the [example.json](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/blob/master/example.json) file. A description of the core settings can be found at: [Core model attributes](https://github.com/adaptlearning/adapt_framework/wiki/Core-model-attributes)
 
 Further settings for this component are:
 
