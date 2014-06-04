@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-confidenceSlider",
   "authors": [
-    "Kev Adsett <kev.adsett@kineo.com>"
+    "Kev Adsett <kev.adsett@kineo.com>",
+    "Himanshu Rajotia <himanshu.rajotia@credipoint.com>"
   ],
   "description": "A contributed two-part component that measures user confidence, using a sliding scale.",
   "main": "/js/adapt-contrib-confidenceSlider.js",
