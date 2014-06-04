@@ -200,6 +200,7 @@ define(function(require) {
             var pixelPosition = this.model.get('_scale')._snapToNumbers ? this.mapIndexToPixels(nearestItemIndex) : left;
             this.animateToPosition(pixelPosition);
             this.model.set('_hasHadInteraction', true);
+            this.setAltText(nearestItemIndex + 1);
         },
 
         preventEvent: function(event) {
