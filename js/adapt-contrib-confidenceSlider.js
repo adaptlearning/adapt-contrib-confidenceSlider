@@ -1,9 +1,8 @@
 /*
-* adapt-contrib-confidenceSlider
-* License - http://github.com/adaptlearning/adapt_framework/LICENSE
-* Maintainers - Kev Adsett <kev.adsett@kineo.com>
-*/
-
+ * adapt-contrib-confidenceSlider
+ * License - https://github.com/adaptlearning/adapt_framework/blob/master/LICENSE
+ * Maintainers - Kev Adsett <kev.adsett@kineo.com>, Himanshu Rajotia <himanshu.rajotia@credipoint.com>
+ */
 define(function(require) {
     var Slider = require('components/adapt-contrib-slider/js/adapt-contrib-slider');
     var QuestionView = require('coreViews/questionView');
@@ -18,7 +17,8 @@ define(function(require) {
             'touchstart .confidenceSlider-item-handle':'onHandlePressed',
             'mousedown .confidenceSlider-item-handle': 'onHandlePressed',
             'focus .confidenceSlider-item-handle':'onHandleFocus',
-            'click .confidenceSlider-widget .button.submit': 'onSubmitClicked',
+            'blur .confidenceSlider-item-handle':'onHandleBlur',
+            'click .confidenceSlider-widget .button.submit': 'onSubmitClicked'
         },
         
         animateToPosition: function(newPosition) {
@@ -49,9 +49,13 @@ define(function(require) {
             this.setScalePositions();
             this.showAppropriateNumbers();
             this.setNormalisedHandlePosition();
+            this.setAltText(this.model.get('_scale')._low);
             Slider.prototype.postRender.apply(this);
         },
 
+        setAltText: function(value) {
+            this.$('.confidenceSlider-item-handle').attr('alt', value);
+        },
 
         resetQuestion: function(properties) {
             Slider.prototype.resetQuestion.apply(this, arguments);
@@ -59,6 +63,7 @@ define(function(require) {
                 this.model.set({
                     _confidence: 0
                 });
+                this.setAltText(this.model.get('_scale')._low);
             }
         },
 
@@ -115,6 +120,7 @@ define(function(require) {
                 var itemIndex = this.getIndexFromValue(this.getSelectedItems().value);
                 this.selectItem(itemIndex);
                 this.animateToPosition(this.mapIndexToPixels(itemIndex));
+                this.setAltText(itemIndex + 1);
             }
         },
 
@@ -138,6 +144,11 @@ define(function(require) {
             event.preventDefault();
             this.$('.confidenceSlider-item-handle').on('keydown', _.bind(this.onKeyDown, this));
         },
+
+        onHandleBlur: function(event) {
+            event.preventDefault();
+            this.$('.confidenceSlider-item-handle').off('keydown');
+        },
         
         onHandlePressed: function (event) {
             event.preventDefault();
@@ -150,6 +161,29 @@ define(function(require) {
             $(document).on('mousemove touchmove', eventData, _.bind(this.onHandleDragged, this));
             $(document).one('mouseup touchend', eventData, _.bind(this.onDragReleased, this));
             this.model.set('_hasHadInteraction', true);
+        },
+
+        onKeyDown: function(event) {
+            if(event.which == 9) return; // tab key
+            event.preventDefault();
+
+            var newItemIndex = this.getIndexFromValue(this.getSelectedItems().value);
+
+            switch (event.which) {
+                case 40: // ↓ down
+                case 37: // ← left
+                    newItemIndex = Math.max(newItemIndex - 1, 0);
+                    break;
+                case 38: // ↑ up
+                case 39: // → right
+                    newItemIndex = Math.min(newItemIndex + 1, this.model.get('_scale')._high);
+                    break;
+            }
+
+            this.selectItem(newItemIndex);
+            if(typeof newItemIndex == "number") this.showScaleMarker(true);
+            this.animateToPosition(this.mapIndexToPixels(newItemIndex));
+            this.setAltText(newItemIndex + 1);
         },
         
         onItemBarSelected: function (event) {
@@ -166,6 +200,7 @@ define(function(require) {
             var pixelPosition = this.model.get('_scale')._snapToNumbers ? this.mapIndexToPixels(nearestItemIndex) : left;
             this.animateToPosition(pixelPosition);
             this.model.set('_hasHadInteraction', true);
+            this.setAltText(nearestItemIndex + 1);
         },
 
         preventEvent: function(event) {
