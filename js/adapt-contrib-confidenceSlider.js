@@ -164,6 +164,7 @@ define(function(require) {
         },
 
         onKeyDown: function(event) {
+            this.model.set('_hasHadInteraction', true);
             if(event.which == 9) return; // tab key
             event.preventDefault();
 
@@ -176,7 +177,7 @@ define(function(require) {
                     break;
                 case 38: // ↑ up
                 case 39: // → right
-                    newItemIndex = Math.min(newItemIndex + 1, this.model.get('_scale')._high);
+                    newItemIndex = Math.min(newItemIndex + 1, this.model.get('_scale')._high - 1);
                     break;
             }
 
@@ -262,17 +263,14 @@ define(function(require) {
         },
         
         showFeedback: function() {
-            this.model.set('_feedbackMessage', this.getFeedbackString());
+            this.model.set('feedbackTitle', this.model.get('title'));
+            this.model.set('feedbackMessage', this.getFeedbackString());
 
-            Adapt.mediator.defaultCallback('questionView:feedback', function(feedback) {
-                Adapt.trigger('questionView:showFeedback', feedback);
-            });
-
-            Adapt.trigger('questionView:feedback', {
-                title: this.model.get('title'),
-                message:this.model.get('_feedbackMessage'),
-                audio:this.model.get('feedbackAudio')
-            });
+            if (this.model.get('_canShowFeedback')) {
+                Adapt.trigger('questionView:showFeedback', this);
+            } else {
+                Adapt.trigger('questionView:disabledFeedback', this);
+            }
         },
 
         setupFeedbackArrays: function() {
