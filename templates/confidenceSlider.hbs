@@ -1,7 +1,7 @@
-{{! Maintainers - Kev Adsett}}
+{{! Maintainers - Kev Adsett, Himanshu Rajotia <himanshu.rajotia@credipoint.com}}
 <div class="confidenceSlider-inner component-inner">
     {{> component this}}
-    <div class="confidenceSlider-widget component-widget{{#unless _isEnabled}} disabled{{#if _isComplete}} complete{{/if}}{{/unless}}">
+    <div class="confidenceSlider-widget component-widget{{#unless _isEnabled}} disabled{{#if _isComplete}} complete submitted{{/if}}{{/unless}}">
         <div class="confidenceSlider-container clearfix">
             {{#if axisLabel}}<div class="confidenceSlider-label-axis">{{{axisLabel}}}</div>{{/if}}
             <div class="confidenceSlider-scale clearfix">
@@ -10,12 +10,12 @@
                     {{#if _scale.labels.high}}<div class="confidenceSlider-scale-label confidenceSlider-scale-label-high">{{{_scale.labels.high}}}</div>{{/if}}
                 </div>
                 <div class="confidenceSlider-scale-numbers clearfix">
-                    {{#each items}}
+                    {{#each _items}}
                         <div class="confidenceSlider-scale-number display-none">{{value}}</div>
                     {{/each}}
                 </div>
                 <div class="confidenceSlider-scale-notches clearfix">
-                    {{#each items}}
+                    {{#each _items}}
                         <div class="confidenceSlider-scale-notch component-item-color display-none"></div>
                     {{/each}}
                     <div class="confidenceSlider-scale-background component-item-color"></div>
@@ -30,10 +30,7 @@
                 <div class="confidenceSlider-item-outer-bar"></div>
             </div>
         </div>
-        <a href="#" class="button submit">
-            <span>  
-                {{{_buttons.submit}}}
-            </span>
-        </a>
+    </div>
+    <div class="buttons">
     </div>
 </div>

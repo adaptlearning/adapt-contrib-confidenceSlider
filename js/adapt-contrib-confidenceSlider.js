@@ -17,10 +17,40 @@ define(function(require) {
             'touchstart .confidenceSlider-item-handle':'onHandlePressed',
             'mousedown .confidenceSlider-item-handle': 'onHandlePressed',
             'focus .confidenceSlider-item-handle':'onHandleFocus',
-            'blur .confidenceSlider-item-handle':'onHandleBlur',
-            'click .confidenceSlider-widget .button.submit': 'onSubmitClicked'
+            'blur .confidenceSlider-item-handle':'onHandleBlur'
         },
-        
+
+        setupModelItems: function() {
+            var items = [],
+                scale = this.model.get('_scale');
+
+            for(var i = scale._low; i <= scale._high; i++) {
+                items.push({value: i, selected:false});
+            }
+            this.model.set('_items', items);
+        },
+
+        setAllItemsEnabled: function(isEnabled) {
+            if (isEnabled) {
+                this.$('.confidenceSlider-widget').removeClass('disabled');
+            } else {
+                this.$('.confidenceSlider-widget').addClass('disabled');
+            }
+        },
+
+        // Used by question to setup itself just after rendering
+        onQuestionRendered: function() {
+            this.setScalePositions();
+            this.showAppropriateNumbers();
+            this.setNormalisedHandlePosition();
+            this.setAltText(this.model.get('_scale')._low);
+            this.onScreenSizeChanged();
+            this.showScaleMarker(true);
+            this.listenTo(Adapt, 'device:resize', this.onScreenSizeChanged);
+            this.setReadyStatus();
+        },
+
+        // this should make the slider handle and slider bar to animate to give position
         animateToPosition: function(newPosition) {
             this.$('.confidenceSlider-item-handle').stop(true).animate({
                 left: newPosition + 'px'
@@ -32,6 +62,150 @@ define(function(require) {
             }, 300);
         },
 
+        // this should give the index of item using given slider value
+        getIndexFromValue: function(itemValue) {
+            var scale = this.model.get('_scale');
+            return Math.floor(this.mapValue(itemValue, scale._low, scale._high, 0, this.model.get('_items').length - 1));
+        },
+
+        // this should set given value to slider handle
+        setAltText: function(value) {
+            this.$('.confidenceSlider-item-handle').attr('alt', value);
+        },
+
+        mapIndexToPixels: function(value) {
+            var numberOfItems = this.model.get('_items').length,
+                width = this.$('.confidenceSlider-item-bar').width();
+
+            return Math.round(this.mapValue(value, 0, numberOfItems - 1, 0, width));
+        },
+
+        mapPixelsToIndex: function(value) {
+            var numberOfItems = this.model.get('_items').length;
+            return Math.round(this.normalisePixelPosition(value) * (numberOfItems - 1));
+        },
+
+        normalisePixelPosition: function(pixelPosition) {
+            return this.normalise(pixelPosition, 0, this.$('.confidenceSlider-item-bar').width())
+        },
+
+        onDragReleased: function (event) {
+            event.preventDefault();
+            $(document).off('mousemove touchmove');
+            this.setNormalisedHandlePosition();
+            if(this.model.get('_scale')._snapToNumbers) {
+                var itemIndex = this.getIndexFromValue(this.model.get('_selectedItem').value);
+                this.selectItem(itemIndex);
+                this.animateToPosition(this.mapIndexToPixels(itemIndex));
+                this.setAltText(itemIndex + 1);
+            }
+        },
+
+        onHandleDragged: function (event) {
+            event.preventDefault();
+            var left = (event.pageX || event.originalEvent.touches[0].pageX) - event.data.offsetLeft;
+            left = Math.max(Math.min(left, event.data.width), 0);
+
+            this.$('.confidenceSlider-item-handle').css({
+                left: left + 'px'
+            });
+
+            this.$('.confidenceSlider-item-indicator-bar').css({
+                width: left + 'px'
+            });
+
+            this.selectItem(this.mapPixelsToIndex(left));
+        },
+
+        onHandleFocus: function(event) {
+            event.preventDefault();
+            this.$('.confidenceSlider-item-handle').on('keydown', _.bind(this.onKeyDown, this));
+        },
+
+        onHandleBlur: function(event) {
+            event.preventDefault();
+            this.$('.confidenceSlider-item-handle').off('keydown');
+        },
+
+        onHandlePressed: function (event) {
+            event.preventDefault();
+            if (!this.model.get("_isEnabled") || this.model.get("_isSubmitted")) return;
+
+            var eventData = {
+                width:this.$('.confidenceSlider-item-bar').width(),
+                offsetLeft: this.$('.confidenceSlider-item-bar').offset().left
+            };
+            $(document).on('mousemove touchmove', eventData, _.bind(this.onHandleDragged, this));
+            $(document).one('mouseup touchend', eventData, _.bind(this.onDragReleased, this));
+            this.model.set('_hasHadInteraction', true);
+        },
+
+        onKeyDown: function(event) {
+            this.model.set('_hasHadInteraction', true);
+            if(event.which == 9) return; // tab key
+            event.preventDefault();
+
+            var newItemIndex = this.getIndexFromValue(this.model.get('_selectedItem').value);
+
+            switch (event.which) {
+                case 40: // ↓ down
+                case 37: // ← left
+                    newItemIndex = Math.max(newItemIndex - 1, 0);
+                    break;
+                case 38: // ↑ up
+                case 39: // → right
+                    newItemIndex = Math.min(newItemIndex + 1, this.model.get('_scale')._high - 1);
+                    break;
+            }
+
+            this.selectItem(newItemIndex);
+            if(typeof newItemIndex == "number") this.showScaleMarker(true);
+            this.animateToPosition(this.mapIndexToPixels(newItemIndex));
+            this.setAltText(newItemIndex + 1);
+        },
+
+        onItemBarSelected: function (event) {
+            event.preventDefault();
+            if (!this.model.get("_isEnabled") || this.model.get("_isSubmitted")) return;
+
+            var offsetLeft = this.$('.confidenceSlider-item-bar').offset().left,
+                width = this.$('.confidenceSlider-item-bar').width(),
+                left = (event.pageX || event.originalEvent.touches[0].pageX) - offsetLeft;
+
+            left = Math.max(Math.min(left, width), 0);
+            var nearestItemIndex = this.mapPixelsToIndex(left);
+            this.selectItem(left);
+            var pixelPosition = this.model.get('_scale')._snapToNumbers ? this.mapIndexToPixels(nearestItemIndex) : left;
+            this.animateToPosition(pixelPosition);
+            this.model.set('_hasHadInteraction', true);
+            this.setAltText(nearestItemIndex + 1);
+        },
+
+        preventEvent: function(event) {
+            event.preventDefault();
+        },
+
+        onScreenSizeChanged: function() {
+            var scaleWidth = this.$('.confidenceSlider-scale-notches').width(),
+                $notches = this.$('.confidenceSlider-scale-notch'),
+                $numbers = this.$('.confidenceSlider-scale-number');
+            for(var i = 0, count = this.model.get('_items').length; i < count; i++) {
+                var $notch = $notches.eq(i), $number = $numbers.eq(i),
+                    newLeft = Math.round($notch.data('normalisedPosition') * scaleWidth);
+                $notch.css({left: newLeft});
+                $number.css({left: newLeft});
+            }
+            var $handle = this.$('.confidenceSlider-item-handle'),
+                handlePosition = Math.round($handle.data('normalisedPosition') * scaleWidth);
+            $handle.css({
+                left: handlePosition
+            });
+            this.$('.confidenceSlider-item-indicator-bar').css({
+                width: handlePosition
+            });
+        },
+
+        //Use to check if the user is allowed to submit the question
         canSubmit: function() {
             if (this.model.get('_hasHadInteraction')) {
                 return true;
@@ -40,47 +214,33 @@ define(function(require) {
             }
         },
 
-        getIndexFromValue: function(itemValue) {
-            var scale = this.model.get('_scale');
-            return Math.floor(this.mapValue(itemValue, scale._low, scale._high, 0, this.model.get('items').length - 1));
+        // Used to set the score based upon the _questionWeight
+        setScore: function() {},
+
+        // Used by the question view to reset the stored user answer
+        resetUserAnswer: function() {
+            this.model.set({
+                _selectedItem: {},
+                _userAnswer: '',
+                _confidence: 0
+            });
         },
 
-        postRender: function() {
-            this.setScalePositions();
-            this.showAppropriateNumbers();
-            this.setNormalisedHandlePosition();
-            this.setAltText(this.model.get('_scale')._low);
-            Slider.prototype.postRender.apply(this);
+        // this return a boolean based upon whether to question is correct or not
+        isCorrect: function() {
+            this.model.set('_isAtLeastOneCorrectSelection', true);
+            return true;
         },
 
-        setAltText: function(value) {
-            this.$('.confidenceSlider-item-handle').attr('alt', value);
-        },
-
+        // Used by the question view to reset the look and feel of the component.
+        // This could also include resetting item data
         resetQuestion: function(properties) {
-            Slider.prototype.resetQuestion.apply(this, arguments);
             if(this.model.get('_isEnabled')) {
                 this.model.set({
                     _confidence: 0
                 });
                 this.setAltText(this.model.get('_scale')._low);
             }
-        },
-
-        mapIndexToPixels: function(value) {
-            var numberOfItems = this.model.get('items').length,
-                width = this.$('.confidenceSlider-item-bar').width();
-            
-            return Math.round(this.mapValue(value, 0, numberOfItems - 1, 0, width));
-        },
-        
-        mapPixelsToIndex: function(value) {
-            var numberOfItems = this.model.get('items').length;
-            return Math.round(this.normalisePixelPosition(value) * (numberOfItems - 1));
-        },
-
-        normalisePixelPosition: function(pixelPosition) {
-            return this.normalise(pixelPosition, 0, this.$('.confidenceSlider-item-bar').width())
         },
 
         showAppropriateNumbers: function() {
@@ -104,138 +264,11 @@ define(function(require) {
         },
 
         setScalePositions: function() {
-            var numberOfItems = this.model.get('items').length;
-            _.each(this.model.get('items'), function(item, index) {
+            var numberOfItems = this.model.get('_items').length;
+            _.each(this.model.get('_items'), function(item, index) {
                 var normalisedPosition = this.normalise(index, 0, numberOfItems -1);
                 this.$('.confidenceSlider-scale-number').eq(index).data('normalisedPosition', normalisedPosition);
                 this.$('.confidenceSlider-scale-notch').eq(index).data('normalisedPosition', normalisedPosition);
-            }, this);
-        },
-
-        onDragReleased: function (event) {
-            event.preventDefault();
-            $(document).off('mousemove touchmove');
-            this.setNormalisedHandlePosition();
-            if(this.model.get('_scale')._snapToNumbers) {
-                var itemIndex = this.getIndexFromValue(this.getSelectedItems().value);
-                this.selectItem(itemIndex);
-                this.animateToPosition(this.mapIndexToPixels(itemIndex));
-                this.setAltText(itemIndex + 1);
-            }
-        },
-
-        onHandleDragged: function (event) {
-            event.preventDefault();
-            var left = (event.pageX || event.originalEvent.touches[0].pageX) - event.data.offsetLeft;
-            left = Math.max(Math.min(left, event.data.width), 0);
-            
-            this.$('.confidenceSlider-item-handle').css({
-                left: left + 'px'
-            });
-
-            this.$('.confidenceSlider-item-indicator-bar').css({
-                width: left + 'px'
-            });
-
-            this.selectItem(this.mapPixelsToIndex(left));
-        },
-        
-        onHandleFocus: function(event) {
-            event.preventDefault();
-            this.$('.confidenceSlider-item-handle').on('keydown', _.bind(this.onKeyDown, this));
-        },
-
-        onHandleBlur: function(event) {
-            event.preventDefault();
-            this.$('.confidenceSlider-item-handle').off('keydown');
-        },
-        
-        onHandlePressed: function (event) {
-            event.preventDefault();
-            if (!this.model.get("_isEnabled") || this.model.get("_isSubmitted")) return;
-            
-            var eventData = {
-                width:this.$('.confidenceSlider-item-bar').width(),
-                offsetLeft: this.$('.confidenceSlider-item-bar').offset().left
-            };
-            $(document).on('mousemove touchmove', eventData, _.bind(this.onHandleDragged, this));
-            $(document).one('mouseup touchend', eventData, _.bind(this.onDragReleased, this));
-            this.model.set('_hasHadInteraction', true);
-        },
-
-        onKeyDown: function(event) {
-            this.model.set('_hasHadInteraction', true);
-            if(event.which == 9) return; // tab key
-            event.preventDefault();
-
-            var newItemIndex = this.getIndexFromValue(this.getSelectedItems().value);
-
-            switch (event.which) {
-                case 40: // ↓ down
-                case 37: // ← left
-                    newItemIndex = Math.max(newItemIndex - 1, 0);
-                    break;
-                case 38: // ↑ up
-                case 39: // → right
-                    newItemIndex = Math.min(newItemIndex + 1, this.model.get('_scale')._high - 1);
-                    break;
-            }
-
-            this.selectItem(newItemIndex);
-            if(typeof newItemIndex == "number") this.showScaleMarker(true);
-            this.animateToPosition(this.mapIndexToPixels(newItemIndex));
-            this.setAltText(newItemIndex + 1);
-        },
-        
-        onItemBarSelected: function (event) {
-            event.preventDefault();
-            if (!this.model.get("_isEnabled") || this.model.get("_isSubmitted")) return;
-                                
-            var offsetLeft = this.$('.confidenceSlider-item-bar').offset().left,
-                width = this.$('.confidenceSlider-item-bar').width(),
-                left = (event.pageX || event.originalEvent.touches[0].pageX) - offsetLeft;
-            
-            left = Math.max(Math.min(left, width), 0);
-            var nearestItemIndex = this.mapPixelsToIndex(left);
-            this.selectItem(left);
-            var pixelPosition = this.model.get('_scale')._snapToNumbers ? this.mapIndexToPixels(nearestItemIndex) : left;
-            this.animateToPosition(pixelPosition);
-            this.model.set('_hasHadInteraction', true);
-            this.setAltText(nearestItemIndex + 1);
-        },
-
-        preventEvent: function(event) {
-            event.preventDefault();
-        },
-
-        onScreenSizeChanged: function() {
-            var scaleWidth = this.$('.confidenceSlider-scale-notches').width(),
-                $notches = this.$('.confidenceSlider-scale-notch'),
-                $numbers = this.$('.confidenceSlider-scale-number');
-            for(var i = 0, count = this.model.get('items').length; i < count; i++) {
-                var $notch = $notches.eq(i), $number = $numbers.eq(i),
-                    newLeft = Math.round($notch.data('normalisedPosition') * scaleWidth);
-                $notch.css({left: newLeft});
-                $number.css({left: newLeft});
-            }
-            var $handle = this.$('.confidenceSlider-item-handle'),
-                handlePosition = Math.round($handle.data('normalisedPosition') * scaleWidth);
-            $handle.css({
-                left: handlePosition
-            });
-            this.$('.confidenceSlider-item-indicator-bar').css({
-                width: handlePosition
-            });
-        },
-        
-        selectItem: function(itemIndex) {
-            _.each(this.model.get('items'), function(item, index) {
-                item.selected = (index === itemIndex);
-                if(item.selected) {
-                    var selectedItems = this.model.get('_selectedItems');
-                    selectedItems[0] = item;
-                    this.model.set('_selectedItems', selectedItems);
-                }
             }, this);
         },
 
@@ -248,20 +281,7 @@ define(function(require) {
             this.model.set('_confidence', normalisedPosition);
         },
 
-        setupModelItems: function() {
-            var items = [],
-                scale = this.model.get('_scale');
-            
-            for(var i = scale._low; i <= scale._high; i++) {
-                items.push({value: i, selected:false});
-            }
-            this.model.set('items', items);
-        },
-
-        markQuestion: function() {
-            this.setCompletionStatus();
-        },
-        
+        // Used to show feedback based upon whether _canShowFeedback is true
         showFeedback: function() {
             this.model.set('feedbackTitle', this.model.get('title'));
             this.model.set('feedbackMessage', this.getFeedbackString());
@@ -310,12 +330,6 @@ define(function(require) {
                 }, this);
 
             return appropriateFeedback[0].text;
-        },
-
-        onUserAnswerShown: function() {
-            if(this.model.get('_userAnswer').length > 0) {
-                Slider.prototype.onUserAnswerShown.apply(this);
-            }
         }
     });
     
