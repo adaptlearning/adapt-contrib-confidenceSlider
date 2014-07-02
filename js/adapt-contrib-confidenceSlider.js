@@ -45,7 +45,6 @@ define(function(require) {
             this.setNormalisedHandlePosition();
             this.setAltText(this.model.get('_scale')._low);
             this.onScreenSizeChanged();
-            this.showScaleMarker(true);
             this.listenTo(Adapt, 'device:resize', this.onScreenSizeChanged);
             this.setReadyStatus();
         },
@@ -86,7 +85,7 @@ define(function(require) {
         },
 
         normalisePixelPosition: function(pixelPosition) {
-            return this.normalise(pixelPosition, 0, this.$('.confidenceSlider-item-bar').width())
+            return this.normalise(pixelPosition, 0, this.$('.confidenceSlider-item-bar').width());
         },
 
         onDragReleased: function (event) {
@@ -159,7 +158,6 @@ define(function(require) {
             }
 
             this.selectItem(newItemIndex);
-            if(typeof newItemIndex == "number") this.showScaleMarker(true);
             this.animateToPosition(this.mapIndexToPixels(newItemIndex));
             this.setAltText(newItemIndex + 1);
         },
@@ -215,7 +213,9 @@ define(function(require) {
         },
 
         // Used to set the score based upon the _questionWeight
-        setScore: function() {},
+        setScore: function() {
+            this.model.set('_score', this.model.get("_questionWeight"));
+        },
 
         // Used by the question view to reset the stored user answer
         resetUserAnswer: function() {
@@ -239,6 +239,8 @@ define(function(require) {
                 this.model.set({
                     _confidence: 0
                 });
+                this.selectItem(0);
+                this.animateToPosition(0);
                 this.setAltText(this.model.get('_scale')._low);
             }
         },
