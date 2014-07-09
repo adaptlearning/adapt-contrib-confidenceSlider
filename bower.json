@@ -8,6 +8,8 @@
   ],
   "description": "A contributed two-part component that measures user confidence, using a sliding scale.",
   "main": "/js/adapt-contrib-confidenceSlider.js",
+  "displayName" : "Confidence Slider",
+  "component" : "confidenceSlider",
   "keywords": [
     "adapt-plugin",
     "adapt-component"
