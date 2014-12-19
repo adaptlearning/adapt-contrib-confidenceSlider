@@ -225,19 +225,15 @@ define(function(require) {
         markQuestion: function() {
             this.setCompletionStatus();
         },
-        
+
         showFeedback: function() {
-            this.model.set('_feedbackMessage', this.getFeedbackString());
-
-            Adapt.mediator.defaultCallback('questionView:feedback', function(feedback) {
-                Adapt.trigger('questionView:showFeedback', feedback);
+            this.model.set({
+                feedbackTitle: this.model.get('title'),
+                feedbackMessage: this.getFeedbackString()
             });
 
-            Adapt.trigger('questionView:feedback', {
-                title: this.model.get('title'),
-                message:this.model.get('_feedbackMessage'),
-                audio:this.model.get('feedbackAudio')
-            });
+            var event = this.model.get('_canShowFeedback') ? 'showFeedback' : 'disabledFeedback';
+            Adapt.trigger('questionView:' + event, this);
         },
 
         setupFeedbackArrays: function() {
