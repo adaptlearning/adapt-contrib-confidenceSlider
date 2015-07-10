@@ -16,9 +16,6 @@
     "url": "https://github.com/adaptlearning/adapt-contrib-confidenceSlider/issues"
   },
   "devDependencies": {
-    "karma": "~0.10",
-    "karma-mocha": "*",
-    "karma-expect": "*",
     "adapt-contrib-slider": "*"
   }
 }
