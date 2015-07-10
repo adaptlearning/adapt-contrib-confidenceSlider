@@ -4,7 +4,6 @@
   "description": "A two-part component that measures user confidence, using a sliding scale.",
   "main": "",
   "scripts": {
-    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
   },
   "repository": {
     "type": "git",
@@ -16,9 +15,6 @@
     "url": "https://github.com/adaptlearning/adapt-contrib-confidenceSlider/issues"
   },
   "devDependencies": {
-    "karma": "~0.10",
-    "karma-mocha": "*",
-    "karma-expect": "*",
     "adapt-contrib-slider": "*"
   }
 }
