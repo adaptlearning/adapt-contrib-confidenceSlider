@@ -228,7 +228,7 @@ define(function(require) {
                 if(item.selected) {
                     var selectedItems = this.getSelectedItems();
                     selectedItems[0] = item;
-                    this.model.set('_selectedItems', selectedItems);
+                    this.model.set('_selectedItem', selectedItems);
                 }
             }, this);
         },
