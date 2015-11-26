@@ -305,12 +305,19 @@ define(function(require) {
 
             return appropriateFeedback[0].text;
         },
+		
+		storeUserAnswer: function() {
+            this.model.set('_userAnswer', this.getSelectedItems()[0].value);
+        },
 
         onUserAnswerShown: function() {
             if(this.model.get('_userAnswer').length > 0) {
                 Slider.prototype.onUserAnswerShown.apply(this);
             }
         }
+    },
+    {
+        template: 'confidenceSlider'
     });
     
     Adapt.register("confidenceSlider", ConfidenceSlider);
