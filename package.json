@@ -1,7 +1,7 @@
 {
   "name": "adapt-contrib-confidenceSlider",
-  "version": "0.0.1",
-  "description": "A two-part component that measures user confidence, using a sliding scale.",
+  "version": "2.1.0",
+  "description": "A contributed component that measures user confidence, using a sliding scale.",
   "main": "",
   "scripts": {
     "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"

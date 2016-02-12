@@ -1,6 +1,6 @@
 {
   "name": "adapt-contrib-confidenceSlider",
-  "version": "0.0.1",
+  "version": "2.1.0",
   "homepage": "https://github.com/chris-steele/adapt-contrib-confidenceSlider",
   "issues": "https://github.com/chris-steele/adapt-contrib-confidenceSlider/issues",
   "description": "A contributed component that measures user confidence, using a sliding scale.",
