@@ -11,6 +11,7 @@ define(function(require) {
             Slider.prototype.preRender.apply(this, arguments);
         },
 
+        /* override */
         setupDefaultSettings: function() {
             Slider.prototype.setupDefaultSettings.apply(this, arguments);
             this.model.set('_canShowModelAnswer', false);
@@ -70,6 +71,17 @@ define(function(require) {
         setupFeedback: function(){
             this.model.set('feedbackTitle', this.model.get('title'));
             this.model.set('feedbackMessage', this._getFeedbackString());
+        },
+
+        /* override */
+        updateButtons: function() {
+            if (this.model.get('_attempts') > 0) {
+                Slider.prototype.updateButtons.apply(this, arguments);
+            }
+            else {
+                this.model.set('_buttonState', this.model.get('_isEnabled') ? 'submit' : 'reset');
+            }
+
         },
 
         _setupLinkedModel: function() {
@@ -226,17 +238,6 @@ define(function(require) {
             else {
                 this.model.set('_isEnabled', false);
             }
-        },
-
-        /* override */
-        updateButtons: function() {
-            if (this.model.get('_attempts') > 0) {
-                Slider.prototype.updateButtons.apply(this, arguments);
-            }
-            else {
-                this.model.set('_buttonState', this.model.get('_isEnabled') ? 'submit' : 'reset');
-            }
-
         }
     }, {
         template:'confidenceSlider'
