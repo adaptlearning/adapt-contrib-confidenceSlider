@@ -1,257 +1,129 @@
-/*
-* adapt-contrib-confidenceSlider
-* License - http://github.com/adaptlearning/adapt_framework/LICENSE
-* Maintainers - Kev Adsett <kev.adsett@kineo.com>
-*/
-
 define(function(require) {
     var Slider = require('components/adapt-contrib-slider/js/adapt-contrib-slider');
-    var QuestionView = require('coreViews/questionView');
     var Adapt = require('coreJS/adapt');
+    var AdaptStatefulSession = require('extensions/adapt-contrib-spoor/js/adapt-stateful-session');
 
     var ConfidenceSlider = Slider.extend({
-        events: {
-            'click .confidenceSlider-item-outer-bar': 'onItemBarSelected',
-            'click .confidenceSlider-item-bar-background': 'onItemBarSelected',
-            'click .confidenceSlider-item-indicator-bar': 'onItemBarSelected',
-            'click .confidenceSlider-item-handle': 'preventEvent',
-            'touchstart .confidenceSlider-item-handle':'onHandlePressed',
-            'mousedown .confidenceSlider-item-handle': 'onHandlePressed',
-            'focus .confidenceSlider-item-handle':'onHandleFocus',
-            'click .confidenceSlider-widget .button.submit': 'onSubmitClicked',
-        },
-        
-        animateToPosition: function(newPosition) {
-            this.$('.confidenceSlider-item-handle').stop(true).animate({
-                left: newPosition + 'px'
-            }, 300, _.bind(function(){
-                this.setNormalisedHandlePosition();
-            }, this));
-            this.$('.confidenceSlider-item-indicator-bar').stop(true).animate({
-                width:newPosition + 'px'
-            }, 300);
+
+        /* override */
+        preRender:function() {
+            this.model.set('_isEnabled', true);
+            Slider.prototype.preRender.apply(this, arguments);
         },
 
-        canSubmit: function() {
-            if (this.model.get('_hasHadInteraction')) {
-                return true;
-            } else {
-                return false;
+        setupDefaultSettings: function() {
+            Slider.prototype.setupDefaultSettings.apply(this, arguments);
+            this.model.set('_canShowModelAnswer', false);
+            if (!this.model.has('_attempts') || this.model.get('_attempts') > 1) this.model.set('_attempts', 1);
+        },
+
+        /* override */
+        setupQuestion: function() {
+            if (this.model.get('_linkedToId')) {
+                this._setupLinkedModel();
+                this.listenTo(Adapt, "buttonsView:postRender", this.onButtonsRendered);
             }
+            Slider.prototype.setupQuestion.apply(this, arguments);
         },
 
-        getIndexFromValue: function(itemValue) {
-            var scale = this.model.get('_scale');
-            return Math.floor(this.mapValue(itemValue, scale._low, scale._high, 0, this.model.get('items').length - 1));
+        /* override */
+        disableQuestion: function() {
+            this.setAllItemsEnabled(false);
+            if (this.model.has('_linkedModel')) this.$('.buttons-action').a11y_cntrl_enabled(false);
         },
 
-        postRender: function() {
-            this.setScalePositions();
-            this.showAppropriateNumbers();
-            this.setNormalisedHandlePosition();
-            Slider.prototype.postRender.apply(this);
+        /* override */
+        enableQuestion: function() {
+            this.setAllItemsEnabled(true);
+            if (this.model.has('_linkedModel')) this.$('.buttons-action').a11y_cntrl_enabled(true);
         },
 
-
-        resetQuestion: function(properties) {
-            Slider.prototype.resetQuestion.apply(this, arguments);
-            if(this.model.get('_isEnabled')) {
-                this.model.set({
-                    _confidence: 0
-                });
-            }
-        },
-
-        mapIndexToPixels: function(value) {
-            var numberOfItems = this.model.get('items').length,
-                width = this.$('.confidenceSlider-item-bar').width();
-            
-            return Math.round(this.mapValue(value, 0, numberOfItems - 1, 0, width));
-        },
-        
-        mapPixelsToIndex: function(value) {
-            var numberOfItems = this.model.get('items').length;
-            return Math.round(this.normalisePixelPosition(value) * (numberOfItems - 1));
-        },
-
-        normalisePixelPosition: function(pixelPosition) {
-            return this.normalise(pixelPosition, 0, this.$('.confidenceSlider-item-bar').width())
-        },
-
-        showAppropriateNumbers: function() {
-            switch (this.model.get('_scale')._showNumberValues) {
-                case "all":
-                    this.$('.confidenceSlider-scale-number').removeClass('display-none');
-                    this.$('.confidenceSlider-scale-notch').removeClass('display-none');
-                    break;
-                case "lowHigh":
-                case "highLow":
-                    this.$('.confidenceSlider-scale-number').first().removeClass('display-none');
-                    this.$('.confidenceSlider-scale-notch').first().removeClass('display-none');
-                    this.$('.confidenceSlider-scale-number').last().removeClass('display-none');
-                    this.$('.confidenceSlider-scale-notch').last().removeClass('display-none');
-                    break;
-                default: 
-                    this.$('.confidenceSlider-scale-notch').first().removeClass('display-none');
-                    this.$('.confidenceSlider-scale-notch').last().removeClass('display-none');
-                    break;
-            }
-        },
-
-        setScalePositions: function() {
-            var numberOfItems = this.model.get('items').length;
-            _.each(this.model.get('items'), function(item, index) {
-                var normalisedPosition = this.normalise(index, 0, numberOfItems -1);
-                this.$('.confidenceSlider-scale-number').eq(index).data('normalisedPosition', normalisedPosition);
-                this.$('.confidenceSlider-scale-notch').eq(index).data('normalisedPosition', normalisedPosition);
-            }, this);
-        },
-
-        onDragReleased: function (event) {
-            event.preventDefault();
-            $(document).off('mousemove touchmove');
-            this.setNormalisedHandlePosition();
-            if(this.model.get('_scale')._snapToNumbers) {
-                var itemIndex = this.getIndexFromValue(this.getSelectedItems().value);
-                this.selectItem(itemIndex);
-                this.animateToPosition(this.mapIndexToPixels(itemIndex));
-            }
-        },
-
-        onHandleDragged: function (event) {
-            event.preventDefault();
-            var left = (event.pageX || event.originalEvent.touches[0].pageX) - event.data.offsetLeft;
-            left = Math.max(Math.min(left, event.data.width), 0);
-            
-            this.$('.confidenceSlider-item-handle').css({
-                left: left + 'px'
-            });
-
-            this.$('.confidenceSlider-item-indicator-bar').css({
-                width: left + 'px'
-            });
-
-            this.selectItem(this.mapPixelsToIndex(left));
-        },
-        
-        onHandleFocus: function(event) {
-            event.preventDefault();
-            this.$('.confidenceSlider-item-handle').on('keydown', _.bind(this.onKeyDown, this));
-        },
-        
-        onHandlePressed: function (event) {
-            event.preventDefault();
-            if (!this.model.get("_isEnabled") || this.model.get("_isSubmitted")) return;
-            
-            var eventData = {
-                width:this.$('.confidenceSlider-item-bar').width(),
-                offsetLeft: this.$('.confidenceSlider-item-bar').offset().left
-            };
-            $(document).on('mousemove touchmove', eventData, _.bind(this.onHandleDragged, this));
-            $(document).one('mouseup touchend', eventData, _.bind(this.onDragReleased, this));
-            this.model.set('_hasHadInteraction', true);
-        },
-        
-        onItemBarSelected: function (event) {
-            event.preventDefault();
-            if (!this.model.get("_isEnabled") || this.model.get("_isSubmitted")) return;
-                                
-            var offsetLeft = this.$('.confidenceSlider-item-bar').offset().left,
-                width = this.$('.confidenceSlider-item-bar').width(),
-                left = (event.pageX || event.originalEvent.touches[0].pageX) - offsetLeft;
-            
-            left = Math.max(Math.min(left, width), 0);
-            var nearestItemIndex = this.mapPixelsToIndex(left);
-            this.selectItem(left);
-            var pixelPosition = this.model.get('_scale')._snapToNumbers ? this.mapIndexToPixels(nearestItemIndex) : left;
-            this.animateToPosition(pixelPosition);
-            this.model.set('_hasHadInteraction', true);
-        },
-
-        preventEvent: function(event) {
-            event.preventDefault();
-        },
-
-        onScreenSizeChanged: function() {
-            var scaleWidth = this.$('.confidenceSlider-scale-notches').width(),
-                $notches = this.$('.confidenceSlider-scale-notch'),
-                $numbers = this.$('.confidenceSlider-scale-number');
-            for(var i = 0, count = this.model.get('items').length; i < count; i++) {
-                var $notch = $notches.eq(i), $number = $numbers.eq(i),
-                    newLeft = Math.round($notch.data('normalisedPosition') * scaleWidth);
-                $notch.css({left: newLeft});
-                $number.css({left: newLeft});
-            }
-            var $handle = this.$('.confidenceSlider-item-handle'),
-                handlePosition = Math.round($handle.data('normalisedPosition') * scaleWidth);
-            $handle.css({
-                left: handlePosition
-            });
-            this.$('.confidenceSlider-item-indicator-bar').css({
-                width: handlePosition
-            });
-        },
-        
-        selectItem: function(itemIndex) {
-            _.each(this.model.get('items'), function(item, index) {
-                item.selected = (index === itemIndex);
-                if(item.selected) {
-                    var selectedItems = this.model.get('_selectedItems');
-                    selectedItems[0] = item;
-                    this.model.set('_selectedItems', selectedItems);
-                }
-            }, this);
-        },
-
-        setNormalisedHandlePosition: function() {
-            var $handle = this.$('.confidenceSlider-item-handle');
-            var normalisedPosition = this.normalisePixelPosition(parseInt($handle.css('left').slice(0, -2)));
-            // cater for string-based left values such as 'auto'
-            if(_.isNaN(normalisedPosition)) normalisedPosition = 0;
-            $handle.data('normalisedPosition', normalisedPosition);
-            this.model.set('_confidence', normalisedPosition);
-        },
-
+        /* override to indicate that all options are correct */
         setupModelItems: function() {
-            var items = [],
-                scale = this.model.get('_scale');
-            
-            for(var i = scale._low; i <= scale._high; i++) {
-                items.push({value: i, selected:false});
+            var items = [];
+            var start = this.model.get('_scaleStart');
+            var end = this.model.get('_scaleEnd');
+
+            for (var i = start; i <= end; i++) {
+                items.push({value: i, selected: false, correct: true});
             }
-            this.model.set('items', items);
+
+            this.model.set('_items', items);
         },
 
-        markQuestion: function() {
-            this.setCompletionStatus();
+        /* override */
+        restoreUserAnswers: function() {
+            if (!this.model.get('_isSubmitted')) return;
+
+            // this is only necessary to avoid an issue when using adapt-cheat
+            if (!this.model.has('_userAnswer')) this.model.set('_userAnswer', this.model.get('_items')[0].value);
+
+            Slider.prototype.restoreUserAnswers.apply(this, arguments);
         },
 
-        showFeedback: function() {
+        /* override */
+        canSubmit: function() {
+            return !this.model.has('_linkedModel') || this.model.get('_linkedModel').get('_isSubmitted');
+        },
+
+        /* override */
+        setupFeedback: function(){
+            this.model.set('feedbackTitle', this.model.get('title'));
+            this.model.set('feedbackMessage', this._getFeedbackString());
+        },
+
+        _setupLinkedModel: function() {
+            var linkedModel = Adapt.components.findWhere({_id: this.model.get('_linkedToId')});
             this.model.set({
-                feedbackTitle: this.model.get('title'),
-                feedbackMessage: this.getFeedbackString()
+                '_showNumber':linkedModel.get('_showNumber'),
+                '_showScaleIndicator':linkedModel.get('_showScaleIndicator'),
+                '_showScale':linkedModel.get('_showScale'),
+                'labelStart':linkedModel.get('labelStart'),
+                'labelEnd':linkedModel.get('labelEnd'),
+                '_scaleStart':linkedModel.get('_scaleStart'),
+                '_scaleEnd':linkedModel.get('_scaleEnd'),
             });
-
-            var event = this.model.get('_canShowFeedback') ? 'showFeedback' : 'disabledFeedback';
-            Adapt.trigger('questionView:' + event, this);
+            this.model.set('_linkedModel', linkedModel);
+            if (this.model.get('_attempts') < 0) linkedModel.set('_attempts', 1);
         },
 
-        setupFeedbackArrays: function() {
-            // intentionally blank
+        _listenToLinkedModel: function() {
+            this.listenTo(this.model.get('_linkedModel'), 'change:_selectedItem', this.onLinkedConfidenceChanged);
+            this.listenTo(this.model.get('_linkedModel'), 'change:_isSubmitted', this.onLinkedSubmittedChanged);
         },
 
-        getFeedbackString: function() {
+        _updateLinkedConfidenceIndicator: function() {
+            var lm = this.model.get('_linkedModel');
+            var linkedValue = lm.get('_isSubmitted') && lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
+            var rangeslider = this.$slider.data('plugin_rangeslider');
+
+            if (linkedValue == this.model.get('_scaleEnd')) {
+                this.$('.linked-confidence-bar').css({width: '100%'});
+            }
+            else {
+                // follow rangeslider setPosition method
+                this.$('.linked-confidence-bar').css({width: (rangeslider.getPositionFromValue(linkedValue) + rangeslider.grabPos) + 'px'});
+            }
+        },
+
+        _getFeedbackString: function() {
             var feedbackSeparator = this.model.get('_feedback').feedbackSeparator,
-                genericFeedback = this.getGenericFeedback(),
-                thresholdFeedback = this.getThresholdFeedback(),
+                genericFeedback = this._getGenericFeedback(),
+                comparisonFeedback = this.model.has('_linkedModel') ? this._getComparisonFeedback() : null,
+                thresholdFeedback = this._getThresholdFeedback(),
                 needsSeparator = false,
                 feedbackString = "";
 
-            if(genericFeedback) {
+            if (genericFeedback) {
                 feedbackString += genericFeedback;
                 needsSeparator = true;
             }
-            if(thresholdFeedback) {
+            if (comparisonFeedback) {
+                if(needsSeparator) feedbackString += feedbackSeparator;
+                feedbackString += comparisonFeedback;
+                needsSeparator = true;
+            }
+            if (thresholdFeedback) {
                 if(needsSeparator) feedbackString += feedbackSeparator;
                 feedbackString += thresholdFeedback;
             }
@@ -260,14 +132,28 @@ define(function(require) {
 
         },
 
-        getGenericFeedback: function() {
+        _getGenericFeedback: function() {
             return this.model.get('_feedback').generic;
         },
 
-        getThresholdFeedback: function() {
-            var confidence = this.model.get('_confidence'),
-                scale = this.model.get('_scale'),
-                confidenceValue = Math.round(scale._low + (confidence * (scale._high - scale._low))),
+        _getComparisonFeedback: function() {
+            var lm = this.model.get('_linkedModel'),
+                confidence = this.model.get('_selectedItem').value,
+                linkedConfidence = lm.get('_isSubmitted') && lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value,
+                feedbackString;
+            if (linkedConfidence < confidence) {
+                feedbackString = this.model.get('_feedback')._comparison.higher;
+            } else if (linkedConfidence > confidence) {
+                feedbackString = this.model.get('_feedback')._comparison.lower;
+            } else {
+                feedbackString = this.model.get('_feedback')._comparison.same;
+            }
+            return feedbackString;
+        },
+
+        _getThresholdFeedback: function() {
+            if (!this.model.get('_feedback')._threshold) return;
+            var confidenceValue = this.model.get('_selectedItem').value,
                 appropriateFeedback = _.filter(this.model.get('_feedback')._threshold, function(feedbackItem) {
                     return confidenceValue >= feedbackItem._values._low && confidenceValue <= feedbackItem._values._high;
                 }, this);
@@ -275,11 +161,85 @@ define(function(require) {
             return appropriateFeedback[0].text;
         },
 
-        onUserAnswerShown: function() {
-            if(this.model.get('_userAnswer').length > 0) {
-                Slider.prototype.onUserAnswerShown.apply(this);
+        onQuestionRendered: function() {
+            Slider.prototype.onQuestionRendered.apply(this, arguments);
+
+            if (this.model.has('_linkedModel')) {
+                this.$('.rangeslider').prepend($('<div class="linked-confidence-bar"/>'))
+                this._listenToLinkedModel();
+                if (this.model.get('_linkedModel').get('_isSubmitted')) {
+                    this.onLinkedConfidenceChanged();
+                } else {
+                    this.model.set('_isEnabled', false);
+                    this.$('.component-body-inner').html(this.model.get('disabledBody'));
+                }
             }
+
+            if (this.model.get('_isSubmitted') && this.model.has('_userAnswer')) {
+                this.model.set('feedbackTitle', this.model.get('title'));
+                this.model.set('feedbackMessage', this._getFeedbackString());
+            }
+        },
+
+        onScreenSizeChanged: function() {
+            Slider.prototype.onScreenSizeChanged.apply(this, arguments);
+
+            // if linked slider on same page update it with user interaction
+            if (this.model.has('_linkedModel') && this.model.get('_linkedModel').get('_isReady')) {
+                this._updateLinkedConfidenceIndicator();
+            }
+        },
+
+        onResetClicked: function() {
+            Slider.prototype.onResetClicked.apply(this, arguments);
+
+            this.model.reset('hard', true);
+
+            AdaptStatefulSession.saveSessionState();
+        },
+
+        onSubmitClicked: function() {
+            Slider.prototype.onSubmitClicked.apply(this, arguments);
+
+            AdaptStatefulSession.saveSessionState();
+        },
+
+        onButtonsRendered:function(buttonsView) {
+            // necessary due to deferred ButtonsView::postRender
+            if (this.buttonsView == buttonsView) {
+                if (!this.model.get('_isEnabled')) {
+                    if (!this.model.has('_linkedModel') || !this.model.get('_linkedModel').get('_isSubmitted')) {
+                        this.$('.buttons-action').a11y_cntrl_enabled(false);
+                    }
+                }
+            }
+        },
+
+        onLinkedConfidenceChanged: function() {
+            this._updateLinkedConfidenceIndicator();
+        },
+
+        onLinkedSubmittedChanged: function(linkedModel) {
+            if (linkedModel.get('_isSubmitted')) {
+                this.model.set('_isEnabled', true);
+            }
+            else {
+                this.model.set('_isEnabled', false);
+            }
+        },
+
+        /* override */
+        updateButtons: function() {
+            if (this.model.get('_attempts') > 0) {
+                Slider.prototype.updateButtons.apply(this, arguments);
+            }
+            else {
+                this.model.set('_buttonState', this.model.get('_isEnabled') ? 'submit' : 'reset');
+            }
+
         }
+    }, {
+        template:'confidenceSlider'
     });
     
     Adapt.register("confidenceSlider", ConfidenceSlider);
