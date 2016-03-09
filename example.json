@@ -1,48 +1,70 @@
 {
-    "_id":"c-125",
-    "_parentId":"b-53",
-    "_type":"component",
-    "_component":"confidenceSlider",
-    "_classes":"",
-    "_layout":"full",
-    "axisLabel":  "Confidence",
-    "_scale": {
-        "labels": {
-            "low": "Not confident",
-            "high": "Totally confident"
+  "_id": "c-125",
+  "_parentId": "b-53",
+  "_type": "component",
+  "_component": "confidenceSlider",
+  "_classes": "",
+  "_layout": "full",
+  "title": "Confidence Slider",
+  "displayTitle": "Confidence Slider",
+  "body": "Although presented like a question component, this component is actually a way to guage user confidence, rather than getting a right/wrong answer. Measure your starting confidence, and then select Submit.",
+  "instruction": "",
+  "axisLabel": "Confidence",
+  "_scale": {
+    "labels": {
+      "low": "Not confident",
+      "high": "Totally confident"
+    },
+    "_low": 1,
+    "_high": 10,
+    "_showNumberValues": "all",
+    "_snapToNumbers": true
+  },
+  "_feedback": {
+    "feedbackSeparator": " ",
+    "generic": "Thanks for measuring your confidence.",
+    "_threshold": [
+      {
+        "_values": {
+          "_low": 1,
+          "_high": 5
         },
-        "_low": 1,
-        "_high": 10,
-        "_showNumberValues": "all",
-        "_snapToNumbers": true
+        "text": "So you're not that confident eh? Don't worry, you will be soon."
+      },
+      {
+        "_values": {
+          "_low": 6,
+          "_high": 10
+        },
+        "text": "Feeling pretty confident huh? Let's see how you get on."
+      }
+    ]
+  },
+  "_buttons": {
+    "_submit": {
+      "buttonText": "Submit",
+      "ariaLabel": "Select here to submit your answer."
     },
-    "title": "Confidence Slider",
-    "displayTitle":"Confidence Slider",
-    "body": "Although presented like a question component, this component is actually a way to guage user confidence, rather than getting a right/wrong answer. Measure your starting confidence, and then select Submit.",
-    "_feedback": {
-        "feedbackSeparator": " ",
-        "generic": "Thanks for measuring your confidence.",
-        "_threshold": [
-            {
-                "_values": {
-                    "_low": 1,
-                    "_high": 5
-                },
-                "text": "So you're not that confident eh? Don't worry, you will be soon."
-            },
-            {
-                "_values": {
-                    "_low": 6,
-                    "_high": 10
-                },
-                "text": "Feeling pretty confident huh? Let's see how you get on."
-            }
-        ]
+    "_reset": {
+      "buttonText": "Reset",
+      "ariaLabel": ""
     },
-    "_buttons": {
-        "submit": ""
+    "_showCorrectAnswer": {
+      "buttonText": "Correct Answer",
+      "ariaLabel": ""
     },
-    "_pageLevelProgress": {
-        "_isEnabled": true
-    }
+    "_hideCorrectAnswer": {
+      "buttonText": "My Answer",
+      "ariaLabel": ""
+    },
+    "_showFeedback": {
+      "buttonText": "Show feedback",
+      "ariaLabel": ""
+    },
+    "remainingAttemptsText": "attempts remaining",
+    "remainingAttemptText": "final attempt"
+  },
+  "_pageLevelProgress": {
+    "_isEnabled": true
+  }
 }

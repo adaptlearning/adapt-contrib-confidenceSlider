@@ -1,21 +1,21 @@
 {{! Maintainers - Kev Adsett}}
-<div class="confidenceSlider-inner component-inner">
+<div class="confidenceSlider-inner component-inner" role="region" aria-label="{{_globals._components._confidenceSlider.ariaRegion}}" {{#if _globals._components._confidenceSlider.ariaRegion}}tabindex="0"{{/if}}>
     {{> component this}}
     <div class="confidenceSlider-widget component-widget{{#unless _isEnabled}} disabled{{#if _isComplete}} complete{{/if}}{{/unless}}">
         <div class="confidenceSlider-container clearfix">
             {{#if axisLabel}}<div class="confidenceSlider-label-axis">{{{axisLabel}}}</div>{{/if}}
             <div class="confidenceSlider-scale clearfix">
                 <div class="confidenceSlider-scale-labels clearfix">
-                    {{#if _scale.labels.low}}<div class="confidenceSlider-scale-label confidenceSlider-scale-label-low">{{{_scale.labels.low}}}</div>{{/if}}
-                    {{#if _scale.labels.high}}<div class="confidenceSlider-scale-label confidenceSlider-scale-label-high">{{{_scale.labels.high}}}</div>{{/if}}
+                    {{#if _scale.labels.low}}<div class="confidenceSlider-scale-label confidenceSlider-scale-label-low" tabindex="0" role="region">{{{_scale.labels.low}}}</div>{{/if}}
+                    {{#if _scale.labels.high}}<div class="confidenceSlider-scale-label confidenceSlider-scale-label-high" tabindex="0" role="region">{{{_scale.labels.high}}}</div>{{/if}}
                 </div>
                 <div class="confidenceSlider-scale-numbers clearfix">
-                    {{#each items}}
-                        <div class="confidenceSlider-scale-number display-none">{{value}}</div>
+                    {{#each _items}}
+                        <button tabindex="0" role="button" class="base confidenceSlider-scale-number display-none" data-id="{{value}}">{{value}}</button>
                     {{/each}}
                 </div>
                 <div class="confidenceSlider-scale-notches clearfix">
-                    {{#each items}}
+                    {{#each _items}}
                         <div class="confidenceSlider-scale-notch component-item-color display-none"></div>
                     {{/each}}
                     <div class="confidenceSlider-scale-background component-item-color"></div>
@@ -25,15 +25,12 @@
                 <div class="confidenceSlider-item-bar">
                     <div class="confidenceSlider-item-bar-background"></div>
                     <div class="confidenceSlider-item-indicator-bar"></div>
-                    <a href="#" class="confidenceSlider-item-handle component-item-color component-item-text-color"></a>
+                    <button class="base confidenceSlider-item-handle component-item-color component-item-text-color  a11y-ignore" tabindex="-1" aria-hidden="true"></button>
                 </div>
                 <div class="confidenceSlider-item-outer-bar"></div>
             </div>
         </div>
-        <a href="#" class="button submit">
-            <span>  
-                {{{_buttons.submit}}}
-            </span>
-        </a>
+    </div>
+    <div class="buttons">
     </div>
 </div>

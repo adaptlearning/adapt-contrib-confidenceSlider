@@ -3,7 +3,107 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "id": "http://jsonschema.net",
   "$ref": "http://localhost/plugins/content/component/model.schema",
+  "globals": {
+    "ariaRegion": {
+      "type": "string",
+      "required": true,
+      "default": "This component requires you to answer the question by selecting the relevant value. After selecting a value select the submit button below.",
+      "inputType": "Text",
+      "validators": []
+    }
+  },
   "properties":{
+    "_supportedLayout": {
+      "type": "string",
+      "required": true,
+      "enum": ["full-width", "half-width", "both"],
+      "default": "both",
+      "editorOnly": true
+    },
+    "instruction": {
+      "type": "string",
+      "required": false,
+      "default": "",
+      "inputType": "Text",
+      "validators": [],
+      "help": "This is the instruction text"
+    },
+    "axisLabel": {
+      "type": "string",
+      "required": false,
+      "default": "",
+      "title": "Axis Label",
+      "inputType": "Text",
+      "validators": [],
+      "help": "This is the label for the confidence slider axis."
+    },
+    "_scale": {
+      "type":"object",
+      "required":true,
+      "properties":{
+        "_high": {
+          "type":"number",
+          "required":true,
+          "default": 10,
+          "title": "High",
+          "inputType": "Number",
+          "validators": ["required", "number"],
+          "help": "This must be a numeric value for the end of the scale."
+        },
+        "_low": {
+          "type":"number",
+          "required":true,
+          "default": 1,
+          "title": "High",
+          "inputType": "Number",
+          "validators": ["required", "number"],
+          "help": "This must be a numeric value for the start of the scale."
+        },
+        "_showNumberValues": {
+          "type": "string",
+          "required": true,
+          "enum": ["all", "lowHigh", "highLow", "default"],
+          "inputType": {"type": "Select", "options": ["all", "lowHigh", "highLow", "none"]},
+          "title": "Show Number Values",
+          "default": "all",
+          "validators": ["required"],
+          "help": "When set then it will decide how many of the numeric values should appear above the scale."
+        },
+        "_snapToNumbers": {
+          "type":"boolean",
+          "required":true,
+          "default": false,
+          "title": "Snap To Numbers",
+          "inputType": {"type": "Boolean", "options": [true, false]},
+          "validators": ["required"],
+          "help": "When set to true the slider handle will snap to the nearest number on the scale."
+        },
+        "labels": {
+          "type":"object",
+          "required":false,
+          "properties":{
+            "high": {
+              "type": "string",
+              "required": false,
+              "default": "",
+              "title": "High Label Text",
+              "inputType": "Text",
+              "validators": [],
+              "help": "The value of this setting appears at the end of the slider scale."
+            },
+            "low": {
+              "type": "string",
+              "required": false,
+              "default": "",
+              "title": "Low Label Text",
+              "inputType": "Text",
+              "validators": [],
+              "help": "The value of this setting appears at the start of the slider scale."
+            }
+          }
+        }
+      }
+    },
     "_feedback": {
       "type":"object",
       "required":true,
@@ -22,88 +122,198 @@
                   "properties":{
                     "_high": {
                       "type":"number",
-                      "required":true
+                      "required":true,
+                      "default": 1,
+                      "title": "High",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": ""
                     },
                     "_low": {
                       "type":"number",
-                      "required":true
+                      "required":true,
+                      "default": 1,
+                      "title": "Low",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": ""
                     }
                   }
                 },
                 "text": {
-                  "type":"string",
-                  "required":true
+                  "type": "string",
+                  "required": true,
+                  "default": "",
+                  "title": "Text",
+                  "inputType": "Text",
+                  "validators": ["required"],
+                  "help": "The feedback text for this threshold range."
                 }
               }
             }
         },
         "feedbackSeparator": {
-          "type":"string",
-          "required":false
+          "type": "string",
+          "required": false,
+          "default": " ",
+          "title": "Feedback Separator",
+          "inputType": "Text",
+          "validators": [],
+          "help": "This is the feedback seperator."
         },
         "generic": {
-          "type":"string",
-          "required":false
+          "type": "string",
+          "required": false,
+          "default": "",
+          "title": "Generic",
+          "inputType": "Text",
+          "validators": [],
+          "help": "If a value is not entered for _threshold this feedback will be shown."
         }
       }
     },
-    "_pageLevelProgress": {
+    "_buttons": {
       "type":"object",
-      "required":false,
+      "title": "Buttons",
+      "required": false,
       "properties":{
-        "_isEnabled": {
-          "type":"boolean",
-          "required":false
-        }
-      }
-    },
-    "_scale": {
-      "type":"object",
-      "required":true,
-      "properties":{
-        "_high": {
-          "type":"number",
-          "required":true
-        },
-        "_low": {
-          "type":"number",
-          "required":true
-        },
-        "_showNumberValues": {
-          "type":"string",
-          "required":true
-        },
-        "_snapToNumbers": {
-          "type":"boolean",
-          "required":true
-        },
-        "labels": {
+        "_submit": {
           "type":"object",
-          "required":false,
+          "title": "Submit",
           "properties":{
-            "high": {
+            "buttonText": {
               "type":"string",
-              "required":false
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "QuestionButton",
+              "validators": [],
+              "help": "Button label text for the submit button"
             },
-            "low": {
+            "ariaLabel": {
               "type":"string",
-              "required":false
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "Text",
+              "validators": [],
+              "help": "Aria label for the submit button"
             }
           }
-        }
-      }
-    },
-    "axisLabel": {
-      "type":"string",
-      "required":false
-    },
-    "buttons": {
-      "type":"object",
-      "required":false,
-      "properties":{
-        "submit": {
+        },
+        "_reset": {
+          "type":"object",
+          "title": "Reset",
+          "properties":{
+            "buttonText": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "QuestionButton",
+              "validators": [],
+              "help": "Button label text for the reset button"
+            },
+            "ariaLabel": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "Text",
+              "validators": [],
+              "help": "Aria label for the reset button"
+            }
+          }
+        },
+        "_showCorrectAnswer": {
+          "type":"object",
+          "title": "Show Correct Answer",
+          "properties":{
+            "buttonText": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "QuestionButton",
+              "validators": [],
+              "help": "Button label text to show the model answer"
+            },
+            "ariaLabel": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "Text",
+              "validators": [],
+              "help": "Aria label for the show model answer button"
+            }
+          }
+        },
+        "_hideCorrectAnswer": {
+          "type":"object",
+          "title": "Hide Correct Answer",
+          "properties":{
+            "buttonText": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "QuestionButton",
+              "validators": [],
+              "help": "Button label text to hide the model answer"
+            },
+            "ariaLabel": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "Text",
+              "validators": [],
+              "help": "Aria label for the hide model answer button"
+            }
+          }
+        },
+        "_showFeedback": {
+          "type":"object",
+          "title": "Show Feedback",
+          "properties":{
+            "buttonText": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "QuestionButton",
+              "validators": [],
+              "help": "Button label text to show feedback"
+            },
+            "ariaLabel": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "",
+              "inputType": "Text",
+              "validators": [],
+              "help": "Aria label for the show feedback button"
+            }
+          }
+        },
+        "remainingAttemptsText": {
           "type":"string",
-          "required":false
+          "required": false,
+          "default": "",
+          "title": "Attempts Remaining Text",
+          "inputType": "Text",
+          "validators": [],
+          "help": "Shown when there are multiple attempts left"
+        },
+        "remainingAttemptText": {
+          "type":"string",
+          "required": false,
+          "default": "",
+          "title": "Final Attempt Text",
+          "inputType": "Text",
+          "validators": [],
+          "help": "Shown when there is one attempt left"
         }
       }
     }
