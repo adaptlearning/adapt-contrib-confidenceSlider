@@ -11,7 +11,7 @@
                 </div>
                 <div class="confidenceSlider-scale-numbers clearfix">
                     {{#each _items}}
-                        <div class="confidenceSlider-scale-number display-none">{{value}}</div>
+                        <button tabindex="0" role="button" class="base confidenceSlider-scale-number display-none" data-id="{{value}}">{{value}}</button>
                     {{/each}}
                 </div>
                 <div class="confidenceSlider-scale-notches clearfix">
@@ -25,12 +25,12 @@
                 <div class="confidenceSlider-item-bar">
                     <div class="confidenceSlider-item-bar-background"></div>
                     <div class="confidenceSlider-item-indicator-bar"></div>
-                    <button class="base confidenceSlider-item-handle component-item-color component-item-text-color"></button>
+                    <button class="base confidenceSlider-item-handle component-item-color component-item-text-color  a11y-ignore" tabindex="-1" aria-hidden="true"></button>
                 </div>
                 <div class="confidenceSlider-item-outer-bar"></div>
             </div>
         </div>
-        <div class="buttons">
-        </div>
+    </div>
+    <div class="buttons">
     </div>
 </div>
