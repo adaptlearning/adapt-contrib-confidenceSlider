@@ -16,7 +16,7 @@ With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run 
     `adapt install`  
     (This second method will reinstall all plug-ins listed in *adapt.json*.)  
 
-* If **Slider** has been uninstalled from the Adapt authoring tool, it may be reinstalled using the [Plug-in Manager](https://github.com/adaptlearning/adapt_authoring/wiki/Plugin-Manager).  
+* If **ConfidenceSlider** has been uninstalled from the Adapt authoring tool, it may be reinstalled using the [Plug-in Manager](https://github.com/adaptlearning/adapt_authoring/wiki/Plugin-Manager).  
 <div float align=right><a href="#top">Back to Top</a></div>
 
 ## Usage
