@@ -106,8 +106,12 @@ define(function(require) {
 
         _updateLinkedConfidenceIndicator: function() {
             var lm = this.model.get('_linkedModel');
-            var linkedValue = lm.get('_isSubmitted') && lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
+            var linkedValue = 0;
             var rangeslider = this.$slider.data('plugin_rangeslider');
+
+            if (lm.get('_isSubmitted')) {
+                linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
+            }
 
             if (linkedValue == this.model.get('_scaleEnd')) {
                 this.$('.linked-confidence-bar').css({width: '100%'});
@@ -121,7 +125,7 @@ define(function(require) {
         _getFeedbackString: function() {
             var feedbackSeparator = this.model.get('_feedback').feedbackSeparator,
                 genericFeedback = this._getGenericFeedback(),
-                comparisonFeedback = this.model.has('_linkedModel') ? this._getComparisonFeedback() : null,
+                comparisonFeedback = this.model.has('_linkedModel') && this.model.get('_linkedModel').get('_isSubmitted') ? this._getComparisonFeedback() : null,
                 thresholdFeedback = this._getThresholdFeedback(),
                 needsSeparator = false,
                 feedbackString = "";
@@ -151,7 +155,7 @@ define(function(require) {
         _getComparisonFeedback: function() {
             var lm = this.model.get('_linkedModel'),
                 confidence = this.model.get('_selectedItem').value,
-                linkedConfidence = lm.get('_isSubmitted') && lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value,
+                linkedConfidence = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value,
                 feedbackString;
             if (linkedConfidence < confidence) {
                 feedbackString = this.model.get('_feedback')._comparison.higher;
