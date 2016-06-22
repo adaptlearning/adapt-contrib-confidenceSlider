@@ -29,13 +29,13 @@ define(function(require) {
 
         /* override */
         disableQuestion: function() {
-            this.setAllItemsEnabled(false);
+            if (this.model.get('_isReady')) this.setAllItemsEnabled(false);
             if (this.model.has('_linkedModel')) this.$('.buttons-action').a11y_cntrl_enabled(false);
         },
 
         /* override */
         enableQuestion: function() {
-            this.setAllItemsEnabled(true);
+            if (this.model.get('_isReady')) this.setAllItemsEnabled(true);
             if (this.model.has('_linkedModel')) this.$('.buttons-action').a11y_cntrl_enabled(true);
         },
 
@@ -44,19 +44,27 @@ define(function(require) {
             var items = [];
             var start = this.model.get('_scaleStart');
             var end = this.model.get('_scaleEnd');
+            var step = this.model.get('_scaleStep') || 1;
 
-            for (var i = start; i <= end; i++) {
+            for (var i = start; i <= end; i += step) {
                 items.push({value: i, selected: false, correct: true});
             }
 
             this.model.set('_items', items);
+            this.model.set('_marginDir', (Adapt.config.get('_defaultDirection') === 'rtl' ? 'right' : 'left'));
         },
 
         /* override */
         restoreUserAnswers: function() {
-            if (!this.model.get('_isSubmitted')) return;
+            if (!this.model.get('_isSubmitted')) {
+                this.model.set({
+                    _selectedItem: {},
+                    _userAnswer: undefined
+                });
+                return;
+            };
 
-            // this is only necessary to avoid an issue when using adapt-cheat
+            // this is only necessary to avoid an issue when using adapt-devtools
             if (!this.model.has('_userAnswer')) this.model.set('_userAnswer', this.model.get('_items')[0].value);
 
             Slider.prototype.restoreUserAnswers.apply(this, arguments);
@@ -109,9 +117,9 @@ define(function(require) {
             var linkedValue = 0;
             var rangeslider = this.$slider.data('plugin_rangeslider');
 
-            if (lm.get('_isSubmitted')) {
+            //if (lm.get('_isSubmitted')) {
                 linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
-            }
+            //}
 
             if (linkedValue == this.model.get('_scaleEnd')) {
                 this.$('.linked-confidence-bar').css({width: '100%'});

@@ -21,6 +21,7 @@
     "labelEnd": "complete",
     "_scaleStart": 0,
     "_scaleEnd": 10,
+    "_scaleStep": 1,
     "_buttons": {
         "_submit": {
             "buttonText": "Submit",
