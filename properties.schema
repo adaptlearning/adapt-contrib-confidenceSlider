@@ -400,7 +400,7 @@
                   "inputType": "Number",
                   "validators": ["number"],
                   "help":"Range bottom"
-                }
+                },
                 "_high":{
                   "type": "number",
                   "default": 0,
@@ -409,7 +409,7 @@
                   "validators": ["number"],
                   "help":"Range top"
                 }
-              }
+              },
               "text": {
                 "type":"string",
                 "required":false,
