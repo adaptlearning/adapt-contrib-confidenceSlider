@@ -176,13 +176,20 @@ define(function(require) {
         },
 
         _getThresholdFeedback: function() {
-            if (!this.model.get('_feedback')._threshold) return;
-            var confidenceValue = this.model.get('_selectedItem').value,
-                appropriateFeedback = _.filter(this.model.get('_feedback')._threshold, function(feedbackItem) {
-                    return confidenceValue >= feedbackItem._values._low && confidenceValue <= feedbackItem._values._high;
-                }, this);
+            var feedbackList = this.model.get('_feedback')._threshold;
 
-            return appropriateFeedback[0].text;
+            if (!feedbackList) return;
+
+            var confidenceValue = this.model.get('_selectedItem').value;
+
+            for (var i = 0, j = feedbackList.length; i < j; i++) {
+                var feedback = feedbackList[i];
+                var values = feedback._values;
+
+                if (confidenceValue >= values._low && confidenceValue <= values._high) {
+                    return feedback.text;
+                }
+            }
         },
 
         onQuestionRendered: function() {
