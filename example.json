@@ -47,7 +47,7 @@
         },
         "_threshold": [{
             "_values": {
-                "_low": 1,
+                "_low": 0,
                 "_high": 5
             },
             "text": "So you're not that confident eh? Don't worry, you will be soon."
