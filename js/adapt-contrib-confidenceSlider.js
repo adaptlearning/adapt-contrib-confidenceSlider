@@ -1,6 +1,7 @@
-define(function(require) {
-    var Slider = require('components/adapt-contrib-slider/js/adapt-contrib-slider');
-    var Adapt = require('coreJS/adapt');
+define([
+    'components/adapt-contrib-slider/js/adapt-contrib-slider',
+    'core/js/adapt'
+], function(Slider, Adapt) {
 
     var ConfidenceSlider = Slider.extend({
 
@@ -61,7 +62,7 @@ define(function(require) {
                     _userAnswer: undefined
                 });
                 return;
-            };
+            }
 
             // this is only necessary to avoid an issue when using adapt-devtools
             if (!this.model.has('_userAnswer')) this.model.set('_userAnswer', this.model.get('_items')[0].value);
@@ -100,7 +101,7 @@ define(function(require) {
                 'labelStart':linkedModel.get('labelStart'),
                 'labelEnd':linkedModel.get('labelEnd'),
                 '_scaleStart':linkedModel.get('_scaleStart'),
-                '_scaleEnd':linkedModel.get('_scaleEnd'),
+                '_scaleEnd':linkedModel.get('_scaleEnd')
             });
             this.model.set('_linkedModel', linkedModel);
             if (this.model.get('_attempts') < 0) linkedModel.set('_attempts', 1);
@@ -245,7 +246,7 @@ define(function(require) {
             Slider.prototype.onQuestionRendered.apply(this, arguments);
 
             if (this.model.has('_linkedModel')) {
-                this.$('.rangeslider').prepend($('<div class="linked-confidence-bar"/>'))
+                this.$('.rangeslider').prepend($('<div class="linked-confidence-bar"/>'));
                 this._listenToLinkedModel();
                 if (this.model.get('_linkedModel').get('_isSubmitted')) {
                     this.onLinkedConfidenceChanged();
