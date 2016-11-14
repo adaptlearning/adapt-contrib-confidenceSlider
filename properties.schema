@@ -356,7 +356,7 @@
           "title": "Feedback separator",
           "inputType": "Text",
           "validators": [],
-          "help": "Optional text/markup that will separate each feedback element."
+          "help": "Optional text/markup that will separate each feedback element"
         },
         "generic": {
           "type":"string",
