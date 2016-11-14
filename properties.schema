@@ -46,7 +46,7 @@
       "title": "Attempts",
       "inputType":"Number",
       "validators": ["required", "number"],
-      "help": "How many attempts the learner is allow"
+      "help": "How many attempts the learner is allowed"
     },
     "_shouldDisplayAttempts": {
       "type":"boolean",
@@ -356,7 +356,7 @@
           "title": "Feedback separator",
           "inputType": "Text",
           "validators": [],
-          "help": "Feedback separator"
+          "help": "Optional text/markup that will separate each feedback element."
         },
         "generic": {
           "type":"string",
