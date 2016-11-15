@@ -9,7 +9,8 @@
       "required": true,
       "default": "This component requires you to answer the question by selecting the relevant value. After selecting a value select the submit button below.",
       "inputType": "Text",
-      "validators": []
+      "validators": [],
+      "translatable": true
     }
   },
   "properties":{
@@ -20,21 +21,23 @@
       "default": "both",
       "editorOnly": true
     },
-    "disabledBody": {
-      "type": "string",
-      "required": false,
-      "default": "",
-      "inputType": "Text",
-      "validators": [],
-      "help": "The body text to display when the confidence slider to which this one is linked has not been answered"
-    },
     "instruction": {
       "type": "string",
       "required": false,
       "default": "",
       "inputType": "Text",
       "validators": [],
-      "help": "This is the instruction text"
+      "help": "This is the instruction text",
+      "translatable": true
+    },
+    "disabledBody": {
+      "type": "string",
+      "required": false,
+      "default": "",
+      "inputType": "Text",
+      "validators": [],
+      "help": "The body text to display when the confidence slider to which this one is linked has not been answered",
+      "translatable": true
     },
     "_attempts": {
       "type":"number",
@@ -43,7 +46,7 @@
       "title": "Attempts",
       "inputType":"Number",
       "validators": ["required", "number"],
-      "help": "How many attempts the learner is allow"
+      "help": "How many attempts the learner is allowed"
     },
     "_shouldDisplayAttempts": {
       "type":"boolean",
@@ -88,7 +91,8 @@
       "title": "Scale Label - Start",
       "inputType": "Text",
       "validators": [],
-      "help": "Label for the start of the slider scale"
+      "help": "Label for the start of the slider scale",
+      "translatable": true
     },
     "labelEnd": {
       "type": "string",
@@ -97,7 +101,8 @@
       "title": "Scale Label - End",
       "inputType": "Text",
       "validators": [],
-      "help": "Label for the end of the slider scale"
+      "help": "Label for the end of the slider scale",
+      "translatable": true
     },
     "_scaleStart": {
       "type":"number",
@@ -198,7 +203,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text for the submit button"
+              "help": "Button label text for the submit button",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
@@ -207,7 +213,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the submit button"
+              "help": "Aria label for the submit button",
+              "translatable": true
             }
           }
         },
@@ -222,7 +229,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text for the reset button"
+              "help": "Button label text for the reset button",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
@@ -231,7 +239,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the reset button"
+              "help": "Aria label for the reset button",
+              "translatable": true
             }
           }
         },
@@ -246,7 +255,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text to show the model answer"
+              "help": "Button label text to show the model answer",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
@@ -255,7 +265,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the show model answer button"
+              "help": "Aria label for the show model answer button",
+              "translatable": true
             }
           }
         },
@@ -270,7 +281,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text to hide the model answer"
+              "help": "Button label text to hide the model answer",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
@@ -279,7 +291,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the hide model answer button"
+              "help": "Aria label for the hide model answer button",
+              "translatable": true
             }
           }
         },
@@ -294,7 +307,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text to show feedback"
+              "help": "Button label text to show feedback",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
@@ -303,7 +317,8 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the show feedback button"
+              "help": "Aria label for the show feedback button",
+              "translatable": true
             }
           }
         },
@@ -314,7 +329,8 @@
           "title": "Attempts Remaining Text",
           "inputType": "QuestionButton",
           "validators": [],
-          "help": "Shown when there are multiple attempts left"
+          "help": "Shown when there are multiple attempts left",
+          "translatable": true
         },
         "remainingAttemptText": {
           "type":"string",
@@ -323,7 +339,8 @@
           "title": "Final Attempt Text",
           "inputType": "QuestionButton",
           "validators": [],
-          "help": "Shown when there is one attempt left"
+          "help": "Shown when there is one attempt left",
+          "translatable": true
         }
       }
     },
@@ -339,7 +356,7 @@
           "title": "Feedback separator",
           "inputType": "Text",
           "validators": [],
-          "help": "Feedback separator"
+          "help": "Optional text/markup that will separate each feedback element"
         },
         "generic": {
           "type":"string",
@@ -348,7 +365,8 @@
           "title": "Generic feedback",
           "inputType": "TextArea",
           "validators": [],
-          "help": "Generic feedback"
+          "help": "Generic feedback",
+          "translatable": true
         },
         "_comparison": {
           "type":"object",
@@ -362,7 +380,8 @@
               "title": "Lower",
               "inputType": "TextArea",
               "validators": [],
-              "help": "Lower"
+              "help": "Lower",
+              "translatable": true
             },
             "same": {
               "type":"string",
@@ -371,7 +390,8 @@
               "title": "Same",
               "inputType": "TextArea",
               "validators": [],
-              "help": "Same"
+              "help": "Same",
+              "translatable": true
             },
             "higher": {
               "type":"string",
@@ -380,7 +400,8 @@
               "title": "Higher",
               "inputType": "TextArea",
               "validators": [],
-              "help": "Higher"
+              "help": "Higher",
+              "translatable": true
             }
           }
         },
@@ -420,7 +441,8 @@
                 "title": "Range description",
                 "inputType": "TextArea",
                 "validators": [],
-                "help": "Range description"
+                "help": "Range description",
+                "translatable": true
               }
             }
           }
