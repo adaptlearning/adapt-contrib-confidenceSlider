@@ -1,7 +1,7 @@
-define(function(require) {
-    var Slider = require('components/adapt-contrib-slider/js/adapt-contrib-slider');
-    var Adapt = require('coreJS/adapt');
-    var AdaptStatefulSession = require('extensions/adapt-contrib-spoor/js/adapt-stateful-session');
+define([
+    'components/adapt-contrib-slider/js/adapt-contrib-slider',
+    'core/js/adapt'
+], function(Slider, Adapt) {
 
     var ConfidenceSlider = Slider.extend({
 
@@ -62,7 +62,7 @@ define(function(require) {
                     _userAnswer: undefined
                 });
                 return;
-            };
+            }
 
             // this is only necessary to avoid an issue when using adapt-devtools
             if (!this.model.has('_userAnswer')) this.model.set('_userAnswer', this.model.get('_items')[0].value);
@@ -101,7 +101,7 @@ define(function(require) {
                 'labelStart':linkedModel.get('labelStart'),
                 'labelEnd':linkedModel.get('labelEnd'),
                 '_scaleStart':linkedModel.get('_scaleStart'),
-                '_scaleEnd':linkedModel.get('_scaleEnd'),
+                '_scaleEnd':linkedModel.get('_scaleEnd')
             });
             this.model.set('_linkedModel', linkedModel);
             if (this.model.get('_attempts') < 0) linkedModel.set('_attempts', 1);
@@ -192,11 +192,61 @@ define(function(require) {
             }
         },
 
+        _getTrackingData:function() {
+            if (this.model.get('_isInteractionComplete') === false || this.model.get('_isComplete') === false) {
+                return null;
+            }
+
+            var hasUserAnswer = (this.model.get('_userAnswer') !== undefined);
+            var isUserAnswerArray = (this.model.get('_userAnswer') instanceof Array);
+
+            var numericParameters = [
+                    this.model.get('_score') || 0,
+                    this.model.get('_attemptsLeft') || 0
+                ];
+
+            var booleanParameters = [
+                    hasUserAnswer ? 1 : 0,
+                    isUserAnswerArray ? 1 : 0,
+                    this.model.get('_isInteractionComplete') ? 1 : 0,
+                    this.model.get('_isSubmitted') ? 1 : 0,
+                    this.model.get('_isCorrect') ? 1 : 0
+                ];
+
+            var data = [
+                numericParameters,
+                booleanParameters
+            ];
+
+
+            if (hasUserAnswer) {
+                var userAnswer = isUserAnswerArray ? this.model.get('_userAnswer') : [this.model.get('_userAnswer')];
+
+                data.push(userAnswer);
+            }
+
+            return data;
+        },
+
+        _updateTracking:function() {
+            // should we track this component?
+            if (this.model.get('_shouldStoreResponses')) {
+                // is tracking is enabled?
+                if (Adapt.config.has('_spoor') && Adapt.config.get('_spoor')._isEnabled) {
+                    // if spoor is handling response tracking we don't need to do anything
+                    if (!Adapt.config.get('_spoor')._tracking._shouldStoreResponses) {
+                        // otherwise write custom tracking data
+                        Adapt.offlineStorage.set(this.model.get('_id'), this._getTrackingData());
+                    }
+                }
+            }
+        },
+
         onQuestionRendered: function() {
             Slider.prototype.onQuestionRendered.apply(this, arguments);
 
             if (this.model.has('_linkedModel')) {
-                this.$('.rangeslider').prepend($('<div class="linked-confidence-bar"/>'))
+                this.$('.rangeslider').prepend($('<div class="linked-confidence-bar"/>'));
                 this._listenToLinkedModel();
                 if (this.model.get('_linkedModel').get('_isSubmitted')) {
                     this.onLinkedConfidenceChanged();
@@ -226,13 +276,13 @@ define(function(require) {
 
             this.model.reset('hard', true);
 
-            AdaptStatefulSession.saveSessionState();
+            this._updateTracking();
         },
 
         onSubmitClicked: function() {
             Slider.prototype.onSubmitClicked.apply(this, arguments);
 
-            AdaptStatefulSession.saveSessionState();
+            this._updateTracking();
         },
 
         onButtonsRendered:function(buttonsView) {
@@ -263,6 +313,49 @@ define(function(require) {
     });
     
     Adapt.register("confidenceSlider", ConfidenceSlider);
+
+    Adapt.on('app:dataReady', function() {
+        // is tracking enabled?
+        if (Adapt.config.has('_spoor') && Adapt.config.get('_spoor')._isEnabled) {
+            // if spoor is handling response tracking we don't need to do anything
+            if (!Adapt.config.get('_spoor')._tracking._shouldStoreResponses) {
+                // ensure data is setup
+                Adapt.offlineStorage.get();
+
+                _.each(Adapt.components.where({'_component':'confidenceSlider', '_shouldStoreResponses':true}), function(confidenceSlider) {
+                    var dataItem = Adapt.offlineStorage.get(confidenceSlider.get('_id'));
+
+                    if (!dataItem) return;
+
+                    var numericParameters = dataItem[0];
+                    var booleanParameters = dataItem[1];
+
+                    var score = numericParameters[0];
+                    var attemptsLeft = numericParameters[1] || 0;
+
+                    var hasUserAnswer = booleanParameters[0];
+                    var isUserAnswerArray = booleanParameters[1];
+                    var isInteractionComplete = booleanParameters[2];
+                    var isSubmitted = booleanParameters[3];
+                    var isCorrect = booleanParameters[4];
+
+                    confidenceSlider.set("_isComplete", true);
+                    confidenceSlider.set("_isInteractionComplete", isInteractionComplete);
+                    confidenceSlider.set("_isSubmitted", isSubmitted);
+                    confidenceSlider.set("_score", score);
+                    confidenceSlider.set("_isCorrect", isCorrect);
+                    confidenceSlider.set("_attemptsLeft", attemptsLeft);
+
+                    if (hasUserAnswer) {
+                        var userAnswer = dataItem[2];
+                        if (!isUserAnswerArray) userAnswer = userAnswer[0];
+
+                        confidenceSlider.set("_userAnswer", userAnswer);
+                    }
+                });
+            }
+        }
+    });
     
     return ConfidenceSlider;
 });
