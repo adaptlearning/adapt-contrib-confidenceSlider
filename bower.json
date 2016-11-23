@@ -1,10 +1,9 @@
 {
   "name": "adapt-contrib-confidenceSlider",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "framework": "^2.0.0",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-confidenceSlider",
   "issues": "https://github.com/adaptlearning/adapt-contrib-confidenceSlider/issues",
-  "repository": "git@github.com:adaptlearning/adapt-contrib-confidenceSlider.git",
   "description": "A contributed two-part component that measures user confidence, using a sliding scale.",
   "main": "/js/adapt-contrib-confidenceSlider.js",
   "displayName" : "Confidence Slider",

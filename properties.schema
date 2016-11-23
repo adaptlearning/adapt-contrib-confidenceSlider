@@ -9,7 +9,8 @@
       "required": true,
       "default": "This component requires you to answer the question by selecting the relevant value. After selecting a value select the submit button below.",
       "inputType": "Text",
-      "validators": []
+      "validators": [],
+      "translatable": true
     }
   },
   "properties":{
@@ -26,151 +27,165 @@
       "default": "",
       "inputType": "Text",
       "validators": [],
-      "help": "This is the instruction text"
+      "help": "This is the instruction text",
+      "translatable": true
     },
-    "axisLabel": {
+    "disabledBody": {
       "type": "string",
       "required": false,
       "default": "",
-      "title": "Axis Label",
       "inputType": "Text",
       "validators": [],
-      "help": "This is the label for the confidence slider axis."
+      "help": "The body text to display when the confidence slider to which this one is linked has not been answered",
+      "translatable": true
     },
-    "_scale": {
-      "type":"object",
+    "_attempts": {
+      "type":"number",
       "required":true,
+      "default":1,
+      "title": "Attempts",
+      "inputType":"Number",
+      "validators": ["required", "number"],
+      "help": "How many attempts the learner is allowed"
+    },
+    "_shouldDisplayAttempts": {
+      "type":"boolean",
+      "required":false,
+      "default": false,
+      "title": "Display Attempts",
+      "inputType": {"type": "Boolean", "options": [true, false]},
+      "validators": [],
+      "help": "Select 'true' to display the numbers of attempts left"
+    },
+    "_questionWeight": {
+      "type":"number",
+      "required":false,
+      "default": 1,
+      "title": "Question Weight",
+      "inputType": "Number",
+      "validators": ["number"],
+      "help": "How much this question is worth"
+    },
+    "_recordInteraction": {
+      "type":"boolean",
+      "required":false,
+      "default": true,
+      "title": "Record interaction",
+      "inputType": {"type": "Boolean", "options": [true, false]},
+      "validators": [],
+      "help": "If set to 'true', the user's answer(s) will be recorded to cmi.interactions on the LMS (where supported)."
+    },
+    "_linkedToId": {
+      "type": "string",
+      "required": false,
+      "default": "",
+      "title": "Link ID",
+      "inputType": "Text",
+      "validators": [],
+      "help": "Component _id of confidence slider on which this confidence slider is dependent"
+    },
+    "labelStart": {
+      "type": "string",
+      "required": false,
+      "default": "",
+      "title": "Scale Label - Start",
+      "inputType": "Text",
+      "validators": [],
+      "help": "Label for the start of the slider scale",
+      "translatable": true
+    },
+    "labelEnd": {
+      "type": "string",
+      "required": false,
+      "default": "",
+      "title": "Scale Label - End",
+      "inputType": "Text",
+      "validators": [],
+      "help": "Label for the end of the slider scale",
+      "translatable": true
+    },
+    "_scaleStart": {
+      "type":"number",
+      "required":true,
+      "default": 1,
+      "title": "Scale Start",
+      "inputType": "Number",
+      "validators": ["required", "number"],
+      "help": "What number the scale should start on"
+    },
+    "_scaleEnd": {
+      "type":"number",
+      "required":true,
+      "default": 1,
+      "title": "Scale End",
+      "inputType": "Number",
+      "validators": ["required", "number"],
+      "help": "What number the scale should end on"
+    },
+    "_scaleStep": {
+      "type":"number",
+      "required":false,
+      "default": 1,
+      "title": "Scale Step",
+      "inputType": "Number",
+      "validators": ["number"],
+      "help": "The amount the scale should increment by"
+    },
+    "_correctAnswer": {
+      "type": "string",
+      "default": "",
+      "title": "Correct Answer",
+      "inputType": "Text",
+      "validators": [],
+      "help": "Correct answer on the scale"
+    },
+    "_correctRange": {
+      "type": "object",
       "properties":{
-        "_high": {
-          "type":"number",
-          "required":true,
-          "default": 10,
-          "title": "High",
+        "_bottom": {
+          "type": "number",
+          "default": 0,
+          "title": "Correct Range - Bottom",
           "inputType": "Number",
-          "validators": ["required", "number"],
-          "help": "This must be a numeric value for the end of the scale."
+          "validators": ["number"],
+          "help": "Correct bottom range answer on the scale -- ignored when 'Correct Answer' is set"
         },
-        "_low": {
-          "type":"number",
-          "required":true,
-          "default": 1,
-          "title": "High",
+        "_top": {
+          "type": "number",
+          "default": 0,
+          "title": "Correct Range - Top",
           "inputType": "Number",
-          "validators": ["required", "number"],
-          "help": "This must be a numeric value for the start of the scale."
-        },
-        "_showNumberValues": {
-          "type": "string",
-          "required": true,
-          "enum": ["all", "lowHigh", "highLow", "default"],
-          "inputType": {"type": "Select", "options": ["all", "lowHigh", "highLow", "none"]},
-          "title": "Show Number Values",
-          "default": "all",
-          "validators": ["required"],
-          "help": "When set then it will decide how many of the numeric values should appear above the scale."
-        },
-        "_snapToNumbers": {
-          "type":"boolean",
-          "required":true,
-          "default": false,
-          "title": "Snap To Numbers",
-          "inputType": {"type": "Boolean", "options": [true, false]},
-          "validators": ["required"],
-          "help": "When set to true the slider handle will snap to the nearest number on the scale."
-        },
-        "labels": {
-          "type":"object",
-          "required":false,
-          "properties":{
-            "high": {
-              "type": "string",
-              "required": false,
-              "default": "",
-              "title": "High Label Text",
-              "inputType": "Text",
-              "validators": [],
-              "help": "The value of this setting appears at the end of the slider scale."
-            },
-            "low": {
-              "type": "string",
-              "required": false,
-              "default": "",
-              "title": "Low Label Text",
-              "inputType": "Text",
-              "validators": [],
-              "help": "The value of this setting appears at the start of the slider scale."
-            }
-          }
+          "validators": ["number"],
+          "help": "Correct top range answer on the scale -- ignored when 'Correct Answer' is set"
         }
       }
     },
-    "_feedback": {
-      "type":"object",
+    "_showNumber": {
+      "type":"boolean",
       "required":true,
-      "properties":{
-        "_threshold": {
-          "type":"array",
-          "required":true,
-          "items":
-            {
-              "type":"object",
-              "required":true,
-              "properties":{
-                "_values": {
-                  "type":"object",
-                  "required":true,
-                  "properties":{
-                    "_high": {
-                      "type":"number",
-                      "required":true,
-                      "default": 1,
-                      "title": "High",
-                      "inputType": "Number",
-                      "validators": ["required", "number"],
-                      "help": ""
-                    },
-                    "_low": {
-                      "type":"number",
-                      "required":true,
-                      "default": 1,
-                      "title": "Low",
-                      "inputType": "Number",
-                      "validators": ["required", "number"],
-                      "help": ""
-                    }
-                  }
-                },
-                "text": {
-                  "type": "string",
-                  "required": true,
-                  "default": "",
-                  "title": "Text",
-                  "inputType": "Text",
-                  "validators": ["required"],
-                  "help": "The feedback text for this threshold range."
-                }
-              }
-            }
-        },
-        "feedbackSeparator": {
-          "type": "string",
-          "required": false,
-          "default": " ",
-          "title": "Feedback Separator",
-          "inputType": "Text",
-          "validators": [],
-          "help": "This is the feedback seperator."
-        },
-        "generic": {
-          "type": "string",
-          "required": false,
-          "default": "",
-          "title": "Generic",
-          "inputType": "Text",
-          "validators": [],
-          "help": "If a value is not entered for _threshold this feedback will be shown."
-        }
-      }
+      "default": true,
+      "title": "Show number on indicator",
+      "inputType": {"type": "Boolean", "options": [true, false]},
+      "validators": [],
+      "help": "Select 'true' to show the position number on the indicator"
+    },
+    "_showScaleIndicator": {
+      "type":"boolean",
+      "required":true,
+      "default": true,
+      "title": "Show position indicator",
+      "inputType": {"type": "Boolean", "options": [true, false]},
+      "validators": [],
+      "help": "Select 'true' to show a position indicator on the scale"
+    },
+    "_showScale": {
+      "type":"boolean",
+      "required":true,
+      "default": true,
+      "title": "Show scale",
+      "inputType": {"type": "Boolean", "options": [true, false]},
+      "validators": [],
+      "help": "Select 'true' to show the lines and numbers of the scale"
     },
     "_buttons": {
       "type":"object",
@@ -188,16 +203,18 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text for the submit button"
+              "help": "Button label text for the submit button",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
               "required": false,
               "default": "",
               "title": "",
-              "inputType": "Text",
+              "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the submit button"
+              "help": "Aria label for the submit button",
+              "translatable": true
             }
           }
         },
@@ -212,16 +229,18 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text for the reset button"
+              "help": "Button label text for the reset button",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
               "required": false,
               "default": "",
               "title": "",
-              "inputType": "Text",
+              "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the reset button"
+              "help": "Aria label for the reset button",
+              "translatable": true
             }
           }
         },
@@ -236,16 +255,18 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text to show the model answer"
+              "help": "Button label text to show the model answer",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
               "required": false,
               "default": "",
               "title": "",
-              "inputType": "Text",
+              "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the show model answer button"
+              "help": "Aria label for the show model answer button",
+              "translatable": true
             }
           }
         },
@@ -260,16 +281,18 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text to hide the model answer"
+              "help": "Button label text to hide the model answer",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
               "required": false,
               "default": "",
               "title": "",
-              "inputType": "Text",
+              "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the hide model answer button"
+              "help": "Aria label for the hide model answer button",
+              "translatable": true
             }
           }
         },
@@ -284,16 +307,18 @@
               "title": "",
               "inputType": "QuestionButton",
               "validators": [],
-              "help": "Button label text to show feedback"
+              "help": "Button label text to show feedback",
+              "translatable": true
             },
             "ariaLabel": {
               "type":"string",
               "required": false,
               "default": "",
               "title": "",
-              "inputType": "Text",
+              "inputType": "QuestionButton",
               "validators": [],
-              "help": "Aria label for the show feedback button"
+              "help": "Aria label for the show feedback button",
+              "translatable": true
             }
           }
         },
@@ -302,20 +327,136 @@
           "required": false,
           "default": "",
           "title": "Attempts Remaining Text",
-          "inputType": "Text",
+          "inputType": "QuestionButton",
           "validators": [],
-          "help": "Shown when there are multiple attempts left"
+          "help": "Shown when there are multiple attempts left",
+          "translatable": true
         },
         "remainingAttemptText": {
           "type":"string",
           "required": false,
           "default": "",
           "title": "Final Attempt Text",
-          "inputType": "Text",
+          "inputType": "QuestionButton",
           "validators": [],
-          "help": "Shown when there is one attempt left"
+          "help": "Shown when there is one attempt left",
+          "translatable": true
         }
       }
+    },
+    "_feedback": {
+      "type":"object",
+      "required":true,
+      "title": "Feedback",
+      "properties":{
+        "feedbackSeparator": {
+          "type":"string",
+          "required":false,
+          "default": "",
+          "title": "Feedback separator",
+          "inputType": "Text",
+          "validators": [],
+          "help": "Optional text/markup that will separate each feedback element"
+        },
+        "generic": {
+          "type":"string",
+          "required":false,
+          "default": "",
+          "title": "Generic feedback",
+          "inputType": "TextArea",
+          "validators": [],
+          "help": "Generic feedback",
+          "translatable": true
+        },
+        "_comparison": {
+          "type":"object",
+          "required":true,
+          "title": "Incorrect Feedback",
+          "properties":{
+            "lower": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "Lower",
+              "inputType": "TextArea",
+              "validators": [],
+              "help": "Lower",
+              "translatable": true
+            },
+            "same": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "Same",
+              "inputType": "TextArea",
+              "validators": [],
+              "help": "Same",
+              "translatable": true
+            },
+            "higher": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "Higher",
+              "inputType": "TextArea",
+              "validators": [],
+              "help": "Higher",
+              "translatable": true
+            }
+          }
+        },
+        "_threshold": {
+          "type":"array",
+          "required":true,
+          "title": "Threshold",
+          "items": {
+            "type":"object",
+            "required":true,
+            "properties":{
+              "_values": {
+                "type": "object",
+                "properties": {
+                  "_low":{
+                    "type": "number",
+                    "default": 0,
+                    "title": "Range bottom",
+                    "inputType": "Number",
+                    "validators": ["number"],
+                    "help":"Range bottom"
+                  },
+                  "_high":{
+                    "type": "number",
+                    "default": 0,
+                    "title": "Range top",
+                    "inputType": "Number",
+                    "validators": ["number"],
+                    "help":"Range top"
+                  }
+                }
+              },
+              "text": {
+                "type":"string",
+                "required":false,
+                "default": "",
+                "title": "Range description",
+                "inputType": "TextArea",
+                "validators": [],
+                "help": "Range description",
+                "translatable": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "_shouldStoreResponses": {
+      "type":"boolean",
+      "required":false,
+      "default": false,
+      "title": "Should store responses",
+      "inputType": {"type": "Boolean", "options": [true, false]},
+      "validators": [],
+      "help": "Select 'true' to store user response in tracking data (see README)"
     }
   }
 }

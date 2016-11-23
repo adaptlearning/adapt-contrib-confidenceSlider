@@ -1,288 +1,140 @@
-define(function(require) {
-
-    var Adapt = require('coreJS/adapt');
-    var Slider = require('components/adapt-contrib-slider/js/adapt-contrib-slider');
+define([
+    'components/adapt-contrib-slider/js/adapt-contrib-slider',
+    'core/js/adapt'
+], function(Slider, Adapt) {
 
     var ConfidenceSlider = Slider.extend({
-        events: {
-            'click .confidenceSlider-item-outer-bar': 'onItemBarSelected',
-            'click .confidenceSlider-item-bar-background': 'onItemBarSelected',
-            'click .confidenceSlider-item-indicator-bar': 'onItemBarSelected',
-            'click .confidenceSlider-item-handle': 'preventEvent',
-            'click .confidenceSlider-scale-number': 'onNumberSelected',
-            'touchstart .confidenceSlider-item-handle': 'onHandlePressed',
-            'mousedown .confidenceSlider-item-handle': 'onHandlePressed',
-            'focus .confidenceSlider-item-handle': 'onHandleFocus',
-            'blur .confidenceSlider-item-handle': 'onHandleBlur'
+
+        /* override */
+        preRender:function() {
+            this.model.set('_isEnabled', true);
+            Slider.prototype.preRender.apply(this, arguments);
         },
 
-        animateToPosition: function(newPosition) {
-            this.$('.confidenceSlider-item-handle').stop(true).animate({
-                left: newPosition + 'px'
-            }, 300, _.bind(function() {
-                this.setNormalisedHandlePosition();
-            }, this));
-            this.$('.confidenceSlider-item-indicator-bar').stop(true).animate({
-                width: newPosition + 'px'
-            }, 300);
+        /* override */
+        setupDefaultSettings: function() {
+            Slider.prototype.setupDefaultSettings.apply(this, arguments);
+            this.model.set('_canShowModelAnswer', false);
+            if (!this.model.has('_attempts') || this.model.get('_attempts') > 1) this.model.set('_attempts', 1);
         },
 
-        canSubmit: function() {
-            return true;
-        },
-
-        getIndexFromValue: function(itemValue) {
-            var scale = this.model.get('_scale');
-            return Math.floor(this.mapValue(itemValue, scale._low, scale._high, 0, this.model.get('_items').length - 1));
-        },
-
-        onQuestionRendered: function() {
-            this.setScalePositions();
-            this.showAppropriateNumbers();
-            this.setNormalisedHandlePosition();
-            this.setAltText(this.model.get('_scale')._low);
-            Slider.prototype.onQuestionRendered.apply(this);
-        },
-
-        setAltText: function(value) {
-            this.$('.confidenceSlider-item-handle').attr('aria-valuenow', value);
-        },
-
-        resetQuestion: function(properties) {
-            Slider.prototype.resetQuestion.apply(this, arguments);
-            if (this.model.get('_isEnabled')) {
-                this.model.set({
-                    _confidence: 0
-                });
-                this.setAltText(this.model.get('_scale')._low);
+        /* override */
+        setupQuestion: function() {
+            if (this.model.get('_linkedToId')) {
+                this._setupLinkedModel();
+                this.listenTo(Adapt, "buttonsView:postRender", this.onButtonsRendered);
             }
+            Slider.prototype.setupQuestion.apply(this, arguments);
         },
 
-        mapIndexToPixels: function(value) {
-            var numberOfItems = this.model.get('_items').length,
-                width = this.$('.confidenceSlider-item-bar').width();
-            return Math.round(this.mapValue(value, 0, numberOfItems - 1, 0, width));
+        /* override */
+        disableQuestion: function() {
+            if (this.model.get('_isReady')) this.setAllItemsEnabled(false);
+            if (this.model.has('_linkedModel')) this.$('.buttons-action').a11y_cntrl_enabled(false);
         },
 
-        mapPixelsToIndex: function(value) {
-            var numberOfItems = this.model.get('_items').length;
-            return Math.round(this.normalisePixelPosition(value) * (numberOfItems - 1));
+        /* override */
+        enableQuestion: function() {
+            if (this.model.get('_isReady')) this.setAllItemsEnabled(true);
+            if (this.model.has('_linkedModel')) this.$('.buttons-action').a11y_cntrl_enabled(true);
         },
 
-        normalisePixelPosition: function(pixelPosition) {
-            return this.normalise(pixelPosition, 0, this.$('.confidenceSlider-item-bar').width());
-        },
-
-        showAppropriateNumbers: function() {
-            switch (this.model.get('_scale')._showNumberValues) {
-                case "all":
-                    this.$('.confidenceSlider-scale-number').removeClass('display-none');
-                    this.$('.confidenceSlider-scale-notch').removeClass('display-none');
-                    break;
-                case "lowHigh":
-                case "highLow":
-                    this.$('.confidenceSlider-scale-number').first().removeClass('display-none');
-                    this.$('.confidenceSlider-scale-notch').first().removeClass('display-none');
-                    this.$('.confidenceSlider-scale-number').last().removeClass('display-none');
-                    this.$('.confidenceSlider-scale-notch').last().removeClass('display-none');
-                    break;
-                default:
-                    this.$('.confidenceSlider-scale-notch').first().removeClass('display-none');
-                    this.$('.confidenceSlider-scale-notch').last().removeClass('display-none');
-                    break;
-            }
-        },
-
-        getSelectedItems: function() {
-            return this.model.get('_selectedItem');
-        },
-
-        setScalePositions: function() {
-            var numberOfItems = this.model.get('_items').length;
-            _.each(this.model.get('_items'), function(item, index) {
-                var normalisedPosition = this.normalise(index, 0, numberOfItems - 1);
-                this.$('.confidenceSlider-scale-number').eq(index).data('normalisedPosition', normalisedPosition);
-                this.$('.confidenceSlider-scale-notch').eq(index).data('normalisedPosition', normalisedPosition);
-            }, this);
-        },
-
-        onDragReleased: function(event) {
-            event.preventDefault();
-            $(document).off('mousemove touchmove');
-            this.setNormalisedHandlePosition();
-            if (this.model.get('_scale')._snapToNumbers) {
-                var itemIndex = this.getIndexFromValue(this.getSelectedItems()[0].value);
-                this.selectItem(itemIndex);
-                this.animateToPosition(this.mapIndexToPixels(itemIndex));
-                this.setAltText(itemIndex + 1);
-            }
-        },
-
-        onHandleDragged: function(event) {
-            event.preventDefault();
-            var left = (event.pageX || event.originalEvent.touches[0].pageX) - event.data.offsetLeft;
-            left = Math.max(Math.min(left, event.data.width), 0);
-            this.$('.confidenceSlider-item-handle').css({
-                left: left + 'px'
-            });
-            this.$('.confidenceSlider-item-indicator-bar').css({
-                width: left + 'px'
-            });
-            this.selectItem(this.mapPixelsToIndex(left));
-        },
-
-        onHandleFocus: function(event) {
-            event.preventDefault();
-            this.$('.confidenceSlider-item-handle').on('keydown', _.bind(this.onKeyDown, this));
-        },
-
-        onHandleBlur: function(event) {
-            event.preventDefault();
-            this.$('.confidenceSlider-item-handle').off('keydown');
-        },
-
-        onHandlePressed: function(event) {
-            event.preventDefault();
-            if (!this.model.get("_isEnabled") || this.model.get("_isSubmitted")) return;
-
-            var eventData = {
-                width: this.$('.confidenceSlider-item-bar').width(),
-                offsetLeft: this.$('.confidenceSlider-item-bar').offset().left
-            };
-            $(document).on('mousemove touchmove', eventData, _.bind(this.onHandleDragged, this));
-            $(document).one('mouseup touchend', eventData, _.bind(this.onDragReleased, this));
-        },
-
-        onKeyDown: function(event) {
-            if (event.which == 9) return; // tab key
-            event.preventDefault();
-
-            var newItemIndex = this.getIndexFromValue(this.getSelectedItems()[0].value);
-
-            switch (event.which) {
-                case 40: // ↓ down
-                case 37: // ← left
-                    newItemIndex = Math.max(newItemIndex - 1, 0);
-                    break;
-                case 38: // ↑ up
-                case 39: // → right
-                    newItemIndex = Math.min(newItemIndex + 1, this.model.get('_scale')._high - 1);
-                    break;
-            }
-
-            this.selectItem(newItemIndex);
-            if (typeof newItemIndex == "number") this.showScaleMarker(true);
-            this.animateToPosition(this.mapIndexToPixels(newItemIndex));
-            this.setAltText(newItemIndex + 1);
-        },
-
-        onItemBarSelected: function(event) {
-            event.preventDefault();
-            if (!this.model.get("_isEnabled") || this.model.get("_isSubmitted")) return;
-
-            var offsetLeft = this.$('.confidenceSlider-item-bar').offset().left,
-                width = this.$('.confidenceSlider-item-bar').width(),
-                left = (event.pageX || event.originalEvent.touches[0].pageX) - offsetLeft;
-
-            left = Math.max(Math.min(left, width), 0);
-            var nearestItemIndex = this.mapPixelsToIndex(left);
-            this.selectItem(nearestItemIndex);
-            var pixelPosition = this.model.get('_scale')._snapToNumbers ? this.mapIndexToPixels(nearestItemIndex) : left;
-            this.animateToPosition(pixelPosition);
-            this.setAltText(nearestItemIndex + 1);
-        },
-
-        onNumberSelected: function(event) {
-            event.preventDefault();
-
-            if (this.model.get('_isComplete')) {
-              return;
-            }
-
-            var itemValue = parseInt($(event.currentTarget).attr('data-id'));
-            var index = this.getIndexFromValue(itemValue);
-            this.selectItem(index);
-            this.animateToPosition(this.mapIndexToPixels(index));
-            this.setAltText(itemValue);
-        },
-
-        preventEvent: function(event) {
-            event.preventDefault();
-        },
-
-        onScreenSizeChanged: function() {
-            var scaleWidth = this.$('.confidenceSlider-scale-notches').width(),
-                $notches = this.$('.confidenceSlider-scale-notch'),
-                $numbers = this.$('.confidenceSlider-scale-number');
-            for (var i = 0, count = this.model.get('_items').length; i < count; i++) {
-                var $notch = $notches.eq(i),
-                    $number = $numbers.eq(i),
-                    newLeft = Math.round($notch.data('normalisedPosition') * scaleWidth);
-                $notch.css({ left: newLeft });
-                $number.css({ left: newLeft });
-            }
-            var $handle = this.$('.confidenceSlider-item-handle'),
-                handlePosition = Math.round($handle.data('normalisedPosition') * scaleWidth);
-            $handle.css({
-                left: handlePosition
-            });
-            this.$('.confidenceSlider-item-indicator-bar').css({
-                width: handlePosition
-            });
-        },
-
-        selectItem: function(itemIndex) {
-            _.each(this.model.get('_items'), function(item, index) {
-                item.selected = (index === itemIndex);
-                if (item.selected) {
-                    var selectedItems = this.getSelectedItems();
-                    selectedItems[0] = item;
-                    this.model.set('_selectedItem', selectedItems);
-                }
-            }, this);
-        },
-
-        setNormalisedHandlePosition: function() {
-            var $handle = this.$('.confidenceSlider-item-handle');
-            var normalisedPosition = this.normalisePixelPosition(parseInt($handle.css('left').slice(0, -2)));
-            // cater for string-based left values such as 'auto'
-            if (_.isNaN(normalisedPosition)) normalisedPosition = 0;
-            $handle.data('normalisedPosition', normalisedPosition);
-            this.model.set('_confidence', normalisedPosition);
-        },
-
+        /* override to indicate that all options are correct */
         setupModelItems: function() {
-            var items = [],
-                scale = this.model.get('_scale');
-            for (var i = scale._low; i <= scale._high; i++) {
-                items.push({ value: i, selected: false });
+            var items = [];
+            var start = this.model.get('_scaleStart');
+            var end = this.model.get('_scaleEnd');
+            var step = this.model.get('_scaleStep') || 1;
+
+            for (var i = start; i <= end; i += step) {
+                items.push({value: i, selected: false, correct: true});
             }
+
             this.model.set('_items', items);
+            this.model.set('_marginDir', (Adapt.config.get('_defaultDirection') === 'rtl' ? 'right' : 'left'));
         },
 
-        markQuestion: function() {
-            this.setCompletionStatus();
+        /* override */
+        restoreUserAnswers: function() {
+            if (!this.model.get('_isSubmitted')) {
+                this.model.set({
+                    _selectedItem: {},
+                    _userAnswer: undefined
+                });
+                return;
+            }
+
+            // this is only necessary to avoid an issue when using adapt-devtools
+            if (!this.model.has('_userAnswer')) this.model.set('_userAnswer', this.model.get('_items')[0].value);
+
+            Slider.prototype.restoreUserAnswers.apply(this, arguments);
         },
 
-        setupFeedback: function() {
+        /* override */
+        canSubmit: function() {
+            return !this.model.has('_linkedModel') || this.model.get('_linkedModel').get('_isSubmitted');
+        },
+
+        /* override */
+        setupFeedback: function(){
             this.model.set('feedbackTitle', this.model.get('title'));
-            this.model.set('feedbackMessage', this.getFeedbackString());
+            this.model.set('feedbackMessage', this._getFeedbackString());
         },
 
+        /* override */
         updateButtons: function() {
-            var $submitButton = this.$('.buttons-action');
-            $submitButton.addClass('disabled');
-            $submitButton.attr('disabled', 'disabled');
+            if (this.model.get('_attempts') > 0) {
+                Slider.prototype.updateButtons.apply(this, arguments);
+            }
+            else {
+                this.model.set('_buttonState', this.model.get('_isEnabled') ? 'submit' : 'reset');
+            }
+
         },
 
-        setupFeedbackArrays: function() {
-            // intentionally blank
+        _setupLinkedModel: function() {
+            var linkedModel = Adapt.components.findWhere({_id: this.model.get('_linkedToId')});
+            this.model.set({
+                '_showNumber':linkedModel.get('_showNumber'),
+                '_showScaleIndicator':linkedModel.get('_showScaleIndicator'),
+                '_showScale':linkedModel.get('_showScale'),
+                'labelStart':linkedModel.get('labelStart'),
+                'labelEnd':linkedModel.get('labelEnd'),
+                '_scaleStart':linkedModel.get('_scaleStart'),
+                '_scaleEnd':linkedModel.get('_scaleEnd')
+            });
+            this.model.set('_linkedModel', linkedModel);
+            if (this.model.get('_attempts') < 0) linkedModel.set('_attempts', 1);
         },
 
-        getFeedbackString: function() {
+        _listenToLinkedModel: function() {
+            this.listenTo(this.model.get('_linkedModel'), 'change:_selectedItem', this.onLinkedConfidenceChanged);
+            this.listenTo(this.model.get('_linkedModel'), 'change:_isSubmitted', this.onLinkedSubmittedChanged);
+        },
+
+        _updateLinkedConfidenceIndicator: function() {
+            var lm = this.model.get('_linkedModel');
+            var linkedValue = 0;
+            var rangeslider = this.$slider.data('plugin_rangeslider');
+
+            //if (lm.get('_isSubmitted')) {
+                linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
+            //}
+
+            if (linkedValue == this.model.get('_scaleEnd')) {
+                this.$('.linked-confidence-bar').css({width: '100%'});
+            }
+            else {
+                // follow rangeslider setPosition method
+                this.$('.linked-confidence-bar').css({width: (rangeslider.getPositionFromValue(linkedValue) + rangeslider.grabPos) + 'px'});
+            }
+        },
+
+        _getFeedbackString: function() {
             var feedbackSeparator = this.model.get('_feedback').feedbackSeparator,
-                genericFeedback = this.getGenericFeedback(),
-                thresholdFeedback = this.getThresholdFeedback(),
+                genericFeedback = this._getGenericFeedback(),
+                comparisonFeedback = this.model.has('_linkedModel') && this.model.get('_linkedModel').get('_isSubmitted') ? this._getComparisonFeedback() : null,
+                thresholdFeedback = this._getThresholdFeedback(),
                 needsSeparator = false,
                 feedbackString = "";
 
@@ -290,8 +142,13 @@ define(function(require) {
                 feedbackString += genericFeedback;
                 needsSeparator = true;
             }
+            if (comparisonFeedback) {
+                if(needsSeparator) feedbackString += feedbackSeparator;
+                feedbackString += comparisonFeedback;
+                needsSeparator = true;
+            }
             if (thresholdFeedback) {
-                if (needsSeparator) feedbackString += feedbackSeparator;
+                if(needsSeparator) feedbackString += feedbackSeparator;
                 feedbackString += thresholdFeedback;
             }
 
@@ -299,37 +156,206 @@ define(function(require) {
 
         },
 
-        getGenericFeedback: function() {
+        _getGenericFeedback: function() {
             return this.model.get('_feedback').generic;
         },
 
-        getThresholdFeedback: function() {
-            var confidence = this.model.get('_confidence'),
-                scale = this.model.get('_scale'),
-                confidenceValue = Math.round(scale._low + (confidence * (scale._high - scale._low))),
-                appropriateFeedback = _.filter(this.model.get('_feedback')._threshold, function(feedbackItem) {
-                    return confidenceValue >= feedbackItem._values._low && confidenceValue <= feedbackItem._values._high;
-                }, this);
-
-            return appropriateFeedback[0].text;
+        _getComparisonFeedback: function() {
+            var lm = this.model.get('_linkedModel'),
+                confidence = this.model.get('_selectedItem').value,
+                linkedConfidence = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value,
+                feedbackString;
+            if (linkedConfidence < confidence) {
+                feedbackString = this.model.get('_feedback')._comparison.higher;
+            } else if (linkedConfidence > confidence) {
+                feedbackString = this.model.get('_feedback')._comparison.lower;
+            } else {
+                feedbackString = this.model.get('_feedback')._comparison.same;
+            }
+            return feedbackString;
         },
 
-        storeUserAnswer: function() {
-            this.model.set('_userAnswer', this.getSelectedItems()[0].value);
+        _getThresholdFeedback: function() {
+            var feedbackList = this.model.get('_feedback')._threshold;
+
+            if (!feedbackList) return;
+
+            var confidenceValue = this.model.get('_selectedItem').value;
+
+            for (var i = 0, j = feedbackList.length; i < j; i++) {
+                var feedback = feedbackList[i];
+                var values = feedback._values;
+
+                if (confidenceValue >= values._low && confidenceValue <= values._high) {
+                    return feedback.text;
+                }
+            }
         },
 
-        onUserAnswerShown: function() {
-            if (this.model.get('_userAnswer').length > 0) {
-                Slider.prototype.onUserAnswerShown.apply(this);
+        _getTrackingData:function() {
+            if (this.model.get('_isInteractionComplete') === false || this.model.get('_isComplete') === false) {
+                return null;
+            }
+
+            var hasUserAnswer = (this.model.get('_userAnswer') !== undefined);
+            var isUserAnswerArray = (this.model.get('_userAnswer') instanceof Array);
+
+            var numericParameters = [
+                    this.model.get('_score') || 0,
+                    this.model.get('_attemptsLeft') || 0
+                ];
+
+            var booleanParameters = [
+                    hasUserAnswer ? 1 : 0,
+                    isUserAnswerArray ? 1 : 0,
+                    this.model.get('_isInteractionComplete') ? 1 : 0,
+                    this.model.get('_isSubmitted') ? 1 : 0,
+                    this.model.get('_isCorrect') ? 1 : 0
+                ];
+
+            var data = [
+                numericParameters,
+                booleanParameters
+            ];
+
+
+            if (hasUserAnswer) {
+                var userAnswer = isUserAnswerArray ? this.model.get('_userAnswer') : [this.model.get('_userAnswer')];
+
+                data.push(userAnswer);
+            }
+
+            return data;
+        },
+
+        _updateTracking:function() {
+            // should we track this component?
+            if (this.model.get('_shouldStoreResponses')) {
+                // is tracking is enabled?
+                if (Adapt.config.has('_spoor') && Adapt.config.get('_spoor')._isEnabled) {
+                    // if spoor is handling response tracking we don't need to do anything
+                    if (!Adapt.config.get('_spoor')._tracking._shouldStoreResponses) {
+                        // otherwise write custom tracking data
+                        Adapt.offlineStorage.set(this.model.get('_id'), this._getTrackingData());
+                    }
+                }
+            }
+        },
+
+        onQuestionRendered: function() {
+            Slider.prototype.onQuestionRendered.apply(this, arguments);
+
+            if (this.model.has('_linkedModel')) {
+                this.$('.rangeslider').prepend($('<div class="linked-confidence-bar"/>'));
+                this._listenToLinkedModel();
+                if (this.model.get('_linkedModel').get('_isSubmitted')) {
+                    this.onLinkedConfidenceChanged();
+                } else {
+                    this.model.set('_isEnabled', false);
+                    this.$('.component-body-inner').html(this.model.get('disabledBody'));
+                }
+            }
+
+            if (this.model.get('_isSubmitted') && this.model.has('_userAnswer')) {
+                this.model.set('feedbackTitle', this.model.get('title'));
+                this.model.set('feedbackMessage', this._getFeedbackString());
+            }
+        },
+
+        onScreenSizeChanged: function() {
+            Slider.prototype.onScreenSizeChanged.apply(this, arguments);
+
+            // if linked slider on same page update it with user interaction
+            if (this.model.has('_linkedModel') && this.model.get('_linkedModel').get('_isReady')) {
+                this._updateLinkedConfidenceIndicator();
+            }
+        },
+
+        onResetClicked: function() {
+            Slider.prototype.onResetClicked.apply(this, arguments);
+
+            this.model.reset('hard', true);
+
+            this._updateTracking();
+        },
+
+        onSubmitClicked: function() {
+            Slider.prototype.onSubmitClicked.apply(this, arguments);
+
+            this._updateTracking();
+        },
+
+        onButtonsRendered:function(buttonsView) {
+            // necessary due to deferred ButtonsView::postRender
+            if (this.buttonsView == buttonsView) {
+                if (!this.model.get('_isEnabled')) {
+                    if (!this.model.has('_linkedModel') || !this.model.get('_linkedModel').get('_isSubmitted')) {
+                        this.$('.buttons-action').a11y_cntrl_enabled(false);
+                    }
+                }
+            }
+        },
+
+        onLinkedConfidenceChanged: function() {
+            this._updateLinkedConfidenceIndicator();
+        },
+
+        onLinkedSubmittedChanged: function(linkedModel) {
+            if (linkedModel.get('_isSubmitted')) {
+                this.model.set('_isEnabled', true);
+            }
+            else {
+                this.model.set('_isEnabled', false);
             }
         }
-
     }, {
-        template: 'confidenceSlider'
+        template:'confidenceSlider'
     });
-
+    
     Adapt.register("confidenceSlider", ConfidenceSlider);
 
-    return ConfidenceSlider;
+    Adapt.on('app:dataReady', function() {
+        // is tracking enabled?
+        if (Adapt.config.has('_spoor') && Adapt.config.get('_spoor')._isEnabled) {
+            // if spoor is handling response tracking we don't need to do anything
+            if (!Adapt.config.get('_spoor')._tracking._shouldStoreResponses) {
+                // ensure data is setup
+                Adapt.offlineStorage.get();
 
+                _.each(Adapt.components.where({'_component':'confidenceSlider', '_shouldStoreResponses':true}), function(confidenceSlider) {
+                    var dataItem = Adapt.offlineStorage.get(confidenceSlider.get('_id'));
+
+                    if (!dataItem) return;
+
+                    var numericParameters = dataItem[0];
+                    var booleanParameters = dataItem[1];
+
+                    var score = numericParameters[0];
+                    var attemptsLeft = numericParameters[1] || 0;
+
+                    var hasUserAnswer = booleanParameters[0];
+                    var isUserAnswerArray = booleanParameters[1];
+                    var isInteractionComplete = booleanParameters[2];
+                    var isSubmitted = booleanParameters[3];
+                    var isCorrect = booleanParameters[4];
+
+                    confidenceSlider.set("_isComplete", true);
+                    confidenceSlider.set("_isInteractionComplete", isInteractionComplete);
+                    confidenceSlider.set("_isSubmitted", isSubmitted);
+                    confidenceSlider.set("_score", score);
+                    confidenceSlider.set("_isCorrect", isCorrect);
+                    confidenceSlider.set("_attemptsLeft", attemptsLeft);
+
+                    if (hasUserAnswer) {
+                        var userAnswer = dataItem[2];
+                        if (!isUserAnswerArray) userAnswer = userAnswer[0];
+
+                        confidenceSlider.set("_userAnswer", userAnswer);
+                    }
+                });
+            }
+        }
+    });
+    
+    return ConfidenceSlider;
 });
