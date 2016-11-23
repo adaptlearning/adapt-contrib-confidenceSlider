@@ -8,10 +8,7 @@ To respond to the question, the learner positions a slider along a scale. Upon s
 
 ##Installation
 
-As one of Adapt's *[core components](https://github.com/adaptlearning/adapt_framework/wiki/Core-Plug-ins-in-the-Adapt-Learning-Framework#components),* **Confidence Slider** is included with the [installation of the Adapt framework](https://github.com/adaptlearning/adapt_framework/wiki/Manual-installation-of-the-Adapt-framework#installation) and the [installation of the Adapt authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-Adapt-Origin).
-
-* If **Confidence Slider** has been uninstalled from the Adapt framework, it may be reinstalled.
-With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run the following from the command line:  
+* With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run the following from the command line:  
 `adapt install adapt-contrib-confidenceSlider`
 
     Alternatively, this component can also be installed by adding the following line of code to the *adapt.json* file:  
@@ -21,6 +18,8 @@ With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run 
     (This second method will reinstall all plug-ins listed in *adapt.json*.)  
 
 * If **Confidence Slider** has been uninstalled from the Adapt authoring tool, it may be reinstalled using the [Plug-in Manager](https://github.com/adaptlearning/adapt_authoring/wiki/Plugin-Manager).  
+
+**NOTE:** This component has a dependency on [adapt-contrib-slider](https://github.com/adaptlearning/adapt-contrib-slider); you **must** have it installed as well in order for this component to be able to function.
 
 <div float align=right><a href="#top">Back to Top</a></div>
 
