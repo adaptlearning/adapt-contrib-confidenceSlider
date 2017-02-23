@@ -2,7 +2,7 @@
 
 <img src="" alt="Confidence Slider in action" align="right"> **Confidence Slider** is a *reflective question component* bundled with the [Adapt framework](https://github.com/adaptlearning/adapt_framework).  
 
-To respond to the question, the learner positions a slider along a scale. Upon submission, feedback is provided via the [**Tutor** extension](https://github.com/adaptlearning/adapt-contrib-tutor), if installed. A second confidence slider can be created and linked to this one. This allows learners to compare his/her confidence to a previous measurement. Feedback may be coordinated according to the selected slider position. In addition, the linked slider may contain comparative feedback. The number of attempts allowed may be configured for a confidence slider. When a pair of confidence sliders are linked the first must be set to allow only one attempt. The second confidence slider, linking to the first (via **_linkedToId**), can have either single or unlimited attempts set. Set the number of attempts to zero or less to indicate unlimited.
+To respond to the question, the learner positions a slider along a scale. Upon submission, feedback is provided via the [**Tutor** extension](https://github.com/adaptlearning/adapt-contrib-tutor), if installed. A second confidence slider can be created and linked to this one. This allows learners to compare his/her confidence to a previous measurement. Feedback may be coordinated according to the selected slider position. In addition, the linked slider may contain comparative feedback. Please note that a confidence slider does not have correct/incorrect answers and so the number of attempts is constrained to `1`. If the component should be reset each time the user visits it use the `_isResetOnRevisit` property.
 
 [Visit the **Confidence Slider** wiki](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/wiki) for more information about its functionality and for explanations of key properties. 
 
@@ -97,7 +97,7 @@ guide the learner’s interaction with the component.
 No known limitations.  
 
 ----------------------------
-**Version number:**  2.1.1   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
+**Version number:**  2.1.2   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
 **Framework versions:** 2.0.0
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/graphs/contributors)    
 **Accessibility support:** WAI AA   

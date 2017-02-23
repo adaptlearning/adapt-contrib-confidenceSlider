@@ -274,7 +274,7 @@ define([
         onResetClicked: function() {
             Slider.prototype.onResetClicked.apply(this, arguments);
 
-            this.model.reset('hard', true);
+            this.model.reset('soft', true);
 
             this._updateTracking();
         },
