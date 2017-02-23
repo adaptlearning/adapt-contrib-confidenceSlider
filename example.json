@@ -10,10 +10,12 @@
     "body": "Question text here",
     "disabledBody":"You need to measure your confidence in the linked part before you can do this part.",
     "instruction": "",
+    "_commentAttempts":"Can only be set to 1",
     "_attempts":1,
+    "_isResetOnRevisit":false,
     "_canShowFeedback": true,
     "_recordInteraction": true,
-    "_comment":"ONLY ADD _linkedToId PROPERTY IF THIS SLIDER LINKS TO ANOTHER",
+    "_commentLinkedToId":"ONLY ADD _linkedToId PROPERTY IF THIS SLIDER LINKS TO ANOTHER",
     "_linkedToId":"c-03",
     "_showNumber": true,
     "_showScaleIndicator": true,
@@ -62,5 +64,5 @@
     "_pageLevelProgress": {
         "_isEnabled": true
     },
-    "_shouldStoreResponses":false
+    "_shouldStoreResponses":true
 }
