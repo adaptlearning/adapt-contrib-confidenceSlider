@@ -8,15 +8,17 @@
     "title": "Confidence Slider component",
     "displayTitle": "Confidence Slider",
     "body": "Question text here",
-    "disabledBody":"You need to measure your confidence in the linked part before you can do this part.",
+    "disabledBody": "You need to measure your confidence in the linked part before you can do this part.",
     "instruction": "",
-    "_commentAttempts":"Can only be set to 1",
-    "_attempts":1,
-    "_isResetOnRevisit":false,
+    "_commentAttempts": "Can only be set to 1",
+    "_attempts": 1,
+    "_isResetOnRevisit": false,
     "_canShowFeedback": true,
+    "_commentCanShowMarking": "If you enable _canShowMarking it will work but will always mark as correct answer",
+    "_canShowMarking": false,
     "_recordInteraction": true,
-    "_commentLinkedToId":"ONLY ADD _linkedToId PROPERTY IF THIS SLIDER LINKS TO ANOTHER",
-    "_linkedToId":"c-03",
+    "_commentLinkedToId": "ONLY ADD _linkedToId PROPERTY IF THIS SLIDER LINKS TO ANOTHER",
+    "_linkedToId": "c-03",
     "_showNumber": true,
     "_showScaleIndicator": true,
     "_showScale": true,
@@ -64,5 +66,5 @@
     "_pageLevelProgress": {
         "_isEnabled": true
     },
-    "_shouldStoreResponses":true
+    "_shouldStoreResponses": true
 }
