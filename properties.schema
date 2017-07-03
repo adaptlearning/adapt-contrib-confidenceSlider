@@ -7,7 +7,7 @@
     "ariaRegion": {
       "type": "string",
       "required": true,
-      "default": "This component requires you to answer the question by selecting the relevant value. After selecting a value select the submit button below.",
+      "default": "Answer the question by selecting a value from the range. Once you have done so, select the submit button below.",
       "inputType": "Text",
       "validators": [],
       "translatable": true
@@ -36,7 +36,7 @@
       "default": "",
       "inputType": "Text",
       "validators": [],
-      "help": "The body text to display when the confidence slider to which this one is linked has not been answered",
+      "help": "The body text to display when the confidence slider to which this one is linked has not (yet) been answered",
       "translatable": true
     },
     "_attempts": {
@@ -53,9 +53,9 @@
       "required":false,
       "default": false,
       "title": "Display Attempts",
-      "inputType": {"type": "Boolean", "options": [true, false]},
+      "inputType": "Checkbox",
       "validators": [],
-      "help": "Select 'true' to display the numbers of attempts left"
+      "help": "Display the number of attempts remaining?"
     },
     "_questionWeight": {
       "type":"number",
@@ -71,9 +71,9 @@
       "required":false,
       "default": true,
       "title": "Record interaction",
-      "inputType": {"type": "Boolean", "options": [true, false]},
+      "inputType": "Checkbox",
       "validators": [],
-      "help": "If set to 'true', the user's answer(s) will be recorded to cmi.interactions on the LMS (where supported)."
+      "help": "If disabled, recording the user's answer(s) to this question to cmi.interactions on the LMS will be disabled for this component only."
     },
     "_linkedToId": {
       "type": "string",
@@ -82,7 +82,7 @@
       "title": "Link ID",
       "inputType": "Text",
       "validators": [],
-      "help": "Component _id of confidence slider on which this confidence slider is dependent"
+      "help": "The _id of another instance of this component you'd like this instance to be linked to. See the README for more info."
     },
     "labelStart": {
       "type": "string",
@@ -165,27 +165,27 @@
       "required":true,
       "default": true,
       "title": "Show number on indicator",
-      "inputType": {"type": "Boolean", "options": [true, false]},
+      "inputType": "Checkbox",
       "validators": [],
-      "help": "Select 'true' to show the position number on the indicator"
+      "help": "Controls whether the position number on the indicator should be shown or not"
     },
     "_showScaleIndicator": {
       "type":"boolean",
       "required":true,
       "default": true,
       "title": "Show position indicator",
-      "inputType": {"type": "Boolean", "options": [true, false]},
+      "inputType": "Checkbox",
       "validators": [],
-      "help": "Select 'true' to show a position indicator on the scale"
+      "help": "Controls whether a position indicator on the scale should be shown or not"
     },
     "_showScale": {
       "type":"boolean",
       "required":true,
       "default": true,
       "title": "Show scale",
-      "inputType": {"type": "Boolean", "options": [true, false]},
+      "inputType": "Checkbox",
       "validators": [],
-      "help": "Select 'true' to show the lines and numbers of the scale"
+      "help": "Controls whether to show the lines and numbers of the scale or not"
     },
     "_buttons": {
       "type":"object",
@@ -421,16 +421,14 @@
                     "default": 0,
                     "title": "Range bottom",
                     "inputType": "Number",
-                    "validators": ["number"],
-                    "help":"Range bottom"
+                    "validators": ["number"]
                   },
                   "_high":{
                     "type": "number",
                     "default": 0,
                     "title": "Range top",
                     "inputType": "Number",
-                    "validators": ["number"],
-                    "help":"Range top"
+                    "validators": ["number"]
                   }
                 }
               },
@@ -441,7 +439,6 @@
                 "title": "Range description",
                 "inputType": "TextArea",
                 "validators": [],
-                "help": "Range description",
                 "translatable": true
               }
             }
@@ -453,10 +450,10 @@
       "type":"boolean",
       "required":false,
       "default": false,
-      "title": "Should store responses",
-      "inputType": {"type": "Boolean", "options": [true, false]},
+      "title": "Save response?",
+      "inputType": "Checkbox",
       "validators": [],
-      "help": "Select 'true' to store user response in tracking data (see README)"
+      "help": "If enabled, the user's response will be saved so that it can be restored in subsequent sessions. Please see the README for more info."
     }
   }
 }
