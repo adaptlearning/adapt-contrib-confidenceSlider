@@ -6,7 +6,7 @@ To respond to the question, the learner positions a slider along a scale. Upon s
 
 [Visit the **Confidence Slider** wiki](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/wiki) for more information about its functionality and for explanations of key properties. 
 
-##Installation
+## Installation
 
 * With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run the following from the command line:  
 `adapt install adapt-contrib-confidenceSlider`
