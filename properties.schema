@@ -75,6 +75,15 @@
       "validators": [],
       "help": "If disabled, recording the user's answer(s) to this question to cmi.interactions on the LMS will be disabled for this component only."
     },
+    "_shouldStoreResponses": {
+      "type":"boolean",
+      "required":false,
+      "default": false,
+      "title": "Save response?",
+      "inputType": "Checkbox",
+      "validators": [],
+      "help": "If enabled, the user's response will be saved so that it can be restored in subsequent sessions. Please see the README for more info."
+    },
     "_linkedToId": {
       "type": "string",
       "required": false,
@@ -186,6 +195,108 @@
       "inputType": "Checkbox",
       "validators": [],
       "help": "Controls whether to show the lines and numbers of the scale or not"
+    },
+    "_feedback": {
+      "type":"object",
+      "required":true,
+      "title": "Feedback",
+      "properties":{
+        "feedbackSeparator": {
+          "type":"string",
+          "required":false,
+          "default": "",
+          "title": "Feedback separator",
+          "inputType": "Text",
+          "validators": [],
+          "help": "Optional text/markup that will separate each feedback element"
+        },
+        "generic": {
+          "type":"string",
+          "required":false,
+          "default": "",
+          "title": "Generic feedback",
+          "inputType": "TextArea",
+          "validators": [],
+          "help": "Generic feedback",
+          "translatable": true
+        },
+        "_comparison": {
+          "type":"object",
+          "required":true,
+          "title": "Incorrect Feedback",
+          "properties":{
+            "lower": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "Lower",
+              "inputType": "TextArea",
+              "validators": [],
+              "help": "Lower",
+              "translatable": true
+            },
+            "same": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "Same",
+              "inputType": "TextArea",
+              "validators": [],
+              "help": "Same",
+              "translatable": true
+            },
+            "higher": {
+              "type":"string",
+              "required": false,
+              "default": "",
+              "title": "Higher",
+              "inputType": "TextArea",
+              "validators": [],
+              "help": "Higher",
+              "translatable": true
+            }
+          }
+        },
+        "_threshold": {
+          "type":"array",
+          "required":true,
+          "title": "Threshold",
+          "items": {
+            "type":"object",
+            "required":true,
+            "properties":{
+              "_values": {
+                "type": "object",
+                "properties": {
+                  "_low":{
+                    "type": "number",
+                    "default": 0,
+                    "title": "Range bottom",
+                    "inputType": "Number",
+                    "validators": ["number"]
+                  },
+                  "_high":{
+                    "type": "number",
+                    "default": 0,
+                    "title": "Range top",
+                    "inputType": "Number",
+                    "validators": ["number"]
+                  }
+                }
+              },
+              "text": {
+                "type":"string",
+                "required":false,
+                "default": "",
+                "title": "Range description",
+                "inputType": "TextArea",
+                "validators": [],
+                "translatable": true
+              }
+            }
+          }
+        }
+      }
     },
     "_buttons": {
       "type":"object",
@@ -343,117 +454,6 @@
           "translatable": true
         }
       }
-    },
-    "_feedback": {
-      "type":"object",
-      "required":true,
-      "title": "Feedback",
-      "properties":{
-        "feedbackSeparator": {
-          "type":"string",
-          "required":false,
-          "default": "",
-          "title": "Feedback separator",
-          "inputType": "Text",
-          "validators": [],
-          "help": "Optional text/markup that will separate each feedback element"
-        },
-        "generic": {
-          "type":"string",
-          "required":false,
-          "default": "",
-          "title": "Generic feedback",
-          "inputType": "TextArea",
-          "validators": [],
-          "help": "Generic feedback",
-          "translatable": true
-        },
-        "_comparison": {
-          "type":"object",
-          "required":true,
-          "title": "Incorrect Feedback",
-          "properties":{
-            "lower": {
-              "type":"string",
-              "required": false,
-              "default": "",
-              "title": "Lower",
-              "inputType": "TextArea",
-              "validators": [],
-              "help": "Lower",
-              "translatable": true
-            },
-            "same": {
-              "type":"string",
-              "required": false,
-              "default": "",
-              "title": "Same",
-              "inputType": "TextArea",
-              "validators": [],
-              "help": "Same",
-              "translatable": true
-            },
-            "higher": {
-              "type":"string",
-              "required": false,
-              "default": "",
-              "title": "Higher",
-              "inputType": "TextArea",
-              "validators": [],
-              "help": "Higher",
-              "translatable": true
-            }
-          }
-        },
-        "_threshold": {
-          "type":"array",
-          "required":true,
-          "title": "Threshold",
-          "items": {
-            "type":"object",
-            "required":true,
-            "properties":{
-              "_values": {
-                "type": "object",
-                "properties": {
-                  "_low":{
-                    "type": "number",
-                    "default": 0,
-                    "title": "Range bottom",
-                    "inputType": "Number",
-                    "validators": ["number"]
-                  },
-                  "_high":{
-                    "type": "number",
-                    "default": 0,
-                    "title": "Range top",
-                    "inputType": "Number",
-                    "validators": ["number"]
-                  }
-                }
-              },
-              "text": {
-                "type":"string",
-                "required":false,
-                "default": "",
-                "title": "Range description",
-                "inputType": "TextArea",
-                "validators": [],
-                "translatable": true
-              }
-            }
-          }
-        }
-      }
-    },
-    "_shouldStoreResponses": {
-      "type":"boolean",
-      "required":false,
-      "default": false,
-      "title": "Save response?",
-      "inputType": "Checkbox",
-      "validators": [],
-      "help": "If enabled, the user's response will be saved so that it can be restored in subsequent sessions. Please see the README for more info."
     }
   }
 }
