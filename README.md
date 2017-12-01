@@ -4,8 +4,6 @@
 
 To respond to the question, the learner positions a slider along a scale. Upon submission, feedback is provided via the [**Tutor** extension](https://github.com/adaptlearning/adapt-contrib-tutor), if installed. A second confidence slider can be created and linked to this one. This allows learners to compare his/her confidence to a previous measurement. Feedback may be coordinated according to the selected slider position. In addition, the linked slider may contain comparative feedback. Please note that a confidence slider does not have correct/incorrect answers and so the number of attempts is constrained to `1`. If the component should be reset each time the user visits it use the `_isResetOnRevisit` property.
 
-[Visit the **Confidence Slider** wiki](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/wiki) for more information about its functionality and for explanations of key properties. 
-
 ## Installation
 
 * With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run the following from the command line:  
@@ -25,7 +23,7 @@ To respond to the question, the learner positions a slider along a scale. Upon s
 
 ## Settings Overview
 
-The attributes listed below are used in *components.json* to configure **Confidence Slider**, and are properly formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/blob/master/example.json). Visit the [**Confidence Slider** wiki](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/wiki) for more information about how they appear in the [authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki). 
+The attributes listed below are used in *components.json* to configure **Confidence Slider**, and are properly formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/blob/master/example.json). 
 
 ### Attributes
 
