@@ -50,8 +50,10 @@ define([
                 items.push({value: i, selected: false, correct: true});
             }
 
-            this.model.set('_items', items);
-            this.model.set('_marginDir', (Adapt.config.get('_defaultDirection') === 'rtl' ? 'right' : 'left'));
+            this.model.set({
+                _items: items,
+                _marginDir: (Adapt.config.get('_defaultDirection') === 'rtl' ? 'right' : 'left')
+            });
         },
 
         /* override */
@@ -77,8 +79,10 @@ define([
 
         /* override */
         setupFeedback: function(){
-            this.model.set('feedbackTitle', this.model.get('title'));
-            this.model.set('feedbackMessage', this._getFeedbackString());
+            this.model.set( {
+                feedbackTitle: this.model.get('title'),
+                feedbackMessage: this._getFeedbackString()
+            });
         },
 
         /* override */
@@ -120,8 +124,10 @@ define([
         },
 
         _listenToLinkedModel: function() {
-            this.listenTo(this.model.get('_linkedModel'), 'change:_selectedItem', this.onLinkedConfidenceChanged);
-            this.listenTo(this.model.get('_linkedModel'), 'change:_isSubmitted', this.onLinkedSubmittedChanged);
+            this.listenTo(this.model.get('_linkedModel'), {
+                'change:_selectedItem': this.onLinkedConfidenceChanged,
+                'change:_isSubmitted': this.onLinkedSubmittedChanged
+            });
         },
 
         _updateLinkedConfidenceIndicator: function() {
@@ -269,8 +275,10 @@ define([
             }
 
             if (this.model.get('_isSubmitted') && this.model.has('_userAnswer')) {
-                this.model.set('feedbackTitle', this.model.get('title'));
-                this.model.set('feedbackMessage', this._getFeedbackString());
+                this.model.set({
+                    feedbackTitle: this.model.get('title'),
+                    feedbackMessage: this._getFeedbackString()
+                });
             }
         },
 
