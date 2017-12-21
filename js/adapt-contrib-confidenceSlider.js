@@ -135,9 +135,7 @@ define([
             var linkedValue = 0;
             var rangeslider = this.$slider.data('plugin_rangeslider');
 
-            //if (lm.get('_isSubmitted')) {
-                linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
-            //}
+            linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
 
             if (linkedValue == this.model.get('_scaleEnd')) {
                 this.$('.linked-confidence-bar').css({width: '100%'});
@@ -305,7 +303,7 @@ define([
             this._updateTracking();
         },
 
-        onButtonsRendered:function(buttonsView) {
+        onButtonsRendered: function(buttonsView) {
             // necessary due to deferred ButtonsView::postRender
             if (this.buttonsView == buttonsView) {
                 if (!this.model.get('_isEnabled')) {
