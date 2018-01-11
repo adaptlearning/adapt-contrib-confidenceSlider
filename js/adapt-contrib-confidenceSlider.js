@@ -97,30 +97,31 @@ define([
         },
 
         _setupLinkedModel: function() {
-            try {
-                var linkedModel = Adapt.components.findWhere({_id: this.model.get('_linkedToId')});
+            var linkedModel = Adapt.components.findWhere({_id: this.model.get('_linkedToId')});
 
-                if (linkedModel.get('_component') !== "confidenceSlider") {
-                    Adapt.log.warn("The component you have linked confidenceSlider " + this.model.get('_id') + " to is not a confidenceSlider component!");
-                    return;
-                }
-
-                this.model.set({
-                    _showNumber: linkedModel.get('_showNumber'),
-                    _showScaleIndicator: linkedModel.get('_showScaleIndicator'),
-                    _showScale: linkedModel.get('_showScale'),
-                    labelStart: linkedModel.get('labelStart'),
-                    labelEnd: linkedModel.get('labelEnd'),
-                    _scaleStart: linkedModel.get('_scaleStart'),
-                    _scaleEnd: linkedModel.get('_scaleEnd')
-                });
-
-                this.model.set('_linkedModel', linkedModel);
-
-                if (this.model.get('_attempts') < 0) linkedModel.set('_attempts', 1);
-            } catch (e) {
-                Adapt.log.error("Please check that you have set _linkedToId correctly!", e);
+            if (!linkedModel) {
+                Adapt.log.error("Please check that you have set _linkedToId correctly!");
+                return;
             }
+
+            if (linkedModel.get('_component') !== "confidenceSlider") {
+                Adapt.log.warn("The component you have linked confidenceSlider " + this.model.get('_id') + " to is not a confidenceSlider component!");
+                return;
+            }
+
+            this.model.set({
+                _showNumber: linkedModel.get('_showNumber'),
+                _showScaleIndicator: linkedModel.get('_showScaleIndicator'),
+                _showScale: linkedModel.get('_showScale'),
+                labelStart: linkedModel.get('labelStart'),
+                labelEnd: linkedModel.get('labelEnd'),
+                _scaleStart: linkedModel.get('_scaleStart'),
+                _scaleEnd: linkedModel.get('_scaleEnd')
+            });
+
+            this.model.set('_linkedModel', linkedModel);
+
+            if (this.model.get('_attempts') < 0) linkedModel.set('_attempts', 1);
         },
 
         _listenToLinkedModel: function() {
