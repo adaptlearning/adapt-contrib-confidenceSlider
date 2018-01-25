@@ -50,8 +50,10 @@ define([
                 items.push({value: i, selected: false, correct: true});
             }
 
-            this.model.set('_items', items);
-            this.model.set('_marginDir', (Adapt.config.get('_defaultDirection') === 'rtl' ? 'right' : 'left'));
+            this.model.set({
+                _items: items,
+                _marginDir: (Adapt.config.get('_defaultDirection') === 'rtl' ? 'right' : 'left')
+            });
         },
 
         /* override */
@@ -77,8 +79,10 @@ define([
 
         /* override */
         setupFeedback: function(){
-            this.model.set('feedbackTitle', this.model.get('title'));
-            this.model.set('feedbackMessage', this._getFeedbackString());
+            this.model.set( {
+                feedbackTitle: this.model.get('title'),
+                feedbackMessage: this._getFeedbackString()
+            });
         },
 
         /* override */
@@ -94,22 +98,37 @@ define([
 
         _setupLinkedModel: function() {
             var linkedModel = Adapt.components.findWhere({_id: this.model.get('_linkedToId')});
+
+            if (!linkedModel) {
+                Adapt.log.error("Please check that you have set _linkedToId correctly!");
+                return;
+            }
+
+            if (linkedModel.get('_component') !== "confidenceSlider") {
+                Adapt.log.warn("The component you have linked confidenceSlider " + this.model.get('_id') + " to is not a confidenceSlider component!");
+                return;
+            }
+
             this.model.set({
-                '_showNumber':linkedModel.get('_showNumber'),
-                '_showScaleIndicator':linkedModel.get('_showScaleIndicator'),
-                '_showScale':linkedModel.get('_showScale'),
-                'labelStart':linkedModel.get('labelStart'),
-                'labelEnd':linkedModel.get('labelEnd'),
-                '_scaleStart':linkedModel.get('_scaleStart'),
-                '_scaleEnd':linkedModel.get('_scaleEnd')
+                _showNumber: linkedModel.get('_showNumber'),
+                _showScaleIndicator: linkedModel.get('_showScaleIndicator'),
+                _showScale: linkedModel.get('_showScale'),
+                labelStart: linkedModel.get('labelStart'),
+                labelEnd: linkedModel.get('labelEnd'),
+                _scaleStart: linkedModel.get('_scaleStart'),
+                _scaleEnd: linkedModel.get('_scaleEnd')
             });
+
             this.model.set('_linkedModel', linkedModel);
+
             if (this.model.get('_attempts') < 0) linkedModel.set('_attempts', 1);
         },
 
         _listenToLinkedModel: function() {
-            this.listenTo(this.model.get('_linkedModel'), 'change:_selectedItem', this.onLinkedConfidenceChanged);
-            this.listenTo(this.model.get('_linkedModel'), 'change:_isSubmitted', this.onLinkedSubmittedChanged);
+            this.listenTo(this.model.get('_linkedModel'), {
+                'change:_selectedItem': this.onLinkedConfidenceChanged,
+                'change:_isSubmitted': this.onLinkedSubmittedChanged
+            });
         },
 
         _updateLinkedConfidenceIndicator: function() {
@@ -117,9 +136,7 @@ define([
             var linkedValue = 0;
             var rangeslider = this.$slider.data('plugin_rangeslider');
 
-            //if (lm.get('_isSubmitted')) {
-                linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
-            //}
+            linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
 
             if (linkedValue == this.model.get('_scaleEnd')) {
                 this.$('.linked-confidence-bar').css({width: '100%'});
@@ -257,8 +274,10 @@ define([
             }
 
             if (this.model.get('_isSubmitted') && this.model.has('_userAnswer')) {
-                this.model.set('feedbackTitle', this.model.get('title'));
-                this.model.set('feedbackMessage', this._getFeedbackString());
+                this.model.set({
+                    feedbackTitle: this.model.get('title'),
+                    feedbackMessage: this._getFeedbackString()
+                });
             }
         },
 
@@ -285,7 +304,7 @@ define([
             this._updateTracking();
         },
 
-        onButtonsRendered:function(buttonsView) {
+        onButtonsRendered: function(buttonsView) {
             // necessary due to deferred ButtonsView::postRender
             if (this.buttonsView == buttonsView) {
                 if (!this.model.get('_isEnabled')) {
