@@ -57,6 +57,21 @@
       "validators": [],
       "help": "Display the number of attempts remaining?"
     },
+    "_canShowFeedback": {
+      "type":"boolean",
+      "required":true,
+      "default": true,
+      "title": "Display Feedback",
+      "inputType": "Checkbox",
+      "validators": []
+    },
+    "_canShowMarking": {
+      "type": "boolean",
+      "default": true,
+      "title": "Display Marking",
+      "inputType": "Checkbox",
+      "validators": []
+    },
     "_questionWeight": {
       "type": "number",
       "required": false,
