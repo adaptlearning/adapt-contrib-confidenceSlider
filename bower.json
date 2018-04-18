@@ -12,5 +12,8 @@
     "adapt-plugin",
     "adapt-component"
   ],
+  "pluginDependencies": {
+    "adapt-contrib-slider": "*"
+  },
   "license": "GPLv3"
 }
