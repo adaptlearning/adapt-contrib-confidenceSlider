@@ -41,7 +41,7 @@ In addition to the attributes specifically listed below, [*question components*]
 
 **instruction** (string): This optional text appears above the component. It is frequently used to
 guide the learner’s interaction with the component.  
-  
+
 **_recordInteraction** (boolean) Determines whether or not the learner's answers will be recorded to the LMS via cmi.interactions. Default is `true`. For further information, see the entry for `_shouldRecordInteractions` in the README for [adapt-contrib-spoor](https://github.com/adaptlearning/adapt-contrib-spoor).
 
 **_linkedToId** (string): The component ID of a slider to which this slider can be linked. This is optional and if set, will disable user interaction until a selection is submitted on the linked slider.
@@ -59,6 +59,8 @@ guide the learner’s interaction with the component.
 **_showScaleIndicator** (boolean): When set to `true`, a marker for the position of the slider along the scale is shown. If **_showNumber** is `true` this marker will contain a numeric value. If **_showNumber** is `false` a blank marker is shown.  
 
 **_showScale** (boolean): When set to `false`, visual indications of the scale&mdash;range of numbers and short rules&mdash;are not displayed. The default is `true`.
+
+**_showScaleNumbers** (boolean): When set to `false`, numbers are not shown over the scale items. Useful if you have a scale with very many steps where displaying that many  numbers would make it look crowded or even unreadable. The default is `true`.
 
 **_feedback** (object): If the [**Tutor** extension](https://github.com/adaptlearning/adapt-contrib-tutor) is enabled, these various texts will be displayed depending on the submitted answer. **_feedback** contains values for three seperate elements: generic, comparison and threshold feedback. Generic feedback is always presented to the user. Comparison feedback is presented on submission if the slider has been linked to another slider. Threshold feedback is determined according to the range in which the user's selection falls. All feedback elements are optional. Each element can be separated by one or more characters (such as a space) or, more commonly, by some HTML markup.
 

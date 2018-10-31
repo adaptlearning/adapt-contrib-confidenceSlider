@@ -22,6 +22,7 @@
     "_showNumber": true,
     "_showScaleIndicator": true,
     "_showScale": true,
+    "_showScaleNumbers": true,
     "labelStart": "incomplete",
     "labelEnd": "complete",
     "_scaleStart": 0,
