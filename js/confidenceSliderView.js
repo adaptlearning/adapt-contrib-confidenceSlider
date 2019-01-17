@@ -3,7 +3,6 @@ define([
   'components/adapt-contrib-slider/js/sliderView',
 ], function(Adapt, SliderView) {
 
-
   var ConfidenceSliderView = SliderView.extend({
 
     /* override */
@@ -26,13 +25,13 @@ define([
     /* override */
     disableQuestion: function() {
       if (this.model.get('_isReady')) this.setAllItemsEnabled(false);
-      if (this.model.has('_linkedModel')) this.$('.buttons-action').a11y_cntrl_enabled(false);
+      if (this.model.has('_linkedModel')) this.$('.js-btn-action').a11y_cntrl_enabled(false);
     },
 
     /* override */
     enableQuestion: function() {
       if (this.model.get('_isReady')) this.setAllItemsEnabled(true);
-      if (this.model.has('_linkedModel')) this.$('.buttons-action').a11y_cntrl_enabled(true);
+      if (this.model.has('_linkedModel')) this.$('.js-btn-action').a11y_cntrl_enabled(true);
     },
 
     _listenToLinkedModel: function() {
@@ -50,11 +49,11 @@ define([
       linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
 
       if (linkedValue == this.model.get('_scaleEnd')) {
-        this.$('.linked-confidence-bar').css({width: '100%'});
+        this.$('.confidenceslider__fill-linked').css({width: '100%'});
       }
       else {
         // follow rangeslider setPosition method
-        this.$('.linked-confidence-bar').css({width: (rangeslider.getPositionFromValue(linkedValue) + rangeslider.grabPos) + 'px'});
+        this.$('.confidenceslider__fill-linked').css({width: (rangeslider.getPositionFromValue(linkedValue) + rangeslider.grabPos) + 'px'});
       }
     },
 
@@ -62,13 +61,13 @@ define([
       SliderView.prototype.onQuestionRendered.apply(this, arguments);
 
       if (this.model.has('_linkedModel')) {
-        this.$('.rangeslider').prepend($('<div class="linked-confidence-bar"/>'));
+        this.$('.rangeslider').prepend($('<div class="confidenceslider__fill-linked"/>'));
         this._listenToLinkedModel();
         if (this.model.get('_linkedModel').get('_isSubmitted')) {
           this.onLinkedConfidenceChanged();
         } else {
           this.model.set('_isEnabled', false);
-          this.$('.component-body-inner').html(this.model.get('disabledBody'));
+          this.$('.component__body-inner').html(this.model.get('disabledBody'));
         }
       }
 
@@ -108,7 +107,7 @@ define([
       if (this.buttonsView == buttonsView) {
         if (!this.model.get('_isEnabled')) {
           if (!this.model.has('_linkedModel') || !this.model.get('_linkedModel').get('_isSubmitted')) {
-            this.$('.buttons-action').a11y_cntrl_enabled(false);
+            this.$('.js-btn-action').a11y_cntrl_enabled(false);
           }
         }
       }
