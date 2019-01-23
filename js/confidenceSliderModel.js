@@ -1,5 +1,5 @@
 define([
-	'core/js/adapt',
+    'core/js/adapt',
     'components/adapt-contrib-slider/js/sliderModel',
 ], function(Adapt, SliderModel) {
     
