@@ -1,8 +1,8 @@
 define([
-	'core/js/adapt',
+    'core/js/adapt',
     'components/adapt-contrib-slider/js/sliderView',
 ], function(Adapt, SliderView) {
-    
+
     var ConfidenceSliderView = SliderView.extend({
 
     	/* override */

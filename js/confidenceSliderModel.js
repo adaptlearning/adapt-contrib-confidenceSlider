@@ -2,18 +2,18 @@ define([
     'core/js/adapt',
     'components/adapt-contrib-slider/js/sliderModel',
 ], function(Adapt, SliderModel) {
-    
+
     var ConfidenceSliderModel = SliderModel.extend({
 
-    	init:function() {
-    		SliderModel.prototype.init.call(this);
+        init: function() {
+            SliderModel.prototype.init.call(this);
 
-    		if (this.get('_linkedToId')) {
-    			this._setupLinkedModel();
-    		}
-    	},
+            if (this.get('_linkedToId')) {
+                this._setupLinkedModel();
+            }
+        },
 
-    	/* override */
+        /* override */
         setupDefaultSettings: function() {
             SliderModel.prototype.setupDefaultSettings.apply(this, arguments);
             this.set('_canShowModelAnswer', false);
