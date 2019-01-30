@@ -12,7 +12,7 @@ define([
         // ensure data is setup
         Adapt.offlineStorage.get();
 
-        _.each(Adapt.components.where({'_component':'confidenceSlider', '_shouldStoreResponses':true}), function(confidenceSlider) {
+        _.each(Adapt.components.where({'_component': 'confidenceSlider', '_shouldStoreResponses': true}), function(confidenceSlider) {
           var dataItem = Adapt.offlineStorage.get(confidenceSlider.get('_id'));
 
           if (!dataItem) return;
@@ -29,25 +29,27 @@ define([
           var isSubmitted = booleanParameters[3];
           var isCorrect = booleanParameters[4];
 
-          confidenceSlider.set("_isComplete", true);
-          confidenceSlider.set("_isInteractionComplete", isInteractionComplete);
-          confidenceSlider.set("_isSubmitted", isSubmitted);
-          confidenceSlider.set("_score", score);
-          confidenceSlider.set("_isCorrect", isCorrect);
-          confidenceSlider.set("_attemptsLeft", attemptsLeft);
+          confidenceSlider.set({
+            _isComplete: true,
+            _isInteractionComplete: isInteractionComplete,
+            _isSubmitted: isSubmitted,
+            _score: score,
+            _isCorrect: isCorrect,
+            _attemptsLeft: attemptsLeft
+          });
 
           if (hasUserAnswer) {
             var userAnswer = dataItem[2];
             if (!isUserAnswerArray) userAnswer = userAnswer[0];
 
-            confidenceSlider.set("_userAnswer", userAnswer);
+            confidenceSlider.set('_userAnswer', userAnswer);
           }
         });
       }
     }
   });
 
-  return Adapt.register("confidenceSlider", {
+  return Adapt.register('confidenceSlider', {
     view: ConfidenceSliderView,
     model: ConfidenceSliderModel
   });

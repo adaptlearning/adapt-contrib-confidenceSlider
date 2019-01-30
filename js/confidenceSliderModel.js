@@ -5,7 +5,7 @@ define([
 
   var ConfidenceSliderModel = SliderModel.extend({
 
-    init:function() {
+    init: function() {
       SliderModel.prototype.init.call(this);
 
       if (this.get('_linkedToId')) {
