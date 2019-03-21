@@ -3,8 +3,8 @@
     <div class="slider-widget component-widget {{#unless _isEnabled}} disabled {{#if _isInteractionComplete}} complete submitted show-user-answer {{#if _canShowMarking}}{{#if _isCorrect}}correct{{else}}incorrect{{/if}}{{/if}} {{/if}} {{/unless}}">
         <div class="slider-holder clearfix">
             <div class="slider-scale-labels">
-                <div class="slider-scale-start">{{labelStart}}</div>
-                <div class="slider-scale-end">{{labelEnd}}</div>
+                <div class="slider-scale-start" aria-label="{{_globals._components._slider.labelStart}}">{{labelStart}}</div>
+                <div class="slider-scale-end" aria-label="{{_globals._components._slider.labelEnd}}">{{labelEnd}}</div>
             </div>
             <div class="slider-scale-numbers clearfix">
                 {{#each _items}}
