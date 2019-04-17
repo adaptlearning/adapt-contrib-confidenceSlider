@@ -8,7 +8,7 @@
     <div class="slider__label-container js-slider-label-container">
 
       {{#if labelStart}}
-      <div class="slider__label-start">
+      <div class="slider__label-start" aria-label="{{_globals._components._slider.labelStart}}">
         <div class="slider__label-start-inner">
           {{{labelStart}}}
         </div>
@@ -16,7 +16,7 @@
       {{/if}}
 
       {{#if labelEnd}}
-      <div class="slider__label-end">
+      <div class="slider__label-end" aria-label="{{_globals._components._slider.labelEnd}}">
         <div class="slider__label-end-inner">
           {{{labelEnd}}}
         </div>
