@@ -8,26 +8,28 @@
         "title": "Confidence Slider component",
         "displayTitle": "Confidence Slider",
         "body": "Question text here",
-        "disabledBody": "You need to measure your confidence in the linked part before you can do this part.",
         "instruction": "",
+        "disabledBody": "You need to measure your confidence in the linked part before you can do this part.",
         "_commentAttempts": "Can only be set to 1",
         "_attempts": 1,
-        "_isResetOnRevisit": false,
+        "_shouldDisplayAttempts": false,
         "_canShowFeedback": true,
         "_commentCanShowMarking": "If you enable _canShowMarking it will work but will always mark as correct answer",
         "_canShowMarking": false,
+        "_questionWeight": 1,
         "_recordInteraction": true,
-        "_commentLinkedToId": "ONLY ADD _linkedToId PROPERTY IF THIS SLIDER LINKS TO ANOTHER",
-        "_linkedToId": "c-10",
-        "_showNumber": true,
-        "_showScaleIndicator": true,
-        "_showScale": true,
-        "_showScaleNumbers": true,
+        "_comment": "ONLY ADD _linkedToId PROPERTY IF THIS SLIDER LINKS TO ANOTHER",
+        "_linkedToId": "c-05",
         "labelStart": "incomplete",
         "labelEnd": "complete",
         "_scaleStart": 0,
         "_scaleEnd": 10,
         "_scaleStep": 1,
+        "_showNumber": true,
+        "_showScaleIndicator": true,
+        "_showScale": true,
+        "_isResetOnRevisit": false,
+        "_shouldStoreResponses": true,
         "_feedback": {
             "feedbackSeparator": " ",
             "generic": "Thanks for measuring your confidence.",
@@ -38,11 +40,11 @@
             },
             "_threshold": [
                 {
-                  "_values": {
-                      "_low": 0,
-                      "_high": 5
-                  },
-                  "text": "So you're not that confident eh? Don't worry, you will be soon."
+                    "_values": {
+                        "_low": 0,
+                        "_high": 5
+                    },
+                    "text": "So you're not that confident eh? Don't worry, you will be soon."
                 },
                 {
                     "_values": {
@@ -56,7 +58,6 @@
         "_pageLevelProgress": {
             "_isEnabled": true
         },
-        "_shouldStoreResponses": true,
         "_buttons": {
             "_submit": {
                 "buttonText": "Submit",
