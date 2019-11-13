@@ -1,34 +1,52 @@
-<div class="confidence slider-inner component-inner">
-    {{> component this}}
-    <div class="slider-widget component-widget {{#unless _isEnabled}} disabled {{#if _isInteractionComplete}} complete submitted show-user-answer {{#if _canShowMarking}}{{#if _isCorrect}}correct{{else}}incorrect{{/if}}{{/if}} {{/if}} {{/unless}}">
-        <div class="slider-holder clearfix">
-            <div class="slider-scale-labels">
-                <div class="slider-scale-start" aria-label="{{_globals._components._slider.labelStart}}">{{labelStart}}</div>
-                <div class="slider-scale-end" aria-label="{{_globals._components._slider.labelEnd}}">{{labelEnd}}</div>
-            </div>
-            <div class="slider-scale-numbers clearfix">
-                {{#each _items}}
-                    <div class="base slider-scale-number" data-id="{{value}}" aria-hidden="true">{{value}}</div>
-                {{/each}}
-                <div class="slider-modelranges"></div>
-                <div class="slider-answer component-item-color component-item-text-color"></div>
-                <div class="slider-scale-marker component-item-color component-item-text-color a11y-ignore" aria-hidden="true" tabindex="-1"></div>
-            </div>
-            <div class="slider-scaler-wrapper clearfix">
-               <div class="slider-scaler component-item-color">
-                  <div class="slider-scale-start-marker slider-line component-item-color"></div>
-                  <div class="slider-markers"></div>
-                  <div class="slider-scale-end-marker slider-line component-item-color"></div>
-              </div>
-          </div>
+<div class="component__inner slider__inner confidence__inner">
 
-            <div class="slider-background">
-                <div class="slider-item component-item {{#unless _isEnabled}}{{#if _isCorrect}}correct{{else}}incorrect{{/if}}{{/unless}}">
-                  <input type="range" role="slider" value="{{#if _userAnswer}}{{_userAnswer}}{{else}}{{_scaleStart}}{{/if}}" min="{{_scaleStart}}" max="{{_scaleEnd}}" aria-valuenow="{{#if _userAnswer}}{{_userAnswer}}{{else}}{{_scaleStart}}{{/if}}" aria-valuemin="{{_scaleStart}}" aria-valuemax="{{_scaleEnd}}" data-rangeslider data-direction="{{#equals _marginDir "right"}}rtl{{/equals}}" {{#unless _isEnabled}} disabled{{/unless}}>
-                </div>
-            </div>
+  {{> component this}}
+
+  <div class="component__widget slider__widget{{#unless _isEnabled}} is-disabled{{#if _isInteractionComplete}} is-complete is-submitted show-user-answer{{#if _canShowMarking}}{{#if _isCorrect}} is-correct{{else}} is-incorrect{{/if}}{{/if}}{{/if}}{{/unless}}">
+
+    {{#any labelStart labelEnd}}
+    <div class="slider__label-container js-slider-label-container">
+
+      {{#if labelStart}}
+      <div class="slider__label-start" aria-label="{{_globals._components._slider.labelStart}}">
+        <div class="slider__label-start-inner">
+          {{{labelStart}}}
         </div>
+      </div>
+      {{/if}}
+
+      {{#if labelEnd}}
+      <div class="slider__label-end" aria-label="{{_globals._components._slider.labelEnd}}">
+        <div class="slider__label-end-inner">
+          {{{labelEnd}}}
+        </div>
+      </div>
+      {{/if}}
+
     </div>
-    <div class="buttons">
+    {{/any}}
+
+    <div class="slider__number-container">
+      {{#each _items}}
+      <div class="slider__number js-slider-number js-slider-number-click" data-id="{{value}}" aria-hidden="true">{{value}}</div>
+      {{/each}}
+      <div class="slider__number-model-range js-slider-model-range"></div>
+      <div class="slider__number-answer"></div>
+      <div class="slider__number-selection js-slider-number-selection a11y-ignore" aria-hidden="true" tabindex="-1"></div>
     </div>
+
+    <div class="slider__scale-container js-slider-scale">
+      <div class="slider__scale-notch slider__scale-notch-start"></div>
+      <div class="slider__scale-notch-container js-slider-scale-notch-container"></div>
+      <div class="slider__scale-notch slider__scale-notch-end"></div>
+    </div>
+
+    <div class="slider__item{{#unless _isEnabled}}{{#if _isCorrect}} is-correct{{else}} is-incorrect{{/if}}{{/unless}}">
+      <input class="slider__item-input js-slider-item-input" type="range" role="slider" value="{{#if _userAnswer}}{{_userAnswer}}{{else}}{{_scaleStart}}{{/if}}" min="{{_scaleStart}}" max="{{_scaleEnd}}" aria-valuenow="{{#if _userAnswer}}{{_userAnswer}}{{else}}{{_scaleStart}}{{/if}}" aria-valuemin="{{_scaleStart}}" aria-valuemax="{{_scaleEnd}}" data-rangeslider data-direction="{{#equals _marginDir "right"}}rtl{{/equals}}" {{#unless _isEnabled}} disabled{{/unless}}>
+    </div>
+
+  </div>
+
+  <div class="btn__container"></div>
+
 </div>
