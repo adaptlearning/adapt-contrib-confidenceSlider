@@ -1,11 +1,11 @@
 define([
   'core/js/adapt',
   'components/adapt-contrib-slider/js/sliderModel',
-], function(Adapt, SliderModel) {
+], function (Adapt, SliderModel) {
 
   var ConfidenceSliderModel = SliderModel.extend({
 
-    init: function() {
+    init: function () {
       SliderModel.prototype.init.call(this);
 
       if (this.get('_linkedToId')) {
@@ -14,21 +14,21 @@ define([
     },
 
     /* override */
-    setupDefaultSettings: function() {
+    setupDefaultSettings: function () {
       SliderModel.prototype.setupDefaultSettings.apply(this, arguments);
       this.set('_canShowModelAnswer', false);
       if (!this.has('_attempts') || this.get('_attempts') > 1) this.set('_attempts', 1);
     },
 
     /* override to indicate that all options are correct */
-    setupModelItems: function() {
+    setupModelItems: function () {
       var items = [];
       var start = this.get('_scaleStart');
       var end = this.get('_scaleEnd');
       var step = this.get('_scaleStep') || 1;
 
       for (var i = start; i <= end; i += step) {
-        items.push({value: i, selected: false, correct: true});
+        items.push({ value: i, selected: false, correct: true });
       }
 
       this.set({
@@ -38,12 +38,12 @@ define([
     },
 
     /* override */
-    restoreUserAnswers: function() {
+    restoreUserAnswers: function () {
       if (!this.get('_isSubmitted')) {
         this.set({
-          _selectedItem: {},
           _userAnswer: undefined
         });
+        this.selectDefaultItem();
         return;
       }
 
@@ -54,20 +54,20 @@ define([
     },
 
     /* override */
-    canSubmit: function() {
+    canSubmit: function () {
       return !this.has('_linkedModel') || this.get('_linkedModel').get('_isSubmitted');
     },
 
     /* override */
-    setupFeedback: function(){
-      this.set( {
+    setupFeedback: function () {
+      this.set({
         feedbackTitle: this.get('title'),
         feedbackMessage: this.getFeedbackString()
       });
     },
 
     /* override */
-    updateButtons: function() {
+    updateButtons: function () {
       if (this.get('_attempts') > 0) {
         SliderModel.prototype.updateButtons.apply(this, arguments);
       }
@@ -76,7 +76,7 @@ define([
       }
     },
 
-    updateTracking:function() {
+    updateTracking: function () {
       // should we track this component?
       if (this.get('_shouldStoreResponses')) {
         // is tracking is enabled?
@@ -90,13 +90,13 @@ define([
       }
     },
 
-    getFeedbackString: function() {
+    getFeedbackString: function () {
       var feedbackSeparator = this.get('_feedback').feedbackSeparator,
-          genericFeedback = this._getGenericFeedback(),
-          comparisonFeedback = this.has('_linkedModel') && this.get('_linkedModel').get('_isSubmitted') ? this._getComparisonFeedback() : null,
-          thresholdFeedback = this._getThresholdFeedback(),
-          needsSeparator = false,
-          feedbackString = "";
+        genericFeedback = this._getGenericFeedback(),
+        comparisonFeedback = this.has('_linkedModel') && this.get('_linkedModel').get('_isSubmitted') ? this._getComparisonFeedback() : null,
+        thresholdFeedback = this._getThresholdFeedback(),
+        needsSeparator = false,
+        feedbackString = "";
 
       if (genericFeedback) {
         feedbackString += genericFeedback;
@@ -115,8 +115,8 @@ define([
       return feedbackString;
     },
 
-    _setupLinkedModel: function() {
-      var linkedModel = Adapt.components.findWhere({_id: this.get('_linkedToId')});
+    _setupLinkedModel: function () {
+      var linkedModel = Adapt.components.findWhere({ _id: this.get('_linkedToId') });
 
       if (!linkedModel) {
         Adapt.log.error("Please check that you have set _linkedToId correctly!");
@@ -143,15 +143,15 @@ define([
       if (this.get('_attempts') < 0) linkedModel.set('_attempts', 1);
     },
 
-    _getGenericFeedback: function() {
+    _getGenericFeedback: function () {
       return this.get('_feedback').generic;
     },
 
-    _getComparisonFeedback: function() {
+    _getComparisonFeedback: function () {
       var lm = this.get('_linkedModel'),
-          confidence = this.get('_selectedItem').value,
-          linkedConfidence = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value,
-          feedbackString;
+        confidence = this.get('_selectedItem').value,
+        linkedConfidence = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value,
+        feedbackString;
       if (linkedConfidence < confidence) {
         feedbackString = this.get('_feedback')._comparison.higher;
       } else if (linkedConfidence > confidence) {
@@ -162,7 +162,7 @@ define([
       return feedbackString;
     },
 
-    _getThresholdFeedback: function() {
+    _getThresholdFeedback: function () {
       var feedbackList = this.get('_feedback')._threshold;
 
       if (!feedbackList) return;
@@ -179,9 +179,9 @@ define([
       }
     },
 
-    _getTrackingData:function() {
+    _getTrackingData: function () {
       if (this.get('_isInteractionComplete') === false || this.get('_isComplete') === false) {
-          return null;
+        return null;
       }
 
       var hasUserAnswer = (this.get('_userAnswer') !== undefined);
