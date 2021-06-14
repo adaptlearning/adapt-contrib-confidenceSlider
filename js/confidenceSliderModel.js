@@ -41,9 +41,9 @@ define([
     restoreUserAnswers: function() {
       if (!this.get('_isSubmitted')) {
         this.set({
-          _selectedItem: {},
           _userAnswer: undefined
         });
+        this.selectDefaultItem();
         return;
       }
 
