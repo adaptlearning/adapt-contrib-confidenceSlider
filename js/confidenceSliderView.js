@@ -7,7 +7,7 @@ define([
 
     /* override */
     preRender() {
-      if (this.model.has('_linkedModel') && this.model.get('_linkedModel').get('_isSubmitted') && !this.model.get('_isSubmitted')) {
+      if (this.model.get('_linkedModel')?.get('_isSubmitted') && !this.model.get('_isSubmitted')) {
         this.model.set('_isEnabled', true);
       }
 
