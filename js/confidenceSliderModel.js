@@ -3,42 +3,45 @@ define([
   'components/adapt-contrib-slider/js/sliderModel',
 ], function(Adapt, SliderModel) {
 
-  var ConfidenceSliderModel = SliderModel.extend({
+  class ConfidenceSliderModel extends SliderModel {
 
-    init: function() {
-      SliderModel.prototype.init.call(this);
+    init() {
+      super.init(this);
 
-      if (this.get('_linkedToId')) {
-        this._setupLinkedModel();
-      }
-    },
+      if (!this.get('_linkedToId')) return;
+      this._setupLinkedModel();
+    }
 
     /* override */
-    setupDefaultSettings: function() {
+    setupDefaultSettings() {
       SliderModel.prototype.setupDefaultSettings.apply(this, arguments);
       this.set('_canShowModelAnswer', false);
       if (!this.has('_attempts') || this.get('_attempts') > 1) this.set('_attempts', 1);
-    },
+    }
 
     /* override to indicate that all options are correct */
-    setupModelItems: function() {
-      var items = [];
-      var start = this.get('_scaleStart');
-      var end = this.get('_scaleEnd');
-      var step = this.get('_scaleStep') || 1;
+    setupModelItems() {
+      const items = [];
+      const start = this.get('_scaleStart');
+      const end = this.get('_scaleEnd');
+      const step = this.get('_scaleStep') || 1;
 
-      for (var i = start; i <= end; i += step) {
-        items.push({value: i, selected: false, correct: true});
+      for (let i = start; i <= end; i += step) {
+        items.push({
+          value: i,
+          selected: false,
+          correct: true
+        });
       }
 
       this.set({
         _items: items,
         _marginDir: (Adapt.config.get('_defaultDirection') === 'rtl' ? 'right' : 'left')
       });
-    },
+    }
 
     /* override */
-    restoreUserAnswers: function() {
+    restoreUserAnswers() {
       if (!this.get('_isSubmitted')) {
         this.set({
           _selectedItem: {},
@@ -51,52 +54,46 @@ define([
       if (!this.has('_userAnswer')) this.set('_userAnswer', this.get('_items')[0].value);
 
       SliderModel.prototype.restoreUserAnswers.apply(this, arguments);
-    },
+    }
 
     /* override */
-    canSubmit: function() {
+    canSubmit() {
       return !this.has('_linkedModel') || this.get('_linkedModel').get('_isSubmitted');
-    },
+    }
 
     /* override */
-    setupFeedback: function(){
-      this.set( {
+    setupFeedback() {
+      this.set({
         feedbackTitle: this.get('title'),
         feedbackMessage: this.getFeedbackString()
       });
-    },
+    }
 
     /* override */
-    updateButtons: function() {
+    updateButtons() {
       if (this.get('_attempts') > 0) {
         SliderModel.prototype.updateButtons.apply(this, arguments);
+        return;
       }
-      else {
-        this.set('_buttonState', this.get('_isEnabled') ? 'submit' : 'reset');
-      }
-    },
+      this.set('_buttonState', this.get('_isEnabled') ? 'submit' : 'reset');
+    }
 
-    updateTracking:function() {
-      // should we track this component?
-      if (this.get('_shouldStoreResponses')) {
-        // is tracking is enabled?
-        if (Adapt.config.has('_spoor') && Adapt.config.get('_spoor')._isEnabled) {
-          // if spoor is handling response tracking we don't need to do anything
-          if (!Adapt.config.get('_spoor')._tracking._shouldStoreResponses) {
-            // otherwise write custom tracking data
-            Adapt.offlineStorage.set(this.get('_id'), this._getTrackingData());
-          }
-        }
-      }
-    },
+    updateTracking() {
+      const shouldTrackResponses = (this.get('_shouldStoreResponses'));
+      const isSpoorEnabled = (Adapt.config.has('_spoor')?._isEnabled);
+      const shouldStoreResponses = (Adapt.config.get('_spoor')?._tracking?._shouldStoreResponses);
+      if (!shouldTrackResponses && !isSpoorEnabled && shouldStoreResponses) return;
+      // write custom tracking data
+      Adapt.offlineStorage.set(this.get('_id'), this._getTrackingData());
+    }
 
-    getFeedbackString: function() {
-      var feedbackSeparator = this.get('_feedback').feedbackSeparator,
-          genericFeedback = this._getGenericFeedback(),
-          comparisonFeedback = this.has('_linkedModel') && this.get('_linkedModel').get('_isSubmitted') ? this._getComparisonFeedback() : null,
-          thresholdFeedback = this._getThresholdFeedback(),
-          needsSeparator = false,
-          feedbackString = "";
+    getFeedbackString() {
+      const feedbackSeparator = this.get('_feedback').feedbackSeparator;
+      const genericFeedback = this._getGenericFeedback();
+      const comparisonFeedback = this.has('_linkedModel') && this.get('_linkedModel').get('_isSubmitted') ? this._getComparisonFeedback() : null;
+      const thresholdFeedback = this._getThresholdFeedback();
+      let needsSeparator = false;
+      let feedbackString = '';
 
       if (genericFeedback) {
         feedbackString += genericFeedback;
@@ -105,7 +102,7 @@ define([
       if (comparisonFeedback) {
         if (needsSeparator) feedbackString += feedbackSeparator;
         feedbackString += comparisonFeedback;
-        needsSeparator = true;
+        if (!needsSeparator) needsSeparator = true;
       }
       if (thresholdFeedback) {
         if (needsSeparator) feedbackString += feedbackSeparator;
@@ -113,18 +110,18 @@ define([
       }
 
       return feedbackString;
-    },
+    }
 
-    _setupLinkedModel: function() {
-      var linkedModel = Adapt.components.findWhere({_id: this.get('_linkedToId')});
+    _setupLinkedModel() {
+      const linkedModel = Adapt.components.findWhere({ _id: this.get('_linkedToId') });
 
       if (!linkedModel) {
-        Adapt.log.error("Please check that you have set _linkedToId correctly!");
+        Adapt.log.error('Please check that you have set _linkedToId correctly!');
         return;
       }
 
-      if (linkedModel.get('_component') !== "confidenceSlider") {
-        Adapt.log.warn("The component you have linked confidenceSlider " + this.get('_id') + " to is not a confidenceSlider component!");
+      if (linkedModel.get('_component') !== 'confidenceSlider') {
+        Adapt.log.warn(`The component you have linked confidenceSlider ${this.get('_id')} to is not a confidenceSlider component!`);
         return;
       }
 
@@ -141,58 +138,56 @@ define([
       this.set('_linkedModel', linkedModel);
 
       if (this.get('_attempts') < 0) linkedModel.set('_attempts', 1);
-    },
+    }
 
-    _getGenericFeedback: function() {
+    _getGenericFeedback() {
       return this.get('_feedback').generic;
-    },
+    }
 
-    _getComparisonFeedback: function() {
-      var lm = this.get('_linkedModel'),
-          confidence = this.get('_selectedItem').value,
-          linkedConfidence = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value,
-          feedbackString;
+    _getComparisonFeedback() {
+      const lm = this.get('_linkedModel');
+      const confidence = this.get('_selectedItem').value;
+      const linkedConfidence = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
       if (linkedConfidence < confidence) {
-        feedbackString = this.get('_feedback')._comparison.higher;
-      } else if (linkedConfidence > confidence) {
-        feedbackString = this.get('_feedback')._comparison.lower;
-      } else {
-        feedbackString = this.get('_feedback')._comparison.same;
+        return this.get('_feedback')._comparison.higher;
       }
-      return feedbackString;
-    },
+      if (linkedConfidence > confidence) {
+        return this.get('_feedback')._comparison.lower;
+      }
+      return this.get('_feedback')._comparison.same;
+    }
 
-    _getThresholdFeedback: function() {
-      var feedbackList = this.get('_feedback')._threshold;
+    _getThresholdFeedback() {
+      const feedbackList = this.get('_feedback')._threshold;
 
       if (!feedbackList) return;
 
-      var confidenceValue = this.get('_selectedItem').value;
+      const confidenceValue = this.get('_selectedItem').value;
 
-      for (var i = 0, j = feedbackList.length; i < j; i++) {
-        var feedback = feedbackList[i];
-        var values = feedback._values;
+      for (let i = 0, j = feedbackList.length; i < j; i++) {
+        const feedback = feedbackList[i];
+        const values = feedback._values;
 
         if (confidenceValue >= values._low && confidenceValue <= values._high) {
           return feedback.text;
         }
       }
-    },
+    }
 
-    _getTrackingData:function() {
+    _getTrackingData() {
       if (this.get('_isInteractionComplete') === false || this.get('_isComplete') === false) {
-          return null;
+        return null;
       }
 
-      var hasUserAnswer = (this.get('_userAnswer') !== undefined);
-      var isUserAnswerArray = (this.get('_userAnswer') instanceof Array);
+      const hasUserAnswer = (this.get('_userAnswer') !== undefined);
+      const isUserAnswerArray = (this.get('_userAnswer') instanceof Array);
 
-      var numericParameters = [
+      const numericParameters = [
         this.get('_score') || 0,
         this.get('_attemptsLeft') || 0
       ];
 
-      var booleanParameters = [
+      const booleanParameters = [
         hasUserAnswer ? 1 : 0,
         isUserAnswerArray ? 1 : 0,
         this.get('_isInteractionComplete') ? 1 : 0,
@@ -200,22 +195,20 @@ define([
         this.get('_isCorrect') ? 1 : 0
       ];
 
-      var data = [
+      const data = [
         numericParameters,
         booleanParameters
       ];
 
-
       if (hasUserAnswer) {
-        var userAnswer = isUserAnswerArray ? this.get('_userAnswer') : [this.get('_userAnswer')];
-
+        const userAnswer = isUserAnswerArray ? this.get('_userAnswer') : [this.get('_userAnswer')];
         data.push(userAnswer);
       }
 
       return data;
     }
 
-  });
+  }
 
   return ConfidenceSliderModel;
 
