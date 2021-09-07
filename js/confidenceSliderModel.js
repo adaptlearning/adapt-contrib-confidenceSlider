@@ -12,7 +12,7 @@ export default class ConfidenceSliderModel extends SliderModel {
 
   /* override */
   setupDefaultSettings() {
-    SliderModel.prototype.setupDefaultSettings.apply(this, arguments);
+    super.setupDefaultSettings(this, arguments);
     this.set('_canShowModelAnswer', false);
     if (!this.has('_attempts') || this.get('_attempts') > 1) this.set('_attempts', 1);
   }
@@ -51,12 +51,12 @@ export default class ConfidenceSliderModel extends SliderModel {
     // this is only necessary to avoid an issue when using adapt-devtools
     if (!this.has('_userAnswer')) this.set('_userAnswer', this.get('_items')[0].value);
 
-    SliderModel.prototype.restoreUserAnswers.apply(this, arguments);
+    super.restoreUserAnswers(this, arguments);
   }
 
   /* override */
   canSubmit() {
-    return !this.has('_linkedModel') || this.get('_linkedModel').get('_isSubmitted');
+    return !this.get('_linkedModel')?.get('_isSubmitted');
   }
 
   /* override */
@@ -70,7 +70,7 @@ export default class ConfidenceSliderModel extends SliderModel {
   /* override */
   updateButtons() {
     if (this.get('_attempts') > 0) {
-      SliderModel.prototype.updateButtons.apply(this, arguments);
+      super.updateButtons(this, arguments);
       return;
     }
     this.set('_buttonState', this.get('_isEnabled') ? 'submit' : 'reset');
@@ -88,7 +88,7 @@ export default class ConfidenceSliderModel extends SliderModel {
   getFeedbackString() {
     const feedbackSeparator = this.get('_feedback').feedbackSeparator;
     const genericFeedback = this._getGenericFeedback();
-    const comparisonFeedback = this.has('_linkedModel') && this.get('_linkedModel').get('_isSubmitted') ? this._getComparisonFeedback() : null;
+    const comparisonFeedback = this.get('_linkedModel')?.get('_isSubmitted') ? this._getComparisonFeedback() : null;
     const thresholdFeedback = this._getThresholdFeedback();
     let needsSeparator = false;
     let feedbackString = '';
@@ -145,7 +145,7 @@ export default class ConfidenceSliderModel extends SliderModel {
   _getComparisonFeedback() {
     const lm = this.get('_linkedModel');
     const confidence = this.get('_selectedItem').value;
-    const linkedConfidence = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
+    const linkedConfidence = lm.get('_userAnswer') ?? lm.get('_selectedItem').value;
     if (linkedConfidence < confidence) {
       return this.get('_feedback')._comparison.higher;
     }
