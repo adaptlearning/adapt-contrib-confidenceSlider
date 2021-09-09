@@ -1,12 +1,8 @@
-define([
-  'core/js/adapt',
-  './confidenceSliderView',
-  './confidenceSliderModel'
-], function(Adapt, ConfidenceSliderView, ConfidenceSliderModel) {
+import Adapt from 'core/js/adapt';
+import ConfidenceSliderView from './ConfidenceSliderView';
+import ConfidenceSliderModel from './ConfidenceSliderModel';
 
-  return Adapt.register('confidenceSlider', {
-    view: ConfidenceSliderView,
-    model: ConfidenceSliderModel
-  });
-
+export default Adapt.register('confidenceSlider', {
+  view: ConfidenceSliderView,
+  model: ConfidenceSliderModel
 });
