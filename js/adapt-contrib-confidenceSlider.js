@@ -2,7 +2,58 @@ import Adapt from 'core/js/adapt';
 import ConfidenceSliderView from './ConfidenceSliderView';
 import ConfidenceSliderModel from './ConfidenceSliderModel';
 
-export default Adapt.register('confidenceSlider', {
+class ConfidenceSlider extends Backbone.Controller {
+  initialise() {
+    this.listenTo(Adapt, 'app:dataLoaded', this.onDataLoaded);
+  }
+
+  onDataReady() {
+    // is tracking enabled?
+    // if spoor is handling response tracking we don't need to do anything
+    if (!Adapt.config.get('_spoor')?._isEnabled && Adapt.config.get('_spoor')?._tracking?._shouldStoreResponses) return;
+    // ensure data is setup
+    Adapt.offlineStorage.get();
+
+    Adapt.components.where({
+      _component: 'confidenceSlider',
+      _shouldStoreResponses: true
+    }).forEach((confidenceSlider) => {
+      const dataItem = Adapt.offlineStorage.get(confidenceSlider.get('_id'));
+
+      if (!dataItem) return;
+
+      const numericParameters = dataItem[0];
+      const booleanParameters = dataItem[1];
+
+      const _score = numericParameters[0];
+      const _attemptsLeft = numericParameters[1] || 0;
+      const _isInteractionComplete = booleanParameters[2];
+      const _isSubmitted = booleanParameters[3];
+      const _isCorrect = booleanParameters[4];
+
+      confidenceSlider.set({
+        _isComplete: true,
+        _isInteractionComplete,
+        _isSubmitted,
+        _score,
+        _isCorrect,
+        _attemptsLeft
+      });
+
+      const hasUserAnswer = booleanParameters[0];
+      const isUserAnswerArray = booleanParameters[1];
+      if (!hasUserAnswer) return;
+      let userAnswer = dataItem[2];
+      if (!isUserAnswerArray) userAnswer = userAnswer[0];
+
+      confidenceSlider.set('_userAnswer', userAnswer);
+    });
+  }
+}
+
+Adapt.register('confidenceSlider', {
   view: ConfidenceSliderView,
   model: ConfidenceSliderModel
 });
+
+export default ConfidenceSlider;
