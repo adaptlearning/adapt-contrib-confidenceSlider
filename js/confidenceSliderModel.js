@@ -56,7 +56,7 @@ export default class ConfidenceSliderModel extends SliderModel {
 
   /* override */
   canSubmit() {
-    return !this.get('_linkedModel')?.get('_isSubmitted');
+    return (!this.has('_linkedModel') || this.get('_linkedModel').get('_isSubmitted'));
   }
 
   /* override */
