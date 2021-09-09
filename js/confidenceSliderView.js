@@ -1,6 +1,6 @@
 define([
   'core/js/adapt',
-  'components/adapt-contrib-slider/js/sliderView',
+  'components/adapt-contrib-slider/js/sliderView'
 ], function(Adapt, SliderView) {
 
   class ConfidenceSliderView extends SliderView {
