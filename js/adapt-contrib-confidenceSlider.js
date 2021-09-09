@@ -4,7 +4,7 @@ import ConfidenceSliderModel from './ConfidenceSliderModel';
 
 class ConfidenceSlider extends Backbone.Controller {
   initialise() {
-    this.listenTo(Adapt, 'app:dataLoaded', this.onDataLoaded);
+    this.listenTo(Adapt, 'app:dataReady', this.onDataReady);
   }
 
   onDataReady() {

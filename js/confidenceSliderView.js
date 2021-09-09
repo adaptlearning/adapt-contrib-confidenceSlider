@@ -109,11 +109,7 @@ export default class ConfidenceSliderView extends SliderView {
   }
 
   onLinkedSubmittedChanged(linkedModel) {
-    if (linkedModel.get('_isSubmitted')) {
-      this.model.set('_isEnabled', true);
-      return;
-    }
-    this.model.set('_isEnabled', false);
+    this.model.set('_isEnabled', (linkedModel.get('_isSubmitted') === true));
   }
 
 }
