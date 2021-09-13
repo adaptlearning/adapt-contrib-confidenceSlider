@@ -8,9 +8,6 @@ class ConfidenceSlider extends Backbone.Controller {
   }
 
   onDataReady() {
-    // is tracking enabled?
-    // if spoor is handling response tracking we don't need to do anything
-    if (!Adapt.config.get('_spoor')?._isEnabled && Adapt.config.get('_spoor')?._tracking?._shouldStoreResponses) return;
     // ensure data is setup
     Adapt.offlineStorage.get();
 

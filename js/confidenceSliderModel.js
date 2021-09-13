@@ -77,10 +77,7 @@ export default class ConfidenceSliderModel extends SliderModel {
   }
 
   updateTracking() {
-    const shouldTrackResponses = (this.get('_shouldStoreResponses'));
-    const isSpoorEnabled = (Adapt.config.has('_spoor')?._isEnabled);
-    const shouldStoreResponses = (Adapt.config.get('_spoor')?._tracking?._shouldStoreResponses);
-    if (!shouldTrackResponses || !isSpoorEnabled || shouldStoreResponses) return;
+    if (this.get('_shouldStoreResponses')) return;
     // write custom tracking data
     Adapt.offlineStorage.set(this.get('_id'), this._getTrackingData());
   }
