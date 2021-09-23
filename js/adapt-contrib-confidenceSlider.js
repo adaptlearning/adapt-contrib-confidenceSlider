@@ -54,4 +54,4 @@ Adapt.register('confidenceSlider', {
   model: ConfidenceSliderModel
 });
 
-export default ConfidenceSlider;
+export default new ConfidenceSlider();
