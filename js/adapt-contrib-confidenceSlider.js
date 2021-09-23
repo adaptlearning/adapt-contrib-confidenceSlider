@@ -3,7 +3,8 @@ import ConfidenceSliderView from './ConfidenceSliderView';
 import ConfidenceSliderModel from './ConfidenceSliderModel';
 
 class ConfidenceSlider extends Backbone.Controller {
-  initialise() {
+
+  initialize() {
     this.listenTo(Adapt, 'app:dataReady', this.onDataReady);
   }
 
