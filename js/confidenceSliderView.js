@@ -1,133 +1,115 @@
-define([
-  'core/js/adapt',
-  'components/adapt-contrib-slider/js/sliderView'
-], function(Adapt, SliderView) {
+import Adapt from 'core/js/adapt';
+import SliderView from 'components/adapt-contrib-slider/js/sliderView';
 
-  var ConfidenceSliderView = SliderView.extend({
+export default class ConfidenceSliderView extends SliderView {
 
-    /* override */
-    preRender:function() {
-      if (this.model.has('_linkedModel') && this.model.get('_linkedModel').get('_isSubmitted') && !this.model.get('_isSubmitted')) {
-        this.model.set('_isEnabled', true);
-      }
+  /* override */
+  preRender() {
+    if (this.model.get('_linkedModel')?.get('_isSubmitted') && !this.model.get('_isSubmitted')) {
+      this.model.set('_isEnabled', true);
+    }
 
-      SliderView.prototype.preRender.apply(this, arguments);
-    },
+    super.preRender(this, arguments);
+  }
 
-    /* override */
-    setupQuestion: function() {
-      if (this.model.get('_linkedToId')) {
-        this.listenTo(Adapt, "buttonsView:postRender", this.onButtonsRendered);
-      }
-      SliderView.prototype.setupQuestion.apply(this, arguments);
-    },
+  /* override */
+  setupQuestion() {
+    if (this.model.get('_linkedToId')) {
+      this.listenTo(Adapt, 'buttonsView:postRender', this.onButtonsRendered);
+    }
 
-    /* override */
-    disableQuestion: function() {
-      if (this.model.get('_isReady')) this.setAllItemsEnabled(false);
-      if (this.model.has('_linkedModel')) this.$('.js-btn-action').a11y_cntrl_enabled(false);
-    },
+    super.setupQuestion(this, arguments);
+  }
 
-    /* override */
-    enableQuestion: function() {
-      if (this.model.get('_isReady')) this.setAllItemsEnabled(true);
-      if (this.model.has('_linkedModel')) this.$('.js-btn-action').a11y_cntrl_enabled(true);
-    },
+  /* override */
+  disableQuestion() {
+    if (this.model.get('_isReady')) this.setAllItemsEnabled(false);
+    if (this.model.has('_linkedModel')) this.$('.js-btn-action').a11y_cntrl_enabled(false);
+  }
 
-    _listenToLinkedModel: function() {
-      this.listenTo(this.model.get('_linkedModel'), {
-        'change:_selectedItem': this.onLinkedConfidenceChanged,
-        'change:_isSubmitted': this.onLinkedSubmittedChanged
-      });
-    },
+  /* override */
+  enableQuestion() {
+    if (this.model.get('_isReady')) this.setAllItemsEnabled(true);
+    if (this.model.has('_linkedModel')) this.$('.js-btn-action').a11y_cntrl_enabled(true);
+  }
 
-    _updateLinkedConfidenceIndicator: function() {
-      var lm = this.model.get('_linkedModel');
-      var linkedValue = 0;
-      var rangeslider = this.$slider.data('plugin_rangeslider');
+  _listenToLinkedModel() {
+    this.listenTo(this.model.get('_linkedModel'), {
+      'change:_selectedItem': this.onLinkedConfidenceChanged,
+      'change:_isSubmitted': this.onLinkedSubmittedChanged
+    });
+  }
 
-      linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
+  _updateLinkedConfidenceIndicator() {
+    const lm = this.model.get('_linkedModel');
+    const rangeslider = this.$slider.data('plugin_rangeslider');
 
-      if (linkedValue == this.model.get('_scaleEnd')) {
-        this.$('.confidenceslider__fill-linked').css({width: '100%'});
-      }
-      else {
-        // follow rangeslider setPosition method
-        this.$('.confidenceslider__fill-linked').css({width: (rangeslider.getPositionFromValue(linkedValue) + rangeslider.grabPos) + 'px'});
-      }
-    },
+    const linkedValue = lm.has('_userAnswer') ? lm.get('_userAnswer') : lm.get('_selectedItem').value;
 
-    onQuestionRendered: function() {
-      SliderView.prototype.onQuestionRendered.apply(this, arguments);
+    if (linkedValue === this.model.get('_scaleEnd')) {
+      this.$('.confidenceslider__fill-linked').css({ width: '100%' });
+      return;
+    }
+    // follow rangeslider setPosition method
+    this.$('.confidenceslider__fill-linked').css({ width: (rangeslider.getPositionFromValue(linkedValue) + rangeslider.grabPos) + 'px' });
+  }
 
-      if (this.model.has('_linkedModel')) {
-        this.$('.rangeslider').prepend($('<div class="confidenceslider__fill-linked"/>'));
-        this._listenToLinkedModel();
-        if (this.model.get('_linkedModel').get('_isSubmitted')) {
-          this.onLinkedConfidenceChanged();
-        } else {
-          this.model.set('_isEnabled', false);
-          this.$('.component__body-inner').html(this.model.get('disabledBody'));
-        }
-      }
+  onQuestionRendered() {
+    super.onQuestionRendered(this, arguments);
 
-      if (this.model.get('_isSubmitted') && this.model.has('_userAnswer')) {
-        this.model.set({
-          feedbackTitle: this.model.get('title'),
-          feedbackMessage: this.model.getFeedbackString()
-        });
-      }
-    },
-
-    onScreenSizeChanged: function() {
-      SliderView.prototype.onScreenSizeChanged.apply(this, arguments);
-
-      // if linked slider on same page update it with user interaction
-      if (this.model.has('_linkedModel') && this.model.get('_linkedModel').get('_isReady')) {
-        this._updateLinkedConfidenceIndicator();
-      }
-    },
-
-    onResetClicked: function() {
-      SliderView.prototype.onResetClicked.apply(this, arguments);
-
-      this.model.reset('soft', true);
-
-      this.model.updateTracking();
-    },
-
-    onSubmitClicked: function() {
-      SliderView.prototype.onSubmitClicked.apply(this, arguments);
-
-      this.model.updateTracking();
-    },
-
-    onButtonsRendered: function(buttonsView) {
-      // necessary due to deferred ButtonsView::postRender
-      if (this.buttonsView == buttonsView) {
-        if (!this.model.get('_isEnabled')) {
-          if (!this.model.has('_linkedModel') || !this.model.get('_linkedModel').get('_isSubmitted')) {
-            this.$('.js-btn-action').a11y_cntrl_enabled(false);
-          }
-        }
-      }
-    },
-
-    onLinkedConfidenceChanged: function() {
-      this._updateLinkedConfidenceIndicator();
-    },
-
-    onLinkedSubmittedChanged: function(linkedModel) {
-      if (linkedModel.get('_isSubmitted')) {
-        this.model.set('_isEnabled', true);
-      }
-      else {
+    if (this.model.has('_linkedModel')) {
+      this.$('.rangeslider').prepend($('<div class="confidenceslider__fill-linked"/>'));
+      this._listenToLinkedModel();
+      if (this.model.get('_linkedModel').get('_isSubmitted')) {
+        this.onLinkedConfidenceChanged();
+      } else {
         this.model.set('_isEnabled', false);
+        this.$('.component__body-inner').html(this.model.get('disabledBody'));
       }
     }
 
-  });
+    if (!(this.model.get('_isSubmitted') && this.model.has('_userAnswer'))) return;
+    this.model.set({
+      feedbackTitle: this.model.get('title'),
+      feedbackMessage: this.model.getFeedbackString()
+    });
+  }
 
-  return ConfidenceSliderView;
+  onScreenSizeChanged() {
+    super.onScreenSizeChanged(this, arguments);
 
-});
+    // if linked slider on same page update it with user interaction
+    if (!this.model.get('_linkedModel')?.get('_isReady')) return;
+    this._updateLinkedConfidenceIndicator();
+  }
+
+  onResetClicked() {
+    super.onResetClicked(this, arguments);
+
+    this.model.reset('soft', true);
+
+    this.model.updateTracking();
+  }
+
+  onSubmitClicked() {
+    super.onSubmitClicked(this, arguments);
+
+    this.model.updateTracking();
+  }
+
+  onButtonsRendered(buttonsView) {
+    // necessary due to deferred ButtonsView::postRender
+    const isLinkedModelSubmitted = this.model.get('_linkedModel')?.get('_isSubmitted');
+    if (this.buttonsView !== buttonsView && this.model.get('_isEnabled') && isLinkedModelSubmitted) return;
+    this.$('.js-btn-action').a11y_cntrl_enabled(false);
+  }
+
+  onLinkedConfidenceChanged() {
+    this._updateLinkedConfidenceIndicator();
+  }
+
+  onLinkedSubmittedChanged(linkedModel) {
+    this.model.set('_isEnabled', (linkedModel.get('_isSubmitted') === true));
+  }
+
+}

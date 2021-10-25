@@ -1,57 +1,57 @@
-define([
-  'core/js/adapt',
-  './confidenceSliderView',
-  './confidenceSliderModel'
-], function(Adapt, ConfidenceSliderView, ConfidenceSliderModel) {
+import Adapt from 'core/js/adapt';
+import ConfidenceSliderView from './ConfidenceSliderView';
+import ConfidenceSliderModel from './ConfidenceSliderModel';
 
-  Adapt.on('app:dataReady', function() {
-    // is tracking enabled?
-    if (Adapt.config.has('_spoor') && Adapt.config.get('_spoor')._isEnabled) {
-      // if spoor is handling response tracking we don't need to do anything
-      if (!Adapt.config.get('_spoor')._tracking._shouldStoreResponses) {
-        // ensure data is setup
-        Adapt.offlineStorage.get();
+class ConfidenceSlider extends Backbone.Controller {
 
-        _.each(Adapt.components.where({'_component': 'confidenceSlider', '_shouldStoreResponses': true}), function(confidenceSlider) {
-          var dataItem = Adapt.offlineStorage.get(confidenceSlider.get('_id'));
+  initialize() {
+    this.listenTo(Adapt, 'app:dataReady', this.onDataReady);
+  }
 
-          if (!dataItem) return;
+  onDataReady() {
+    // ensure data is setup
+    Adapt.offlineStorage.get();
 
-          var numericParameters = dataItem[0];
-          var booleanParameters = dataItem[1];
+    Adapt.components.where({
+      _component: 'confidenceSlider',
+      _shouldStoreResponses: true
+    }).forEach((confidenceSlider) => {
+      const dataItem = Adapt.offlineStorage.get(confidenceSlider.get('_id'));
 
-          var score = numericParameters[0];
-          var attemptsLeft = numericParameters[1] || 0;
+      if (!dataItem) return;
 
-          var hasUserAnswer = booleanParameters[0];
-          var isUserAnswerArray = booleanParameters[1];
-          var isInteractionComplete = booleanParameters[2];
-          var isSubmitted = booleanParameters[3];
-          var isCorrect = booleanParameters[4];
+      const numericParameters = dataItem[0];
+      const booleanParameters = dataItem[1];
 
-          confidenceSlider.set({
-            _isComplete: true,
-            _isInteractionComplete: isInteractionComplete,
-            _isSubmitted: isSubmitted,
-            _score: score,
-            _isCorrect: isCorrect,
-            _attemptsLeft: attemptsLeft
-          });
+      const _score = numericParameters[0];
+      const _attemptsLeft = numericParameters[1] || 0;
+      const _isInteractionComplete = booleanParameters[2];
+      const _isSubmitted = booleanParameters[3];
+      const _isCorrect = booleanParameters[4];
 
-          if (hasUserAnswer) {
-            var userAnswer = dataItem[2];
-            if (!isUserAnswerArray) userAnswer = userAnswer[0];
+      confidenceSlider.set({
+        _isComplete: true,
+        _isInteractionComplete,
+        _isSubmitted,
+        _score,
+        _isCorrect,
+        _attemptsLeft
+      });
 
-            confidenceSlider.set('_userAnswer', userAnswer);
-          }
-        });
-      }
-    }
-  });
+      const hasUserAnswer = booleanParameters[0];
+      const isUserAnswerArray = booleanParameters[1];
+      if (!hasUserAnswer) return;
+      let userAnswer = dataItem[2];
+      if (!isUserAnswerArray) userAnswer = userAnswer[0];
 
-  return Adapt.register('confidenceSlider', {
-    view: ConfidenceSliderView,
-    model: ConfidenceSliderModel
-  });
+      confidenceSlider.set('_userAnswer', userAnswer);
+    });
+  }
+}
 
+Adapt.register('confidenceSlider', {
+  view: ConfidenceSliderView,
+  model: ConfidenceSliderModel
 });
+
+export default new ConfidenceSlider();
