@@ -19,8 +19,8 @@ export default class ConfidenceSliderModel extends SliderModel {
   /* override to indicate that all options are correct */
   setupModelItems() {
     const items = [];
-    const start = this.get('_scaleStart');
-    const end = this.get('_scaleEnd');
+    const start = this.get('_scaleStart') ?? 1;
+    const end = this.get('_scaleEnd') ?? 1;
     const step = this.get('_scaleStep') || 1;
     for (let i = start; i <= end; i += step) {
       items.push({
