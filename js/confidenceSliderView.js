@@ -23,13 +23,15 @@ export default class ConfidenceSliderView extends SliderView {
   /* override */
   disableQuestion() {
     if (this.model.get('_isReady')) this.setAllItemsEnabled(false);
-    if (this.model.linkedModel) a11y.toggleEnabled(this.$('.js-btn-action'), false); // this.$('.js-btn-action').a11y_cntrl_enabled(false);
+    if (!this.model.linkedModel) return;
+    a11y.toggleEnabled(this.$('.js-btn-action'), false);
   }
 
   /* override */
   enableQuestion() {
     if (this.model.get('_isReady')) this.setAllItemsEnabled(true);
-    if (this.model.linkedModel) a11y.toggleEnabled(this.$('.js-btn-action'), true); // this.$('.js-btn-action').a11y_cntrl_enabled(true);
+    if (!this.model.linkedModel) return;
+    a11y.toggleEnabled(this.$('.js-btn-action'), true);
   }
 
   _listenToLinkedModel() {
