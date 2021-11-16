@@ -86,7 +86,6 @@ export default class ConfidenceSliderView extends SliderView {
     // necessary due to deferred ButtonsView::postRender
     const isLinkedModelSubmitted = this.model.linkedModel?.get('_isSubmitted');
     if (this.model.get('_isEnabled') && isLinkedModelSubmitted) return;
-    // this.$('.js-btn-action').a11y_cntrl_enabled(false);
     a11y.toggleEnabled(this.$('.js-btn-action'), false);
   }
 
