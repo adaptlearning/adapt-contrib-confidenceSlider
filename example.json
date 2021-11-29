@@ -19,11 +19,11 @@
         "_questionWeight": 1,
         "_recordInteraction": true,
         "_comment": "ONLY ADD _linkedToId PROPERTY IF THIS SLIDER LINKS TO ANOTHER",
-        "_linkedToId": "c-05",
+        "_linkedToId": "",
         "labelStart": "incomplete",
         "labelEnd": "complete",
-        "_scaleStart": 0,
-        "_scaleEnd": 10,
+        "_scaleStart": 1,
+        "_scaleEnd": 1,
         "_scaleStep": 1,
         "_showNumber": true,
         "_showScaleIndicator": true,
@@ -55,9 +55,6 @@
                 }
             ]
         },
-        "_pageLevelProgress": {
-            "_isEnabled": true
-        },
         "_buttons": {
             "_submit": {
                 "buttonText": "Submit",
@@ -71,5 +68,8 @@
                 "buttonText": "Show feedback",
                 "ariaLabel": "View the question feedback again by clicking here."
             }
+        },
+        "_pageLevelProgress": {
+            "_isEnabled": true
         }
     }
