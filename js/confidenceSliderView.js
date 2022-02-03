@@ -2,7 +2,7 @@ import Adapt from 'core/js/adapt';
 import SliderView from 'components/adapt-contrib-slider/js/sliderView';
 import a11y from 'core/js/a11y';
 
-export default class ConfidenceSliderView extends SliderView {
+class ConfidenceSliderView extends SliderView {
 
   /* override */
   preRender() {
@@ -98,3 +98,7 @@ export default class ConfidenceSliderView extends SliderView {
   }
 
 }
+
+ConfidenceSliderView.template = 'confidenceSlider.jsx';
+
+export default ConfidenceSliderView;
