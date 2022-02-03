@@ -1,4 +1,3 @@
-
 import Adapt from 'core/js/adapt';
 import React from 'react';
 import { classes, templates } from 'core/js/reactHelpers';
