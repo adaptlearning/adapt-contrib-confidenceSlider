@@ -4,8 +4,7 @@ import { classes, templates } from 'core/js/reactHelpers';
 
 export default function ConfidenceSlider (props) {
   const {
-    isInteractive,
-    _canShowMarking,
+    _shouldShowMarking,
     _isInteractionComplete,
     _isEnabled,
     _isCorrect,
@@ -16,8 +15,6 @@ export default function ConfidenceSlider (props) {
     _scaleEnd,
     _marginDir
   } = props;
-
-  const shouldShowMarking = isInteractive() && _canShowMarking;
 
   const _globals = Adapt.course.get('_globals');
 
@@ -30,8 +27,8 @@ export default function ConfidenceSlider (props) {
         'component__widget slider__widget',
         !_isEnabled && 'is-disabled',
         _isInteractionComplete && 'is-complete is-submitted show-user-answer',
-        shouldShowMarking && _isCorrect && 'is-correct',
-        shouldShowMarking && !_isCorrect && 'is-incorrect'
+        _shouldShowMarking && _isCorrect && 'is-correct',
+        _shouldShowMarking && !_isCorrect && 'is-incorrect'
       ])}>
 
         <div className='slider__label-container js-slider-label-container'>
@@ -80,8 +77,8 @@ export default function ConfidenceSlider (props) {
 
         <div className={classes([
           'slider__item',
-          shouldShowMarking && _isCorrect && 'is-correct',
-          shouldShowMarking && !_isCorrect && 'is-incorrect'
+          _shouldShowMarking && _isCorrect && 'is-correct',
+          _shouldShowMarking && !_isCorrect && 'is-incorrect'
         ])}
         >
           <input className='slider__item-input js-slider-item-input'
