@@ -11,6 +11,22 @@
       "inputType": "Text",
       "validators": [],
       "translatable": true
+    },
+    "labelStart": {
+      "type": "number",
+      "required": true,
+      "default": "1",
+      "inputType": "Number",
+      "validators": [],
+      "translatable": true
+    },
+    "labelEnd": {
+      "type": "number",
+      "required": true,
+      "default": "1",
+      "inputType": "Number",
+      "validators": [],
+      "translatable": true
     }
   },
   "properties": {

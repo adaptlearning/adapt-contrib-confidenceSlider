@@ -2,7 +2,7 @@ import Adapt from 'core/js/adapt';
 import SliderView from 'components/adapt-contrib-slider/js/sliderView';
 import a11y from 'core/js/a11y';
 
-export default class ConfidenceSliderView extends SliderView {
+class ConfidenceSliderView extends SliderView {
 
   /* override */
   preRender() {
@@ -94,7 +94,12 @@ export default class ConfidenceSliderView extends SliderView {
   }
 
   onLinkedSubmittedChanged(linkedModel) {
+    this.$('.component__body-inner').html(this.model.get('body'));
     this.model.set('_isEnabled', (linkedModel.get('_isSubmitted') === true));
   }
 
 }
+
+ConfidenceSliderView.template = 'confidenceSlider.jsx';
+
+export default ConfidenceSliderView;
