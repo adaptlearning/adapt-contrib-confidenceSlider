@@ -94,7 +94,7 @@ class ConfidenceSliderView extends SliderView {
   }
 
   onLinkedSubmittedChanged(linkedModel) {
-    this.$('.component__body-inner').html(linkedModel.get('body'));
+    this.$('.component__body-inner').html(this.model.get('body'));
     this.model.set('_isEnabled', (linkedModel.get('_isSubmitted') === true));
   }
 
