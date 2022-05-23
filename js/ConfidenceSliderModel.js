@@ -1,5 +1,6 @@
 import Adapt from 'core/js/adapt';
 import SliderModel from 'components/adapt-contrib-slider/js/sliderModel';
+import logging from 'core/js/logging';
 
 export default class ConfidenceSliderModel extends SliderModel {
 
@@ -70,10 +71,10 @@ export default class ConfidenceSliderModel extends SliderModel {
   _setupLinkedModel() {
     this.linkedModel = Adapt.components.findWhere({ _id: this.get('_linkedToId') });
     if (!this.linkedModel) {
-      return Adapt.log.error('Please check that you have set _linkedToId correctly!');
+      return logging.error('Please check that you have set _linkedToId correctly!');
     }
     if (this.linkedModel.get('_component') !== 'confidenceSlider') {
-      return Adapt.log.warn(`The component you have linked confidenceSlider ${this.get('_id')} to is not a confidenceSlider component!`);
+      return logging.warn(`The component you have linked confidenceSlider ${this.get('_id')} to is not a confidenceSlider component!`);
     }
     this.set({
       _showNumber: this.linkedModel.get('_showNumber'),
