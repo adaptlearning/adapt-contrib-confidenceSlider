@@ -1,0 +1,35 @@
+{
+  "$anchor": "confidenceSlider-course",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "$patch": {
+    "source": {
+      "$ref": "course"
+    },
+    "with": {
+      "properties": {
+        "_globals": {
+          "type": "object",
+          "default": {},
+          "properties": {
+            "_confidenceSlider": {
+              "type": "object",
+              "default": {},
+              "properties": {
+                "ariaRegion": {
+                  "type": "string",
+                  "title": "Aria region",
+                  "default": "Answer the question by selecting a value from the range. Once you have done so, select the submit button below.",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
