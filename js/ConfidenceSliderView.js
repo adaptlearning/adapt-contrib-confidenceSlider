@@ -51,6 +51,14 @@ class ConfidenceSliderView extends SliderView {
       this.$('.confidenceslider__fill-linked').css({ width: '100%' });
       return;
     }
+
+    // Add previous answer aria-label to linked slider if exists
+    const globals = Adapt.course.get('_globals');
+    const ariaLabelUserAnswer = globals._components._confidenceSlider.ariaUserAnswer;
+    this.$('.js-slider-item-input').attr('aria-label', Handlebars.helpers.compile_a11y_normalize(ariaLabelUserAnswer, {
+      linkedValue: linkedValue
+    }));
+
     // follow rangeslider setPosition method
     this.$('.confidenceslider__fill-linked').css({ width: (rangeslider.getPositionFromValue(linkedValue) + rangeslider.grabPos) + 'px' });
   }
