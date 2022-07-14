@@ -12,6 +12,14 @@
       "validators": [],
       "translatable": true
     },
+    "ariaUserAnswer": {
+      "type": "string",
+      "required": true,
+      "default": "Earlier in the course, you provided {{{linkedValue}}} as an answer to this question.",
+      "inputType": "Text",
+      "validators": [],
+      "translatable": true
+    },
     "labelStart": {
       "type": "number",
       "required": true,
