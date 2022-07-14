@@ -1,0 +1,453 @@
+{
+  "$anchor": "confidenceSlider-component",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "$patch": {
+    "source": {
+      "$ref": "component"
+    },
+    "with": {
+      "properties": {
+        "_supportedLayout": {
+          "type": "string",
+          "title": "Supported layout",
+          "default": "both",
+          "properties": {},
+          "_adapt": {
+            "editorOnly": true
+          }
+        },
+        "instruction": {
+          "type": "string",
+          "title": "Instruction",
+          "description": "This is the instruction text",
+          "default": "",
+          "properties": {},
+          "_adapt": {
+            "translatable": true
+          }
+        },
+        "disabledBody": {
+          "type": "string",
+          "title": "Disabled body",
+          "description": "The body text to display when the confidence slider to which this one is linked has not (yet) been answered",
+          "default": "",
+          "properties": {},
+          "_adapt": {
+            "translatable": true
+          }
+        },
+        "_attempts": {
+          "type": "number",
+          "title": "Attempts",
+          "description": "How many attempts the learner is allowed",
+          "default": 1,
+          "properties": {}
+        },
+        "_shouldDisplayAttempts": {
+          "type": "boolean",
+          "title": "Display Attempts",
+          "description": "Display the number of attempts remaining?",
+          "default": false,
+          "properties": {}
+        },
+        "_canShowFeedback": {
+          "type": "boolean",
+          "title": "Display Feedback",
+          "default": true,
+          "properties": {}
+        },
+        "_canShowMarking": {
+          "type": "boolean",
+          "title": "Display Marking",
+          "default": true,
+          "properties": {}
+        },
+        "_questionWeight": {
+          "type": "number",
+          "title": "Question Weight",
+          "description": "How much this question is worth",
+          "default": 1,
+          "properties": {}
+        },
+        "_recordInteraction": {
+          "type": "boolean",
+          "title": "Record interaction",
+          "description": "If disabled, recording the user's answer(s) to this question to cmi.interactions on the LMS will be disabled for this component only.",
+          "default": true,
+          "properties": {}
+        },
+        "_shouldStoreResponses": {
+          "type": "boolean",
+          "title": "Save response?",
+          "description": "If enabled, the user's response will be saved so that it can be restored in subsequent sessions. Please see the README for more info.",
+          "default": false,
+          "properties": {}
+        },
+        "_linkedToId": {
+          "type": "string",
+          "title": "Link ID",
+          "description": "The _id of another instance of this component you'd like this instance to be linked to. See the README for more info.",
+          "default": "",
+          "properties": {}
+        },
+        "labelStart": {
+          "type": "string",
+          "title": "Scale Label - Start",
+          "description": "Label for the start of the slider scale",
+          "default": "",
+          "properties": {},
+          "_adapt": {
+            "translatable": true
+          }
+        },
+        "labelEnd": {
+          "type": "string",
+          "title": "Scale Label - End",
+          "description": "Label for the end of the slider scale",
+          "default": "",
+          "properties": {},
+          "_adapt": {
+            "translatable": true
+          }
+        },
+        "_scaleStart": {
+          "type": "number",
+          "title": "Scale Start",
+          "description": "What number the scale should start on",
+          "default": 1,
+          "properties": {}
+        },
+        "_scaleEnd": {
+          "type": "number",
+          "title": "Scale End",
+          "description": "What number the scale should end on",
+          "default": 1,
+          "properties": {}
+        },
+        "_scaleStep": {
+          "type": "number",
+          "title": "Scale Step",
+          "description": "The amount the scale should increment by",
+          "default": 1,
+          "properties": {}
+        },
+        "_correctAnswer": {
+          "type": "string",
+          "title": "Correct Answer",
+          "description": "Correct answer on the scale",
+          "default": "",
+          "properties": {}
+        },
+        "_correctRange": {
+          "type": "object",
+          "title": "Correct range",
+          "default": {},
+          "properties": {
+            "_bottom": {
+              "type": "number",
+              "title": "Correct Range - Bottom",
+              "description": "Correct bottom range answer on the scale -- ignored when 'Correct Answer' is set",
+              "default": 0,
+              "properties": {}
+            },
+            "_top": {
+              "type": "number",
+              "title": "Correct Range - Top",
+              "description": "Correct top range answer on the scale -- ignored when 'Correct Answer' is set",
+              "default": 0,
+              "properties": {}
+            }
+          }
+        },
+        "_showNumber": {
+          "type": "boolean",
+          "title": "Show number on indicator",
+          "description": "Controls whether the position number on the indicator should be shown or not",
+          "default": true,
+          "properties": {}
+        },
+        "_showScaleIndicator": {
+          "type": "boolean",
+          "title": "Show position indicator",
+          "description": "Controls whether a position indicator on the scale should be shown or not",
+          "default": true,
+          "properties": {}
+        },
+        "_showScale": {
+          "type": "boolean",
+          "title": "Show scale",
+          "description": "Controls whether to show the lines and numbers of the scale or not",
+          "default": true,
+          "properties": {}
+        },
+        "_feedback": {
+          "type": "object",
+          "title": "Feedback",
+          "default": {},
+          "properties": {
+            "feedbackSeparator": {
+              "type": "string",
+              "title": "Feedback separator",
+              "description": "Optional text/markup that will separate each feedback element",
+              "default": "",
+              "properties": {}
+            },
+            "generic": {
+              "type": "string",
+              "title": "Generic feedback",
+              "description": "Generic feedback",
+              "default": "",
+              "properties": {},
+              "_adapt": {
+                "translatable": true
+              },
+              "_backboneForms": "TextArea"
+            },
+            "_comparison": {
+              "type": "object",
+              "title": "Incorrect Feedback",
+              "default": {},
+              "properties": {
+                "lower": {
+                  "type": "string",
+                  "title": "Lower",
+                  "description": "Lower",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  },
+                  "_backboneForms": "TextArea"
+                },
+                "same": {
+                  "type": "string",
+                  "title": "Same",
+                  "description": "Same",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  },
+                  "_backboneForms": "TextArea"
+                },
+                "higher": {
+                  "type": "string",
+                  "title": "Higher",
+                  "description": "Higher",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  },
+                  "_backboneForms": "TextArea"
+                }
+              }
+            },
+            "_threshold": {
+              "type": "array",
+              "title": "Threshold",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_values": {
+                    "type": "object",
+                    "title": "Values",
+                    "default": {},
+                    "properties": {
+                      "_low": {
+                        "type": "number",
+                        "title": "Range bottom",
+                        "default": 0,
+                        "properties": {}
+                      },
+                      "_high": {
+                        "type": "number",
+                        "title": "Range top",
+                        "default": 0,
+                        "properties": {}
+                      }
+                    }
+                  },
+                  "text": {
+                    "type": "string",
+                    "title": "Range description",
+                    "default": "",
+                    "properties": {},
+                    "_adapt": {
+                      "translatable": true
+                    },
+                    "_backboneForms": "TextArea"
+                  }
+                }
+              },
+              "properties": {}
+            }
+          }
+        },
+        "_buttons": {
+          "type": "object",
+          "title": "Buttons",
+          "default": {},
+          "properties": {
+            "_submit": {
+              "type": "object",
+              "title": "Submit",
+              "default": {},
+              "properties": {
+                "buttonText": {
+                  "type": "string",
+                  "title": "Button text",
+                  "description": "Button label text for the submit button",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "ariaLabel": {
+                  "type": "string",
+                  "title": "Aria label",
+                  "description": "Aria label for the submit button",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                }
+              }
+            },
+            "_reset": {
+              "type": "object",
+              "title": "Reset",
+              "default": {},
+              "properties": {
+                "buttonText": {
+                  "type": "string",
+                  "title": "Button text",
+                  "description": "Button label text for the reset button",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "ariaLabel": {
+                  "type": "string",
+                  "title": "Aria label",
+                  "description": "Aria label for the reset button",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                }
+              }
+            },
+            "_showCorrectAnswer": {
+              "type": "object",
+              "title": "Show Correct Answer",
+              "default": {},
+              "properties": {
+                "buttonText": {
+                  "type": "string",
+                  "title": "Button text",
+                  "description": "Button label text to show the model answer",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "ariaLabel": {
+                  "type": "string",
+                  "title": "Aria label",
+                  "description": "Aria label for the show model answer button",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                }
+              }
+            },
+            "_hideCorrectAnswer": {
+              "type": "object",
+              "title": "Hide Correct Answer",
+              "default": {},
+              "properties": {
+                "buttonText": {
+                  "type": "string",
+                  "title": "Button text",
+                  "description": "Button label text to hide the model answer",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "ariaLabel": {
+                  "type": "string",
+                  "title": "Aria label",
+                  "description": "Aria label for the hide model answer button",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                }
+              }
+            },
+            "_showFeedback": {
+              "type": "object",
+              "title": "Show Feedback",
+              "default": {},
+              "properties": {
+                "buttonText": {
+                  "type": "string",
+                  "title": "Button text",
+                  "description": "Button label text to show feedback",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "ariaLabel": {
+                  "type": "string",
+                  "title": "Aria label",
+                  "description": "Aria label for the show feedback button",
+                  "default": "",
+                  "properties": {},
+                  "_adapt": {
+                    "translatable": true
+                  }
+                }
+              }
+            },
+            "remainingAttemptsText": {
+              "type": "string",
+              "title": "Attempts Remaining Text",
+              "description": "Shown when there are multiple attempts left",
+              "default": "",
+              "properties": {},
+              "_adapt": {
+                "translatable": true
+              }
+            },
+            "remainingAttemptText": {
+              "type": "string",
+              "title": "Final Attempt Text",
+              "description": "Shown when there is one attempt left",
+              "default": "",
+              "properties": {},
+              "_adapt": {
+                "translatable": true
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
