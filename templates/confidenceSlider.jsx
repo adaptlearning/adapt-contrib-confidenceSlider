@@ -91,7 +91,7 @@ export default function ConfidenceSlider (props) {
             aria-valuemin={_scaleStart}
             aria-valuemax={_scaleEnd}
             data-rangeslider
-            data-direction={_marginDir === ' right' ?? 'rtl'}
+            data-direction={_marginDir === 'right' ?? 'rtl'}
             disabled={!_isEnabled}
           />
         </div>
