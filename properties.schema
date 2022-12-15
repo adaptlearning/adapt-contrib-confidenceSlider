@@ -240,6 +240,26 @@
       "required": true,
       "title": "Feedback",
       "properties": {
+        "title": {
+          "type": "string",
+          "required": false,
+          "default": "",
+          "title": "Title",
+          "inputType": "Text",
+          "validators": [],
+          "help": "The text used as the feedback title. Leave empty if no display title is required.",
+          "translatable": true
+        },
+        "altTitle": {
+          "type": "string",
+          "required": false,
+          "default": "",
+          "title": "Alternative title",
+          "inputType": "Text",
+          "validators": [],
+          "help": "The text used to provide an alternative heading for Assistive Technology if no display title is required. Only used if `title` is empty.",
+          "translatable": true
+        },
         "feedbackSeparator": {
           "type": "string",
           "required": false,
