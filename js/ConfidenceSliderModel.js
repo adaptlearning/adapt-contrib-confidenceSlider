@@ -1,4 +1,5 @@
 import Adapt from 'core/js/adapt';
+import BUTTON_STATE from 'core/js/enums/buttonStateEnum';
 import SliderModel from 'components/adapt-contrib-slider/js/sliderModel';
 import logging from 'core/js/logging';
 
@@ -52,7 +53,7 @@ export default class ConfidenceSliderModel extends SliderModel {
   /* override */
   updateButtons() {
     if (this.get('_attempts') > 0) return super.updateButtons();
-    this.set('_buttonState', this.get('_isEnabled') ? 'submit' : 'reset');
+    this.set('_buttonState', this.get('_isEnabled') ? BUTTON_STATE.SUBMIT : BUTTON_STATE.RESET);
   }
 
   getFeedbackString() {
