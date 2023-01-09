@@ -31,6 +31,8 @@
         "_isResetOnRevisit": false,
         "_shouldStoreResponses": true,
         "_feedback": {
+            "title": "Feedback",
+            "altTitle": "",
             "feedbackSeparator": " ",
             "generic": "Thanks for measuring your confidence.",
             "_comparison": {
