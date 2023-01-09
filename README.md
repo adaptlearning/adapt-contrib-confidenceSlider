@@ -78,6 +78,10 @@ guide the learner’s interaction with the component.
 
 **\_feedback** (object): If the [**Tutor** extension](https://github.com/adaptlearning/adapt-contrib-tutor) is enabled, these various texts will be displayed depending on the submitted answer. **\_feedback** contains values for three seperate elements: generic, comparison and threshold feedback. Generic feedback is always presented to the user. Comparison feedback is presented on submission if the slider has been linked to another slider. Threshold feedback is determined according to the range in which the user's selection falls. All feedback elements are optional. Each element can be separated by one or more characters (such as a space) or, more commonly, by some HTML markup.
 
+>**title** (string): The text used as the feedback title. Leave empty if no display title is required.
+
+>**altTitle** (string): The text used to provide an alternative heading for Assistive Technology if no display title is required. Only used if `title` is empty.
+
 >**feedbackSeparator** (string): Optional text/markup that will separate each feedback element.
 
 >**generic** (string): Text that will be shown whichever selection is made.

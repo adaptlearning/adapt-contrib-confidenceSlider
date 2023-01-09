@@ -43,17 +43,25 @@ export default class ConfidenceSliderModel extends SliderModel {
   }
 
   /* override */
-  setupFeedback() {
-    this.set({
-      feedbackTitle: this.get('title'),
-      feedbackMessage: this.getFeedbackString()
-    });
-  }
-
-  /* override */
   updateButtons() {
     if (this.get('_attempts') > 0) return super.updateButtons();
     this.set('_buttonState', this.get('_isEnabled') ? BUTTON_STATE.SUBMIT : BUTTON_STATE.RESET);
+  }
+
+  /* override */
+  getFeedback(_feedback = this.get('_feedback')) {
+    if (!_feedback) return {};
+    const {
+      altTitle = Adapt.course.get('_globals')._accessibility.altFeedbackTitle || '',
+      title,
+      _classes
+    } = _feedback;
+    return {
+      altTitle,
+      title,
+      _classes,
+      body: this.getFeedbackString()
+    };
   }
 
   getFeedbackString() {

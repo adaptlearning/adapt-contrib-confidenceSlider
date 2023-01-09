@@ -186,6 +186,24 @@
           "title": "Feedback",
           "default": {},
           "properties": {
+            "title": {
+              "type": "string",
+              "title": "Title",
+              "description": "The text used as the feedback title. Leave empty if no display title is required.",
+              "default": "",
+              "_adapt": {
+                "translatable": true
+              }
+            },
+            "altTitle": {
+              "type": "string",
+              "title": "Alternative title",
+              "description": "The text used to provide an alternative heading for Assistive Technology if no display title is required. Only used if `title` is empty.",
+              "default": "",
+              "_adapt": {
+                "translatable": true
+              }
+            },
             "feedbackSeparator": {
               "type": "string",
               "title": "Feedback separator",
