@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Adapt from 'core/js/adapt';
 import { classes, templates } from 'core/js/reactHelpers';
 
-export default function Slider (props) {
+export default function ConfidenceSlider (props) {
   const {
     _globals,
     _isReady,
