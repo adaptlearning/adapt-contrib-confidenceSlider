@@ -27,6 +27,15 @@
             "translatable": true
           }
         },
+        "ariaQuestion": {
+          "type": "string",
+          "title": "ARIA question",
+          "description": "This will be read out by screen readers instead of reading the 'Display title', 'Body' & 'Instruction' fields when focusing on the when focusing on the group or radiogroup. To be clear and concise, ensure the text encompasses only the question associated.",
+          "default": "",
+          "_adapt": {
+            "translatable": true
+          }
+        },
         "disabledBody": {
           "type": "string",
           "title": "Disabled body",

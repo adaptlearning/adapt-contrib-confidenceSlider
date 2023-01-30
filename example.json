@@ -9,6 +9,7 @@
         "displayTitle": "Confidence Slider",
         "body": "Question text here",
         "instruction": "",
+        "ariaQuestion": "Question text specifically for screen readers.",
         "disabledBody": "You need to measure your confidence in the linked part before you can do this part.",
         "_commentAttempts": "Can only be set to 1",
         "_attempts": 1,
