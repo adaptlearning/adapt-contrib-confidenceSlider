@@ -24,11 +24,12 @@
         "labelStart": "incomplete",
         "labelEnd": "complete",
         "_scaleStart": 1,
-        "_scaleEnd": 1,
+        "_scaleEnd": 10,
         "_scaleStep": 1,
         "_showNumber": true,
         "_showScaleIndicator": true,
         "_showScale": true,
+        "_showScaleNumbers": true,
         "_isResetOnRevisit": false,
         "_shouldStoreResponses": true,
         "_feedback": {
