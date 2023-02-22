@@ -1,6 +1,6 @@
 import Adapt from 'core/js/adapt';
 import BUTTON_STATE from 'core/js/enums/buttonStateEnum';
-import SliderModel from 'components/adapt-contrib-slider/js/sliderModel';
+import SliderModel from 'components/adapt-contrib-slider/js/SliderModel';
 import logging from 'core/js/logging';
 
 export default class ConfidenceSliderModel extends SliderModel {
