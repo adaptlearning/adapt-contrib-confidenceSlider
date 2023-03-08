@@ -8,6 +8,7 @@ export default class ConfidenceSliderModel extends SliderModel {
   init() {
     super.init();
     if (!this.get('_linkedToId')) return;
+    this.set('originalBody', this.get('body'));
     this._setupLinkedModel();
   }
 
