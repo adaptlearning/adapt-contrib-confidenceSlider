@@ -1,5 +1,6 @@
 import Adapt from 'core/js/adapt';
-import SliderView from 'components/adapt-contrib-slider/js/sliderView';
+import SliderView from 'components/adapt-contrib-slider/js/SliderView';
+import a11y from 'core/js/a11y';
 
 class ConfidenceSliderView extends SliderView {
 
