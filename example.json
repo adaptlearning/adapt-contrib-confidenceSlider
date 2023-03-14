@@ -59,18 +59,19 @@
                 }
             ]
         },
+        "_comment": "You only need to include _buttons if you want to override the button labels that are set in course.json",
         "_buttons": {
             "_submit": {
                 "buttonText": "Submit",
-                "ariaLabel": "Submit your answer by clicking here."
+                "ariaLabel": "Select here to submit your answer."
             },
             "_reset": {
                 "buttonText": "Reset",
-                "ariaLabel": "Reset the question by clicking here."
+                "ariaLabel": ""
             },
             "_showFeedback": {
                 "buttonText": "Show feedback",
-                "ariaLabel": "View the question feedback again by clicking here."
+                "ariaLabel": ""
             }
         },
         "_pageLevelProgress": {
