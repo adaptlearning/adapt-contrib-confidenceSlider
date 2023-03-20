@@ -100,16 +100,18 @@ export default function ConfidenceSlider (props) {
         <div className="slider__label-container js-slider-label-container">
 
           {labelStart &&
-          <div className="slider__label-start" aria-label={_globals._components._confidenceSlider.labelStart}>
+          <div className="slider__label-start">
             <div className="slider__label-start-inner">
+              <span className="aria-label">{_globals._components._confidenceSlider.labelStart} {_scaleStart}</span>
               {labelStart}
             </div>
           </div>
           }
 
           {labelEnd &&
-          <div className="slider__label-end" aria-label={_globals._components._confidenceSlider.labelEnd}>
+          <div className="slider__label-end">
             <div className="slider__label-end-inner">
+              <span className="aria-label">{_globals._components._confidenceSlider.labelEnd} {_scaleEnd}</span>
               {labelEnd}
             </div>
           </div>
