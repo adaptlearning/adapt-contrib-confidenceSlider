@@ -19,6 +19,7 @@ export default function ConfidenceSlider (props) {
     labelStart,
     labelEnd,
     _selectedItem,
+    _fillWidth,
     _scaleStart,
     _scaleEnd,
     _marginDir,
@@ -157,7 +158,7 @@ export default function ConfidenceSlider (props) {
           </div>
 
           {/* annotate the selected value  */}
-          <div className="slider__number-answer"></div>
+          <div className="slider__number-answer" />
           {_showScaleIndicator &&
             <div
               className="slider__number-selection js-slider-number-selection a11y-ignore"
@@ -172,7 +173,7 @@ export default function ConfidenceSlider (props) {
 
         {/* always present start and end notches */}
         <div className="slider__scale-container js-slider-scale" ref={sliderScaleRef}>
-          <div className="slider__scale-notch slider__scale-notch-start"></div>
+          <div className="slider__scale-notch slider__scale-notch-start" />
           {_showScale &&
               <div className="slider__scale-notch-container js-slider-scale-notch-container">
                 {_items.slice(1).map((item, index) =>
@@ -185,7 +186,7 @@ export default function ConfidenceSlider (props) {
                 )}
               </div>
           }
-          <div className="slider__scale-notch slider__scale-notch-end"></div>
+          <div className="slider__scale-notch slider__scale-notch-end" />
         </div>
 
         <div className={classes([
@@ -194,6 +195,8 @@ export default function ConfidenceSlider (props) {
           _shouldShowMarking && !_isCorrect && 'is-incorrect'
         ])}
         >
+          <div className="slider__item-input-track" />
+          <div className="slider__item-input-fill" style={{ width: `${_fillWidth}%` }} />
           <input className='slider__item-input js-slider-item-input'
             type='range'
             role='slider'
@@ -211,7 +214,7 @@ export default function ConfidenceSlider (props) {
 
       </div>
 
-      <div className="btn__container" ref={buttonContainerRef}></div>
+      <div className="btn__container" ref={buttonContainerRef} />
 
     </div>
   );
