@@ -168,7 +168,7 @@ export default function ConfidenceSlider (props) {
           <div className="slider__item-input-track">
             <div className={`slider__item-input-fill${_isLinkedModel ? _isLinkedHigher ? ' is-higher' : ' is-lower' : ''}`} style={{ width: `${selectedWidth}%` }} />
             {_isLinkedModel &&
-            <div className='slider__item-input-fill-linked' style={{ right: `${calculatePercentFromIndex(_linkedModelSelectedIndex)}%` }} />
+            <div className='slider__item-input-fill-linked' style={{ right: `${100 - calculatePercentFromIndex(_linkedModelSelectedIndex)}%` }} />
             }
           </div>
 
