@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Adapt from 'core/js/adapt';
+import React, { useRef } from 'react';
 import { classes, templates } from 'core/js/reactHelpers';
 
 export default function ConfidenceSlider (props) {
   const {
-    _globals,
-    _isReady,
     _id,
+    _globals,
     _shouldShowMarking,
     _isInteractionComplete,
     _isCorrectAnswerShown,
@@ -19,69 +17,41 @@ export default function ConfidenceSlider (props) {
     labelStart,
     labelEnd,
     _selectedItem,
-    _fillWidth,
     _scaleStart,
     _scaleEnd,
     _marginDir,
-    onInput,
     onNumberSelected,
-    mapValue,
     getIndexFromValue,
-    normalise,
     getCorrectAnswers,
     _items,
     _showScale,
     _showNumber,
     _showScaleNumbers,
-    _showScaleIndicator
+    _showScaleIndicator,
+    _isLinkedModel,
+    _isLinkedHigher,
+    _linkedModelSelectedIndex
   } = props;
 
-  const sliderScaleRef = useRef(null);
-  const sliderNumberSelectionRef = useRef(null);
+  const confidenceSliderNumberSelectionRef = useRef(0);
+
   const buttonContainerRef = useRef(null);
-  const [sliderScaleWidth, setSliderScaleWidth] = useState(0);
-
-  const mapIndexToPixels = (value) => {
-    const numberOfGrads = _items.length;
-
-    return Math.round(mapValue(value, 0, numberOfGrads - 1, 0, sliderScaleWidth));
-  };
 
   const getCorrectRangeMidpoint = () => {
     const answers = getCorrectAnswers();
     return answers[Math.floor(answers.length / 2)];
   };
 
-  useEffect(() => {
-    const onResize = () => {
-      setSliderScaleWidth($(sliderScaleRef.current).width());
-    };
+  const calculatePercentFromIndex = (index) => {
+    return index / (_items.length - 1) * 100;
+  };
 
-    Adapt.on('device:resize', onResize);
-
-    onResize();
-
-    return () => Adapt.off('device:resize', onResize);
-  }, [Adapt, _isReady]);
-
-  useEffect(() => {
-    const value = _isCorrectAnswerShown ? getCorrectRangeMidpoint() : (_selectedItem.value || _scaleStart);
-    const itemIndex = getIndexFromValue(value);
-    const pixels = mapIndexToPixels(itemIndex);
-
-    $(sliderNumberSelectionRef.current)
-      .velocity('stop')
-      .velocity({
-        left: pixels
-      }, {
-        duration: 200,
-        easing: 'linear',
-        mobileHA: false
-      });
-  }, [_isCorrectAnswerShown, _selectedItem]);
+  const selectedValue = _isCorrectAnswerShown ? getCorrectRangeMidpoint() : (_selectedItem.value || _scaleStart);
+  const selectedIndex = getIndexFromValue(selectedValue);
+  const selectedWidth = calculatePercentFromIndex(selectedIndex);
 
   return (
-    <div className="component__inner slider__inner confidence__inner">
+    <div className="component__inner slider__inner confidenceslider__inner">
 
       <templates.header {...props} />
 
@@ -123,16 +93,15 @@ export default function ConfidenceSlider (props) {
 
           {/* annotate the scale */}
           {_showScale && _showScaleNumbers &&
-            _items.map(({ value }, index) => {
-              const normalisedPosition = normalise(index, 0, _items.length - 1);
+            _items.map(({ index, value }) => {
               return (
                 <div
-                  key={value}
+                  key={index}
                   className="slider__number js-slider-number js-slider-number-click"
                   data-id={value}
                   aria-hidden="true"
-                  style={{ left: Math.round(normalisedPosition * sliderScaleWidth) }}
-                  onClick={onNumberSelected}
+                  style={{ left: `${calculatePercentFromIndex(index)}%` }}
+                  onClick={e => onNumberSelected(parseFloat(e.currentTarget.getAttribute('data-id')))}
                 >
                   {value}
                 </div>
@@ -140,7 +109,7 @@ export default function ConfidenceSlider (props) {
             })
           }
 
-          {/* annotate the correct answer range  */}
+          {/* annotate the correct answer range */}
           <div className="slider__number-model-range js-slider-model-range">
             {_isCorrectAnswerShown &&
               getCorrectAnswers().map(correctAnswer => {
@@ -148,7 +117,7 @@ export default function ConfidenceSlider (props) {
                   <div
                     className="slider__number-model-answer"
                     key={correctAnswer}
-                    style={{ left: `${mapIndexToPixels(getIndexFromValue(correctAnswer))}px` }}
+                    style={{ left: `${calculatePercentFromIndex(getIndexFromValue(correctAnswer))}%` }}
                   >
                     {_showNumber && correctAnswer}
                   </div>
@@ -157,14 +126,15 @@ export default function ConfidenceSlider (props) {
             }
           </div>
 
-          {/* annotate the selected value  */}
+          {/* annotate the selected value */}
           <div className="slider__number-answer" />
           {_showScaleIndicator &&
             <div
               className="slider__number-selection js-slider-number-selection a11y-ignore"
               aria-hidden="true"
+              style={{ left: `${calculatePercentFromIndex(selectedIndex)}%` }}
               tabIndex="-1"
-              ref={sliderNumberSelectionRef}
+              ref={confidenceSliderNumberSelectionRef}
             >
               {_showNumber && _selectedItem.value}
             </div>
@@ -172,19 +142,19 @@ export default function ConfidenceSlider (props) {
         </div>
 
         {/* always present start and end notches */}
-        <div className="slider__scale-container js-slider-scale" ref={sliderScaleRef}>
+        <div className="slider__scale-container js-slider-scale">
           <div className="slider__scale-notch slider__scale-notch-start" />
           {_showScale &&
-              <div className="slider__scale-notch-container js-slider-scale-notch-container">
-                {_items.slice(1).map((item, index) =>
-                  <div
-                    className="slider__scale-notch"
-                    style={{ left: `${mapIndexToPixels(index + 1)}px` }}
-                    key={item.value}
-                  >
-                  </div>
-                )}
-              </div>
+            <div className="slider__scale-notch-container js-slider-scale-notch-container">
+              {_items.slice(1).map((item, index) =>
+                <div
+                  className="slider__scale-notch"
+                  style={{ left: `${calculatePercentFromIndex(index)}%` }}
+                  key={item.value}
+                >
+                </div>
+              )}
+            </div>
           }
           <div className="slider__scale-notch slider__scale-notch-end" />
         </div>
@@ -195,20 +165,25 @@ export default function ConfidenceSlider (props) {
           _shouldShowMarking && !_isCorrect && 'is-incorrect'
         ])}
         >
-          <div className="slider__item-input-track" />
-          <div className="slider__item-input-fill" style={{ width: `${_fillWidth}%` }} />
+          <div className="slider__item-input-track">
+            <div className={`slider__item-input-fill${_isLinkedModel ? _isLinkedHigher ? ' is-higher' : ' is-lower' : ''}`} style={{ width: `${selectedWidth}%` }} />
+            {_isLinkedModel &&
+            <div className='slider__item-input-fill-linked' style={{ right: `${calculatePercentFromIndex(_linkedModelSelectedIndex)}%` }} />
+            }
+          </div>
+
           <input className='slider__item-input js-slider-item-input'
             type='range'
             role='slider'
-            value={_isCorrectAnswerShown ? getCorrectRangeMidpoint() : (_selectedItem.value || _scaleStart)}
+            value={selectedValue}
             min={_scaleStart}
             max={_scaleEnd}
-            aria-valuenow={_isCorrectAnswerShown ? getCorrectRangeMidpoint() : (_selectedItem.value || _scaleStart)}
+            aria-valuenow={selectedValue}
             aria-valuemin={_scaleStart}
             aria-valuemax={_scaleEnd}
             data-direction={_marginDir === 'right' ?? 'rtl'}
             disabled={!_isEnabled}
-            onInput={onInput}
+            onChange={e => onNumberSelected(e.target.value)}
           />
         </div>
 

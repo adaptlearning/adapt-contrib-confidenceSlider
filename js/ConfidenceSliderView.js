@@ -1,6 +1,5 @@
 import Adapt from 'core/js/adapt';
 import SliderView from 'components/adapt-contrib-slider/js/SliderView';
-import a11y from 'core/js/a11y';
 
 class ConfidenceSliderView extends SliderView {
 
@@ -30,6 +29,8 @@ class ConfidenceSliderView extends SliderView {
       if (!this.model.linkedModel.get('_isSubmitted')) {
         this.model.set('_isEnabled', false);
         this.model.set('body', this.model.get('disabledBody'));
+      } else {
+        this.model.set('_linkedModelSelectedIndex', this.model.linkedModel.get('_selectedItem').index);
       }
     }
     if (!(this.model.get('_isSubmitted') && this.model.has('_userAnswer'))) return;
@@ -44,9 +45,21 @@ class ConfidenceSliderView extends SliderView {
     this.setReadyStatus();
   }
 
+  onNumberSelected(value) {
+    const index = this.getIndexFromValue(value);
+
+    if (this.model.linkedModel) {
+      if (!this.model.linkedModel.get('_isSubmitted')) return;
+      const originalIndex = this.model.linkedModel.get('_selectedItem').index;
+      this.model.set('_isLinkedHigher', index > originalIndex);
+    }
+    super.onNumberSelected(value);
+  }
+
   onLinkedSubmittedChanged(linkedModel) {
     this.model.set('body', this.model.get('originalBody'));
     this.model.set('_isEnabled', (linkedModel.get('_isSubmitted') === true));
+    this.model.set('_linkedModelSelectedIndex', linkedModel.get('_selectedItem').index);
     this.model.checkCanSubmit();
   }
 
