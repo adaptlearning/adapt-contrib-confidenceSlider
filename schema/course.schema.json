@@ -12,17 +12,24 @@
           "type": "object",
           "default": {},
           "properties": {
-            "_confidenceSlider": {
+            "_components": {
               "type": "object",
               "default": {},
               "properties": {
-                "ariaRegion": {
-                  "type": "string",
-                  "title": "Aria region",
-                  "default": "Answer the question by selecting a value from the range. Once you have done so, select the submit button below.",
-                  "properties": {},
-                  "_adapt": {
-                    "translatable": true
+                "_confidenceSlider": {
+                  "type": "object",
+                  "title": "Confidence Slider",
+                  "default": {},
+                  "properties": {
+                    "ariaRegion": {
+                      "type": "string",
+                      "title": "Aria region",
+                      "default": "Answer the question by selecting a value from the range. Once you have done so, select the submit button below.",
+                      "properties": {},
+                      "_adapt": {
+                        "translatable": true
+                      }
+                    }
                   }
                 }
               }
