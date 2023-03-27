@@ -29,6 +29,22 @@
                       "_adapt": {
                         "translatable": true
                       }
+                    },
+                    "labelStart": {
+                      "type": "string",
+                      "title": "Scale start ARIA label",
+                      "default": "Start of the scale",
+                      "_adapt": {
+                        "translatable": true
+                      }
+                    },
+                    "labelEnd": {
+                      "type": "string",
+                      "title": "Scale end ARIA label",
+                      "default": "End of the scale",
+                      "_adapt": {
+                        "translatable": true
+                      }
                     }
                   }
                 }
