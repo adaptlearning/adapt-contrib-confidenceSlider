@@ -1,6 +1,11 @@
 .confidenceslider {
-  &__fill-linked {
-    height: 100%;
-    background-color: yellow;
+  .slider {
+    &__item-input-fill-linked {
+      position: absolute;
+      left: 0;
+      height: @slider-track-height;
+      background-color: darken(@background-inverted, 40%);
+      mix-blend-mode: screen;
+    }
   }
 }

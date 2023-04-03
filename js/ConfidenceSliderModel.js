@@ -31,6 +31,9 @@ export default class ConfidenceSliderModel extends SliderModel {
         selected: false,
         correct: true
       });
+
+      const index = items.length - 1;
+      items[index].index = index;
     }
     this.set({
       _items: items,
@@ -87,6 +90,7 @@ export default class ConfidenceSliderModel extends SliderModel {
       return logging.warn(`The component you have linked confidenceSlider ${this.get('_id')} to is not a confidenceSlider component!`);
     }
     this.set({
+      _isLinkedModel: true,
       _showNumber: this.linkedModel.get('_showNumber'),
       _showScaleIndicator: this.linkedModel.get('_showScaleIndicator'),
       _showScale: this.linkedModel.get('_showScale'),
