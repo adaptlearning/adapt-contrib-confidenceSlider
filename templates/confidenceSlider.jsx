@@ -46,7 +46,9 @@ export default function ConfidenceSlider (props) {
     return index / (_items.length - 1) * 100;
   };
 
-  const selectedValue = _isCorrectAnswerShown ? getCorrectRangeMidpoint() : (_selectedItem?.value ?? _scaleStart);
+  const selectedValue = _isCorrectAnswerShown
+    ? getCorrectRangeMidpoint()
+    : (_selectedItem?.value ?? _scaleStart);
   const selectedIndex = getIndexFromValue(selectedValue);
   const selectedWidth = calculatePercentFromIndex(selectedIndex);
 
