@@ -145,6 +145,14 @@
       "validators": [],
       "help": "The _id of another instance of this component you'd like this instance to be linked to. See the README for more info."
     },
+    "ariaScaleName": {
+      "type": "string",
+      "default": "confidence",
+      "inputType": "Text",
+      "validators": [],
+      "help": "This will be read out by screen readers when focusing on the scale input (slider handle). An appropriate name should give context to which the scale is a measurement of.",
+      "translatable": true
+    },
     "labelStart": {
       "type": "string",
       "required": false,

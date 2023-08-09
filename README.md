@@ -58,6 +58,8 @@ guide the learner’s interaction with the component.
 
 **\_linkedToId** (string): The component ID of a slider to which this slider can be linked. This is optional and if set, will disable user interaction until a selection is submitted on the linked slider.
 
+**ariaScaleName** (string): This will be read out by screen readers when focusing on the scale input (slider handle). An appropriate name should give context to which the scale is a measurement of. The default is `confidence`.
+
 **labelStart** (string): Text/characters that appear at the start of the slider scale.
 
 **labelEnd** (string): Text/characters that appear at the end of the slider scale.
