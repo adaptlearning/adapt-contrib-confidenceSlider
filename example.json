@@ -21,6 +21,7 @@
         "_recordInteraction": true,
         "_comment": "ONLY ADD _linkedToId PROPERTY IF THIS SLIDER LINKS TO ANOTHER",
         "_linkedToId": "",
+        "ariaScaleName": "confidence",
         "labelStart": "incomplete",
         "labelEnd": "complete",
         "_scaleStart": 1,
