@@ -52,10 +52,12 @@ export default class ConfidenceSliderModel extends SliderModel {
     this.set('_buttonState', this.get('_isEnabled') ? BUTTON_STATE.SUBMIT : BUTTON_STATE.RESET);
   }
 
+  /** @type {boolean} */
   isCorrect() {
     return true;
   }
 
+  /** @type {boolean} */
   isPartlyCorrect() {
     return false;
   }
@@ -72,16 +74,12 @@ export default class ConfidenceSliderModel extends SliderModel {
     return 0;
   }
 
-  /**
-   * @type {number}
-   */
+  /** @type {number} */
   get maxScore() {
     return 0;
   }
 
-  /**
-   * @type {number}
-   */
+  /** @type {number} */
   get minScore() {
     return 0;
   }
