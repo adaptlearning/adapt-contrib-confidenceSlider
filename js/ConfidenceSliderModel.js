@@ -67,9 +67,7 @@ export default class ConfidenceSliderModel extends SliderModel {
     this.set('_score', 0);
   }
 
-  /**
-   * @type {number}
-   */
+  /** @type {number} */
   get score() {
     return 0;
   }
