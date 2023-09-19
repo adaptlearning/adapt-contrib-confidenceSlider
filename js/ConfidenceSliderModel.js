@@ -52,6 +52,19 @@ export default class ConfidenceSliderModel extends SliderModel {
     this.set('_buttonState', this.get('_isEnabled') ? BUTTON_STATE.SUBMIT : BUTTON_STATE.RESET);
   }
 
+  isCorrect() {
+    return true;
+  }
+
+  isPartlyCorrect() {
+    return false;
+  }
+
+  // Used to set the score based upon the _questionWeight
+  setScore() {
+    this.set('_score', 0);
+  }
+
   /**
    * @type {number}
    */
