@@ -52,6 +52,36 @@ export default class ConfidenceSliderModel extends SliderModel {
     this.set('_buttonState', this.get('_isEnabled') ? BUTTON_STATE.SUBMIT : BUTTON_STATE.RESET);
   }
 
+  /** @type {boolean} */
+  isCorrect() {
+    return true;
+  }
+
+  /** @type {boolean} */
+  isPartlyCorrect() {
+    return false;
+  }
+
+  // Used to set the score based upon the _questionWeight
+  setScore() {
+    this.set('_score', 0);
+  }
+
+  /** @type {number} */
+  get score() {
+    return 0;
+  }
+
+  /** @type {number} */
+  get maxScore() {
+    return 0;
+  }
+
+  /** @type {number} */
+  get minScore() {
+    return 0;
+  }
+
   /* override */
   getFeedback(_feedback = this.get('_feedback')) {
     if (!_feedback) return {};
