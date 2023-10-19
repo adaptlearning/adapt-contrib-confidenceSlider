@@ -18,8 +18,8 @@ class ConfidenceSliderView extends SliderView {
   }
 
   _listenToLinkedModel() {
-    this.listenTo(this.model.linkedModel, {
-      'change:_isSubmitted': this.onLinkedSubmittedChanged
+    Adapt.listenTo(this.model.linkedModel, {
+      'change:_isSubmitted': this.onLinkedSubmittedChanged.bind(this)
     });
   }
 
