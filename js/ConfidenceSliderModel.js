@@ -148,12 +148,7 @@ export default class ConfidenceSliderModel extends SliderModel {
       _scaleEnd: this.linkedModel.get('_scaleEnd')
     });
     this._listenToLinkedModel();
-    if (!this.linkedModel.get('_isSubmitted')) {
-      this.set('_isEnabled', false);
-      this.set('body', this.get('disabledBody'));
-    } else {
-      this.set('_linkedModelSelectedIndex', this.linkedModel.get('_selectedItem').index);
-    }
+    this.updateFromLinkedModel();
     if (this.get('_attempts') < 0) this.linkedModel.set('_attempts', 1);
   }
 
