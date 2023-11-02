@@ -9,7 +9,11 @@ export default class ConfidenceSliderModel extends SliderModel {
     super.init();
     if (!this.get('_linkedToId')) return;
     this.set('originalBody', this.get('body'));
-    this._setupLinkedModel();
+    this.setupEventListeners();
+  }
+
+  setupEventListeners() {
+    this.listenToOnce(Adapt, 'adapt:initialize', this._setupLinkedModel);
   }
 
   /* override */
@@ -111,6 +115,20 @@ export default class ConfidenceSliderModel extends SliderModel {
     return feedbackString;
   }
 
+  updateFromLinkedModel() {
+    const isSubmitted = this.linkedModel.get('_isSubmitted');
+    this.set('body', isSubmitted ? this.get('originalBody') : this.get('disabledBody'));
+    this.set('_isEnabled', isSubmitted);
+    if (isSubmitted) {
+      this.set('_linkedModelSelectedIndex', this.linkedModel.get('_selectedItem').index);
+    }
+    this.checkCanSubmit();
+  }
+
+  _listenToLinkedModel() {
+    this.listenTo(this.linkedModel, 'change:_isSubmitted', this.updateFromLinkedModel);
+  }
+
   _setupLinkedModel() {
     this.linkedModel = Adapt.components.findWhere({ _id: this.get('_linkedToId') });
     if (!this.linkedModel) {
@@ -129,6 +147,8 @@ export default class ConfidenceSliderModel extends SliderModel {
       _scaleStart: this.linkedModel.get('_scaleStart'),
       _scaleEnd: this.linkedModel.get('_scaleEnd')
     });
+    this._listenToLinkedModel();
+    this.updateFromLinkedModel();
     if (this.get('_attempts') < 0) this.linkedModel.set('_attempts', 1);
   }
 
