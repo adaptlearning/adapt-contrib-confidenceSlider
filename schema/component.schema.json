@@ -51,6 +51,8 @@
           "title": "Attempts",
           "description": "How many attempts the learner is allowed",
           "default": 1,
+          "minimum": 1,
+          "maximum": 1,
           "properties": {}
         },
         "_shouldDisplayAttempts": {
@@ -459,26 +461,6 @@
                     "translatable": true
                   }
                 }
-              }
-            },
-            "remainingAttemptsText": {
-              "type": "string",
-              "title": "Attempts Remaining Text",
-              "description": "Shown when there are multiple attempts left",
-              "default": "",
-              "properties": {},
-              "_adapt": {
-                "translatable": true
-              }
-            },
-            "remainingAttemptText": {
-              "type": "string",
-              "title": "Final Attempt Text",
-              "description": "Shown when there is one attempt left",
-              "default": "",
-              "properties": {},
-              "_adapt": {
-                "translatable": true
               }
             }
           }
