@@ -140,7 +140,7 @@
           "type": "number",
           "title": "Scale End",
           "description": "What number the scale should end on",
-          "default": 1,
+          "default": 10,
           "properties": {}
         },
         "_scaleStep": {

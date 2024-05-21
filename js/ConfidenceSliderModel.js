@@ -9,11 +9,6 @@ export default class ConfidenceSliderModel extends SliderModel {
     super.init();
     if (!this.get('_linkedToId')) return;
     this.set('originalBody', this.get('body'));
-    this.setupEventListeners();
-  }
-
-  setupEventListeners() {
-    this.listenToOnce(Adapt, 'adapt:initialize', this._setupLinkedModel);
   }
 
   /* override */
@@ -25,10 +20,11 @@ export default class ConfidenceSliderModel extends SliderModel {
 
   /* override to indicate that all options are correct */
   setupModelItems() {
+    this._setupLinkedModel();
     const items = [];
-    const start = this.get('_scaleStart') ?? 1;
-    const end = this.get('_scaleEnd') ?? 1;
-    const step = this.get('_scaleStep') || 1;
+    const start = this.get('_scaleStart');
+    const end = this.get('_scaleEnd');
+    const step = this.get('_scaleStep');
     for (let i = start; i <= end; i += step) {
       items.push({
         value: i,
@@ -43,6 +39,11 @@ export default class ConfidenceSliderModel extends SliderModel {
       _items: items,
       _marginDir: (Adapt.config.get('_defaultDirection') === 'rtl' ? 'right' : 'left')
     });
+  }
+
+  onAdaptInitialize() {
+    this.updateFromLinkedModel();
+    super.onAdaptInitialize();
   }
 
   /* override */
@@ -116,6 +117,7 @@ export default class ConfidenceSliderModel extends SliderModel {
   }
 
   updateFromLinkedModel() {
+    if (!this.linkedModel) return;
     const isSubmitted = this.linkedModel.get('_isSubmitted');
     this.set('body', isSubmitted ? this.get('originalBody') : this.get('disabledBody'));
     this.set('_isEnabled', isSubmitted);
@@ -130,7 +132,9 @@ export default class ConfidenceSliderModel extends SliderModel {
   }
 
   _setupLinkedModel() {
-    this.linkedModel = Adapt.components.findWhere({ _id: this.get('_linkedToId') });
+    const linkedToId = this.get('_linkedToId');
+    if (!linkedToId) return;
+    this.linkedModel = Adapt.components.findWhere({ _id: linkedToId });
     if (!this.linkedModel) {
       return logging.error('Please check that you have set _linkedToId correctly!');
     }
@@ -148,7 +152,6 @@ export default class ConfidenceSliderModel extends SliderModel {
       _scaleEnd: this.linkedModel.get('_scaleEnd')
     });
     this._listenToLinkedModel();
-    this.updateFromLinkedModel();
     if (this.get('_attempts') < 0) this.linkedModel.set('_attempts', 1);
   }
 

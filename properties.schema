@@ -185,7 +185,7 @@
     "_scaleEnd": {
       "type": "number",
       "required": true,
-      "default": 1,
+      "default": 10,
       "title": "Scale End",
       "inputType": "Number",
       "validators": ["required", "number"],
