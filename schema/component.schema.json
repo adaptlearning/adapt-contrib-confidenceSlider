@@ -148,6 +148,7 @@
           "title": "Scale Step",
           "description": "The amount the scale should increment by",
           "default": 1,
+          "exclusiveMinimum": 0,
           "properties": {}
         },
         "_correctAnswer": {

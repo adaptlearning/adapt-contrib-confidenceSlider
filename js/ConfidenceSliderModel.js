@@ -1,7 +1,8 @@
 import Adapt from 'core/js/adapt';
+import data from 'core/js/data';
+import logging from 'core/js/logging';
 import BUTTON_STATE from 'core/js/enums/buttonStateEnum';
 import SliderModel from 'components/adapt-contrib-slider/js/SliderModel';
-import logging from 'core/js/logging';
 
 export default class ConfidenceSliderModel extends SliderModel {
 
@@ -134,9 +135,9 @@ export default class ConfidenceSliderModel extends SliderModel {
   _setupLinkedModel() {
     const linkedToId = this.get('_linkedToId');
     if (!linkedToId) return;
-    this.linkedModel = Adapt.components.findWhere({ _id: linkedToId });
+    this.linkedModel = data.findById(linkedToId);
     if (!this.linkedModel) {
-      return logging.error('Please check that you have set _linkedToId correctly!');
+      return logging.error(`Could not find \`_linkedToId: ${linkedToId}\` for ${this.get('_id')}`);
     }
     if (this.linkedModel.get('_component') !== 'confidenceSlider') {
       return logging.warn(`The component you have linked confidenceSlider ${this.get('_id')} to is not a confidenceSlider component!`);
