@@ -64,11 +64,11 @@ guide the learner’s interaction with the component.
 
 **labelEnd** (string): Text/characters that appear at the end of the slider scale.
 
-**\_scaleStart** (number): This value is the numeric start of the scale. It is used to calculate the slider's position on the scale.
+**\_scaleStart** (number): This value is the numeric start of the scale. It is used to calculate the slider's position on the scale. The default is `1`.
 
-**\_scaleEnd** (number): This value is the numeric end of the scale. It is used to calculate the slider's position on the scale.
+**\_scaleEnd** (number): This value is the numeric end of the scale. It is used to calculate the slider's position on the scale. The default is `10`.
 
-**\_scaleStep** (number): Defines the amount the scale should be incremented by.
+**\_scaleStep** (number): Defines the amount the scale should be incremented by. The default is `1`.
 
 **\_showNumber** (boolean): When set to `true`, a numeric value appears on the marker described in **\_showScaleIndicator**. The value indicates the slider's position on the scale. The default is `true`. Note that **\_showScaleIndicator** must be set to `true` in order for this to work.
 
