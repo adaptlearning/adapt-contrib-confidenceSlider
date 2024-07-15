@@ -69,7 +69,7 @@ export default function ConfidenceSlider (props) {
         ])}
         aria-labelledby={ariaQuestion ? null : (displayTitle || body || instruction) && `${_id}-header`}
         aria-label={ariaQuestion || null}
-        role='region'
+        role='group'
       >
 
         {(labelStart || labelEnd) &&
