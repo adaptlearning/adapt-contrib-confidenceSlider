@@ -606,7 +606,7 @@ describe('adapt-contrib-confidenceSlider - v2.1.0 > v2.1.3', async () => {
   mutateContent('adapt-contrib-confidenceSlider - modify globals ariaRegion attribute', async (content) => {
     course = content.find(({ _type }) => _type === 'course');
     if (!_.has(course, '_globals._components._confidenceSlider')) _.set(course, '_globals._components._confidenceSlider', {});
-    courseConfidenceSliderGlobals = course._globals._components._accordion;
+    courseConfidenceSliderGlobals = course._globals._components._confidenceSlider;
 
     if (courseConfidenceSliderGlobals) {
       if (courseConfidenceSliderGlobals.ariaRegion ===
