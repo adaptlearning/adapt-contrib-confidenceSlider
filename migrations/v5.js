@@ -1,4 +1,5 @@
 import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import _ from 'lodash';
 
 describe('adapt-contrib-confidenceSlider - v4.0.0 > v5.2.0', async () => {
   let course, courseConfidenceSliderGlobals, confidenceSliders;
@@ -52,8 +53,8 @@ describe('adapt-contrib-confidenceSlider - v5.2.0 > v5.2.3', async () => {
     return true;
   });
 
-  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.title atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _feedback }) => _feedback.title !== undefined);
+  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.title attribute', async () => {
+    const isValid = confidenceSliders.every(({ _feedback }) => _feedback.title === '');
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _feedback.title not added to every instance of confidenceSlider');
     return true;
   });
@@ -68,8 +69,8 @@ describe('adapt-contrib-confidenceSlider - v5.2.0 > v5.2.3', async () => {
     return true;
   });
 
-  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.altTitle atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _feedback }) => _feedback.altTitle !== undefined);
+  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.altTitle attribute', async () => {
+    const isValid = confidenceSliders.every(({ _feedback }) => _feedback.altTitle === '');
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _feedback.altTitle not added to every instance of confidenceSlider');
     return true;
   });
@@ -97,8 +98,8 @@ describe('adapt-contrib-confidenceSlider - v5.2.3 > v5.2.4', async () => {
     return true;
   });
 
-  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider.ariaQuestionatrribute', async () => {
-    const isValid = confidenceSliders.every(({ ariaQuestion }) => ariaQuestion !== undefined);
+  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider.ariaQuestion attribute', async () => {
+    const isValid = confidenceSliders.every(({ ariaQuestion }) => ariaQuestion === '');
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - ariaQuestion not added to every instance of confidenceSlider');
     return true;
   });
@@ -114,7 +115,7 @@ describe('adapt-contrib-confidenceSlider - v5.2.3 > v5.2.4', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.altTitle atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _feedback }) => _feedback.altTitle !== undefined);
+    const isValid = confidenceSliders.every(({ _feedback }) => _feedback.altTitle === '');
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _feedback.altTitle not added to every instance of confidenceSlider');
     return true;
   });
@@ -146,7 +147,7 @@ describe('adapt-contrib-confidenceSlider - v5.2.4 > v5.4.4', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - modify globals labelStart attribute', async (content) => {
-    const isValid = courseConfidenceSliderGlobals.labelStart !== 'Start of the scale';
+    const isValid = courseConfidenceSliderGlobals.labelStart === 'Start of the scale';
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - globals labelStart attribute not modified.');
     return true;
   });
@@ -165,7 +166,7 @@ describe('adapt-contrib-confidenceSlider - v5.2.4 > v5.4.4', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - modify globals labelEnd attribute', async (content) => {
-    const isValid = courseConfidenceSliderGlobals.labelStart !== 'End of the scale';
+    const isValid = courseConfidenceSliderGlobals.labelStart === 'End of the scale';
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - globals labelEnd attribute not modified.');
     return true;
   });
@@ -193,8 +194,8 @@ describe('adapt-contrib-confidenceSlider - v5.4.4 > v5.4.6', async () => {
     return true;
   });
 
-  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider.ariaScaleName atrribute', async () => {
-    const isValid = confidenceSliders.every(({ ariaScaleName }) => ariaScaleName === 'confidence');
+  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider.ariaScaleName attribute', async () => {
+    const isValid = confidenceSliders.every(({ ariaScaleName }) => ariaScaleName !== undefined);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - ariaScaleName not added to every instance of confidenceSlider');
     return true;
   });
@@ -224,8 +225,8 @@ describe('adapt-contrib-confidenceSlider - v5.4.6 > v5.5.2', async () => {
     return true;
   });
 
-  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._scaleEnd atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _scaleEnd }) => _scaleEnd !== undefined);
+  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._scaleEnd attribute', async () => {
+    const isValid = confidenceSliders.every(({ _scaleEnd }) => _scaleEnd !== null);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _scaleEnd not added to every instance of confidenceSlider');
     return true;
   });

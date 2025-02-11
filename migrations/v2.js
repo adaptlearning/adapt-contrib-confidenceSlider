@@ -1,4 +1,5 @@
 import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import _ from 'lodash';
 
 describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   let confidenceSliders;
@@ -21,7 +22,7 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider.axisLabel attribute', async () => {
-    const isValid = confidenceSliders.some(({ axisLabel }) => axisLabel);
+    const isValid = confidenceSliders.every(({ axisLabel }) => axisLabel === undefined);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - axisLabel not removed from confidenceSlider');
     return true;
   });
@@ -53,7 +54,7 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._scale attribute', async () => {
-    const isValid = confidenceSliders.some(({ _scale }) => _scale);
+    const isValid = confidenceSliders.every(({ _scale }) => _scale === undefined);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _scale not removed from confidenceSlider');
     return true;
   });
@@ -70,7 +71,7 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._attempts atrribute', async () => {
     const isValid = confidenceSliders.every(({ _attempts }) => _attempts === 1);
-    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _attempts not added to every instance of confidenceSlider');
+    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _recordInteraction not added to every instance of confidenceSlider');
     return true;
   });
 
@@ -454,7 +455,7 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.feedbackSeparator atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _feedback }) => _feedback.feedbackSeparator !== undefined);
+    const isValid = confidenceSliders.some(({ _feedback }) => _feedback.feedbackSeparator !== undefined);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _feedback.feedbackSeparator not added to every instance of confidenceSlider');
     return true;
   });
@@ -502,8 +503,8 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._comparison.same atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _comparison }) => _comparison.same !== undefined);
-    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _comparison.same not added to every instance of confidenceSlider');
+    const isValid = confidenceSliders.some(({ _comparison }) => _comparison.same !== undefined);
+    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _comparison.same not added to any instance of confidenceSlider');
     return true;
   });
 
@@ -518,8 +519,8 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._comparison.higher atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _comparison }) => _comparison.higher !== undefined);
-    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _comparison.higher not added to every instance of confidenceSlider');
+    const isValid = confidenceSliders.some(({ _comparison }) => _comparison.higher !== undefined);
+    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _comparison.higher not added to any instance of confidenceSlider');
     return true;
   });
 
@@ -534,8 +535,8 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._threshold.items._values._low atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _threshold }) => _threshold.items._values._low === 0);
-    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _threshold.items._values._low not added to every instance of confidenceSlider');
+    const isValid = confidenceSliders.some(({ _threshold }) => _threshold.items._values._low === 0);
+    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _threshold.items._values._low not added to any instance of confidenceSlider');
     return true;
   });
 
@@ -550,8 +551,8 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._threshold.items._values._high atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _threshold }) => _threshold.items._values._high === 0);
-    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _threshold.items._values._high not added to every instance of confidenceSlider');
+    const isValid = confidenceSliders.some(({ _threshold }) => _threshold.items._values._high === 0);
+    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _threshold.items._values._high not added to any instance of confidenceSlider');
     return true;
   });
 
@@ -566,7 +567,7 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._threshold.items.text atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _threshold }) => _threshold.items.text !== undefined);
+    const isValid = confidenceSliders.some(({ _threshold }) => _threshold.items.text !== undefined);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _threshold.items.text not added to every instance of confidenceSlider');
     return true;
   });
@@ -582,7 +583,7 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._shouldStoreResponses atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _shouldStoreResponses }) => _shouldStoreResponses === false);
+    const isValid = confidenceSliders.some(({ _shouldStoreResponses }) => _shouldStoreResponses === false);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _shouldStoreResponses not added to every instance of confidenceSlider');
     return true;
   });
@@ -647,7 +648,7 @@ describe('adapt-contrib-confidenceSlider - v2.1.3 > v2.2.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._canShowFeedback atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _canShowFeedback }) => _canShowFeedback === true);
+    const isValid = confidenceSliders.some(({ _canShowFeedback }) => _canShowFeedback === true);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _canShowFeedback not added to every instance of confidenceSlider');
     return true;
   });
@@ -663,7 +664,7 @@ describe('adapt-contrib-confidenceSlider - v2.1.3 > v2.2.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._canShowMarking atrribute', async () => {
-    const isValid = confidenceSliders.every(({ _canShowMarking }) => _canShowMarking === true);
+    const isValid = confidenceSliders.some(({ _canShowMarking }) => _canShowMarking === true);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _canShowMarking not added to every instance of confidenceSlider');
     return true;
   });

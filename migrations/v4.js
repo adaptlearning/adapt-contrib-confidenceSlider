@@ -1,4 +1,5 @@
 import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import _ from 'lodash';
 
 describe('adapt-contrib-confidenceSlider - v2.2.0 > v4.0.0', async () => {
   let course, courseConfidenceSliderGlobals, confidenceSliders;
@@ -11,8 +12,8 @@ describe('adapt-contrib-confidenceSlider - v2.2.0 > v4.0.0', async () => {
   });
 
   /**
-    * * Add an attribute value within course globals.
-    */
+   * Add an attribute value within course globals.
+   */
   mutateContent('adapt-contrib-confidenceSlider - modify globals labelStart attribute', async (content) => {
     course = content.find(({ _type }) => _type === 'course');
     if (!_.has(course, '_globals._components._confidenceSlider')) _.set(course, '_globals._components._confidenceSlider', {});
