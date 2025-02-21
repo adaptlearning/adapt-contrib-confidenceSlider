@@ -1,4 +1,4 @@
-import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, getCourse, getComponents } from 'adapt-migrations';
 import _ from 'lodash';
 
 describe('adapt-contrib-confidenceSlider - v2.2.0 > v4.0.0', async () => {
@@ -7,7 +7,7 @@ describe('adapt-contrib-confidenceSlider - v2.2.0 > v4.0.0', async () => {
   whereFromPlugin('adapt-contrib-confidenceSlider - from v2.2.0', { name: 'adapt-contrib-confidenceSlider', version: '<4.0.0' });
 
   whereContent('adapt-contrib-confidenceSlider - where confidenceSlider', async content => {
-    confidenceSliders = content.filter(({ _component }) => _component === 'confidenceSlider');
+    confidenceSliders = getComponents('confidenceSlider');
     return confidenceSliders.length;
   });
 
@@ -15,7 +15,7 @@ describe('adapt-contrib-confidenceSlider - v2.2.0 > v4.0.0', async () => {
    * Add an attribute value within course globals.
    */
   mutateContent('adapt-contrib-confidenceSlider - modify globals labelStart attribute', async (content) => {
-    course = content.find(({ _type }) => _type === 'course');
+    course = getCourse();
     if (!_.has(course, '_globals._components._confidenceSlider')) _.set(course, '_globals._components._confidenceSlider', {});
     courseConfidenceSliderGlobals = course._globals._components._confidenceSlider;
 
@@ -34,7 +34,7 @@ describe('adapt-contrib-confidenceSlider - v2.2.0 > v4.0.0', async () => {
     * * Add an attribute value within course globals.
     */
   mutateContent('adapt-contrib-confidenceSlider - modify globals labelEnd attribute', async (content) => {
-    course = content.find(({ _type }) => _type === 'course');
+    course = getCourse();
     if (!_.has(course, '_globals._components._confidenceSlider')) _.set(course, '_globals._components._confidenceSlider', {});
     courseConfidenceSliderGlobals = course._globals._components._confidenceSlider;
 

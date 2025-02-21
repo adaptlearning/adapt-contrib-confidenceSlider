@@ -1,13 +1,13 @@
-import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, getCourse, getComponents } from 'adapt-migrations';
 import _ from 'lodash';
 
 describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   let confidenceSliders;
 
-  whereFromPlugin('adapt-contrib-confidenceSlider - from v2', { name: 'adapt-contrib-confidenceSlider', version: '<2.1.0' });
+  whereFromPlugin('adapt-contrib-confidenceSlider - from v2.0.0', { name: 'adapt-contrib-confidenceSlider', version: '<2.1.0' });
 
   whereContent('adapt-contrib-confidenceSlider - where confidenceSlider', async content => {
-    confidenceSliders = content.filter(({ _component }) => _component === 'confidenceSlider');
+    confidenceSliders = getComponents('confidenceSlider');
     return confidenceSliders.length;
   });
 
@@ -22,7 +22,7 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider.axisLabel attribute', async () => {
-    const isValid = confidenceSliders.every(({ axisLabel }) => axisLabel === undefined);
+    const isValid = confidenceSliders.every(confidenceSlider => !_.has(confidenceSlider, 'axisLabel'));
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - axisLabel not removed from confidenceSlider');
     return true;
   });
@@ -54,7 +54,7 @@ describe('adapt-contrib-confidenceSlider - v2.0.0 > v2.1.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._scale attribute', async () => {
-    const isValid = confidenceSliders.every(({ _scale }) => _scale === undefined);
+    const isValid = confidenceSliders.every(confidenceSlider => !_.has(confidenceSlider, '_scale'));
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _scale not removed from confidenceSlider');
     return true;
   });
@@ -597,7 +597,7 @@ describe('adapt-contrib-confidenceSlider - v2.1.0 > v2.1.3', async () => {
   whereFromPlugin('adapt-contrib-confidenceSlider - from v2.1.0', { name: 'adapt-contrib-confidenceSlider', version: '<2.1.3' });
 
   whereContent('adapt-contrib-confidenceSlider - where confidenceSlider', async content => {
-    confidenceSliders = content.filter(({ _component }) => _component === 'confidenceSlider');
+    confidenceSliders = getComponents('confidenceSlider');
     return confidenceSliders.length;
   });
 
@@ -605,7 +605,7 @@ describe('adapt-contrib-confidenceSlider - v2.1.0 > v2.1.3', async () => {
     * * Adjust an attribute value within course globals.
     */
   mutateContent('adapt-contrib-confidenceSlider - modify globals ariaRegion attribute', async (content) => {
-    course = content.find(({ _type }) => _type === 'course');
+    course = getCourse();
     if (!_.has(course, '_globals._components._confidenceSlider')) _.set(course, '_globals._components._confidenceSlider', {});
     courseConfidenceSliderGlobals = course._globals._components._confidenceSlider;
 
@@ -633,7 +633,7 @@ describe('adapt-contrib-confidenceSlider - v2.1.3 > v2.2.0', async () => {
   whereFromPlugin('adapt-contrib-confidenceSlider - from v2.1.3', { name: 'adapt-contrib-confidenceSlider', version: '<2.2.0' });
 
   whereContent('adapt-contrib-confidenceSlider - where confidenceSlider', async content => {
-    confidenceSliders = content.filter(({ _component }) => _component === 'confidenceSlider');
+    confidenceSliders = getComponents('confidenceSlider');
     return confidenceSliders.length;
   });
 
