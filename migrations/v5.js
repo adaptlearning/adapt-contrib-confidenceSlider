@@ -1,8 +1,9 @@
-import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, getCourse, getComponents } from 'adapt-migrations';
+import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, getCourse, getComponents, testStopWhere, testSuccessWhere } from 'adapt-migrations';
 import _ from 'lodash';
 
 describe('adapt-contrib-confidenceSlider - v4.0.0 > v5.2.0', async () => {
   let course, courseConfidenceSliderGlobals, confidenceSliders;
+  const ariaUserAnswer = 'Earlier in the course, you provided {{{linkedValue}}} as an answer to this question.';
 
   whereFromPlugin('adapt-contrib-confidenceSlider - from v4.0.0', { name: 'adapt-contrib-confidenceSlider', version: '<5.2.0' });
 
@@ -11,26 +12,51 @@ describe('adapt-contrib-confidenceSlider - v4.0.0 > v5.2.0', async () => {
     return confidenceSliders.length;
   });
 
-  /**
-    * * Add an attribute value within course globals.
-    */
-  mutateContent('adapt-contrib-confidenceSlider - modify globals labelStart attribute', async (content) => {
+  mutateContent('adapt-contrib-confidenceSlider - add globals ariaUserAnswer attribute', async (content) => {
     course = getCourse();
     if (!_.has(course, '_globals._components._confidenceSlider')) _.set(course, '_globals._components._confidenceSlider', {});
     courseConfidenceSliderGlobals = course._globals._components._confidenceSlider;
-
-    courseConfidenceSliderGlobals.ariaUserAnswer = 'Earlier in the course, you provided {{{linkedValue}}} as an answer to this question.';
-
+    courseConfidenceSliderGlobals.ariaUserAnswer = ariaUserAnswer;
     return true;
   });
 
-  checkContent('adapt-contrib-confidenceSlider - modify globals ariaUserAnswer attribute', async (content) => {
-    const isValid = courseConfidenceSliderGlobals.ariaUserAnswer === 'Earlier in the course, you provided {{{linkedValue}}} as an answer to this question.';
+  checkContent('adapt-contrib-confidenceSlider - check globals ariaUserAnswer attribute', async (content) => {
+    const isValid = courseConfidenceSliderGlobals.ariaUserAnswer === ariaUserAnswer;
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - globals ariaUserAnswer attribute not added.');
     return true;
   });
 
   updatePlugin('adapt-contrib-confidenceSlider - update to v5.2.0', { name: 'adapt-contrib-confidenceSlider', version: '5.2.0', framework: '>=5.19.1' });
+
+  testSuccessWhere('non/configured confidenceSlider component with empty course', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '4.0.0' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider' },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course' }
+    ]
+  });
+
+  testSuccessWhere('non/configured confidenceSlider component with course._globals', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '4.0.0' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider' },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course', _globals: { _components: { _confidenceSlider: {} } } }
+    ]
+  });
+
+  testStopWhere('no confidenceSlider components', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '4.0.0' }],
+    content: [
+      { _component: 'other' },
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.0' }]
+  });
 });
 
 describe('adapt-contrib-confidenceSlider - v5.2.0 > v5.2.3', async () => {
@@ -39,16 +65,20 @@ describe('adapt-contrib-confidenceSlider - v5.2.0 > v5.2.3', async () => {
   whereFromPlugin('adapt-contrib-confidenceSlider - from v5.2.0', { name: 'adapt-contrib-confidenceSlider', version: '<5.2.3' });
 
   whereContent('adapt-contrib-confidenceSlider - where confidenceSlider', async content => {
-    confidenceSliders = getComponents('confidenceSlider');
+    confidenceSliders = getComponents('confidenceSlider').filter(confidenceSlider => confidenceSlider._feedback);
     return confidenceSliders.length;
   });
 
-  /**
-     * * Add JSON field to component and set blank.
-     */
   mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider._feedback.title', async () => {
     confidenceSliders.forEach(confidenceSlider => {
       confidenceSlider._feedback.title = '';
+    });
+    return true;
+  });
+
+  mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider._feedback.altTitle', async () => {
+    confidenceSliders.forEach(confidenceSlider => {
+      confidenceSlider._feedback.altTitle = '';
     });
     return true;
   });
@@ -59,16 +89,6 @@ describe('adapt-contrib-confidenceSlider - v5.2.0 > v5.2.3', async () => {
     return true;
   });
 
-  /**
-     * * Add JSON field to component and set blank.
-     */
-  mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider._feedback.altTitle', async () => {
-    confidenceSliders.forEach(confidenceSlider => {
-      confidenceSlider._feedback.altTitle = '';
-    });
-    return true;
-  });
-
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.altTitle attribute', async () => {
     const isValid = confidenceSliders.every(({ _feedback }) => _feedback.altTitle === '');
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _feedback.altTitle not added to every instance of confidenceSlider');
@@ -76,6 +96,36 @@ describe('adapt-contrib-confidenceSlider - v5.2.0 > v5.2.3', async () => {
   });
 
   updatePlugin('adapt-contrib-confidenceSlider - update to v5.2.3', { name: 'adapt-contrib-confidenceSlider', version: '5.2.3', framework: '>=5.19.1' });
+
+  testSuccessWhere('non/configured confidenceSlider component with empty course', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '4.0.0' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course' }
+    ]
+  });
+
+  testSuccessWhere('non/configured confidenceSlider component with course._globals', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '4.0.0' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course', _globals: { _components: { _confidenceSlider: {} } } }
+    ]
+  });
+
+  testStopWhere('no confidenceSlider components', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '4.0.0' }],
+    content: [
+      { _component: 'other' },
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.0' }]
+  });
 });
 
 describe('adapt-contrib-confidenceSlider - v5.2.3 > v5.2.4', async () => {
@@ -88,12 +138,16 @@ describe('adapt-contrib-confidenceSlider - v5.2.3 > v5.2.4', async () => {
     return confidenceSliders.length;
   });
 
-  /**
-   * * Add JSON field to component and set blank.
-   */
   mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider.ariaQuestion', async () => {
     confidenceSliders.forEach(confidenceSlider => {
       confidenceSlider.ariaQuestion = '';
+    });
+    return true;
+  });
+
+  mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider._feedback.altTitle', async () => {
+    confidenceSliders.forEach(confidenceSlider => {
+      _.set(confidenceSlider, '_feedback.altTitle', '');
     });
     return true;
   });
@@ -104,16 +158,6 @@ describe('adapt-contrib-confidenceSlider - v5.2.3 > v5.2.4', async () => {
     return true;
   });
 
-  /**
-   * * Add JSON field to component and set blank.
-   */
-  mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider._feedback.altTitle', async () => {
-    confidenceSliders.forEach(confidenceSlider => {
-      confidenceSlider._feedback.altTitle = '';
-    });
-    return true;
-  });
-
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.altTitle atrribute', async () => {
     const isValid = confidenceSliders.every(({ _feedback }) => _feedback.altTitle === '');
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _feedback.altTitle not added to every instance of confidenceSlider');
@@ -121,10 +165,33 @@ describe('adapt-contrib-confidenceSlider - v5.2.3 > v5.2.4', async () => {
   });
 
   updatePlugin('adapt-contrib-confidenceSlider - update to v5.2.4', { name: 'adapt-contrib-confidenceSlider', version: '5.2.4', framework: '>=5.19.1' });
+
+  testSuccessWhere('non/configured confidenceSlider component with empty course', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.3' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('no confidenceSlider components', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.3' }],
+    content: [
+      { _component: 'other' },
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.4' }]
+  });
 });
 
 describe('adapt-contrib-confidenceSlider - v5.2.4 > v5.4.4', async () => {
   let course, courseConfidenceSliderGlobals, confidenceSliders;
+  const newLabelStart = 'Start of the scale';
+  const newLabelEnd = 'End of the scale';
 
   whereFromPlugin('adapt-contrib-confidenceSlider - from v5.2.4', { name: 'adapt-contrib-confidenceSlider', version: '<5.4.4' });
 
@@ -133,45 +200,77 @@ describe('adapt-contrib-confidenceSlider - v5.2.4 > v5.4.4', async () => {
     return confidenceSliders.length;
   });
 
-  /**
-    * * Add an attribute value within course globals.
-    */
-  mutateContent('adapt-contrib-confidenceSlider - modify globals labelStart attribute', async (content) => {
+  mutateContent('adapt-contrib-confidenceSlider - check for globals', async () => {
     course = getCourse();
     if (!_.has(course, '_globals._components._confidenceSlider')) _.set(course, '_globals._components._confidenceSlider', {});
     courseConfidenceSliderGlobals = course._globals._components._confidenceSlider;
+    return true;
+  });
 
-    courseConfidenceSliderGlobals.labelStart = 'Start of the scale';
+  mutateContent('adapt-contrib-confidenceSlider - modify globals labelStart attribute', async (content) => {
+    const labelStart = courseConfidenceSliderGlobals.labelStart || newLabelStart;
+    courseConfidenceSliderGlobals.labelStart = String(labelStart);
+    return true;
+  });
 
+  mutateContent('adapt-contrib-confidenceSlider - modify globals labelEnd attribute', async (content) => {
+    const labelEnd = courseConfidenceSliderGlobals.labelEnd || newLabelEnd;
+    courseConfidenceSliderGlobals.labelEnd = String(labelEnd);
     return true;
   });
 
   checkContent('adapt-contrib-confidenceSlider - modify globals labelStart attribute', async (content) => {
-    const isValid = courseConfidenceSliderGlobals.labelStart === 'Start of the scale';
+    const isValid = typeof (courseConfidenceSliderGlobals.labelStart) === 'string';
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - globals labelStart attribute not modified.');
     return true;
   });
 
-  /**
-    * * Add an attribute value within course globals.
-    */
-  mutateContent('adapt-contrib-confidenceSlider - modify globals labelEnd attribute', async (content) => {
-    course = getCourse();
-    if (!_.has(course, '_globals._components._confidenceSlider')) _.set(course, '_globals._components._confidenceSlider', {});
-    courseConfidenceSliderGlobals = course._globals._components._confidenceSlider;
-
-    courseConfidenceSliderGlobals.labelStart = 'End of the scale';
-
-    return true;
-  });
-
   checkContent('adapt-contrib-confidenceSlider - modify globals labelEnd attribute', async (content) => {
-    const isValid = courseConfidenceSliderGlobals.labelStart === 'End of the scale';
+    const isValid = typeof (courseConfidenceSliderGlobals.labelEnd) === 'string';
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - globals labelEnd attribute not modified.');
     return true;
   });
 
   updatePlugin('adapt-contrib-confidenceSlider - update to v5.4.4', { name: 'adapt-contrib-confidenceSlider', version: '5.4.4', framework: '>=5.19.1' });
+
+  testSuccessWhere('non/configured confidenceSlider component with empty course', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.4.3' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course' }
+    ]
+  });
+
+  testSuccessWhere('non/configured confidenceSlider component with empty course._globals', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.4.3' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course', _globals: { _components: { _confidenceSlider: {} } } }
+    ]
+  });
+
+  testSuccessWhere('non/configured confidenceSlider component with course._globals', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.4.3' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course', _globals: { _components: { _confidenceSlider: { labelStart: 1, labelEnd: 1 } } } }
+    ]
+  });
+
+  testStopWhere('no confidenceSlider components', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.4.3' }],
+    content: [
+      { _component: 'other' },
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.4.4' }]
+  });
 });
 
 describe('adapt-contrib-confidenceSlider - v5.4.4 > v5.4.6', async () => {
@@ -184,9 +283,6 @@ describe('adapt-contrib-confidenceSlider - v5.4.4 > v5.4.6', async () => {
     return confidenceSliders.length;
   });
 
-  /**
-   * * Add JSON field to component and set attribute.
-   */
   mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider.ariaScaleName', async () => {
     confidenceSliders.forEach(confidenceSlider => {
       confidenceSlider.ariaScaleName = 'confidence';
@@ -201,35 +297,43 @@ describe('adapt-contrib-confidenceSlider - v5.4.4 > v5.4.6', async () => {
   });
 
   updatePlugin('adapt-contrib-confidenceSlider - update to v5.4.6', { name: 'adapt-contrib-confidenceSlider', version: '5.4.6', framework: '>=5.19.1' });
-});
 
-describe('adapt-contrib-confidenceSlider - v5.4.6 > v5.5.2', async () => {
-  let confidenceSliders;
-
-  whereFromPlugin('adapt-contrib-confidenceSlider - from v5.4.6', { name: 'adapt-contrib-confidenceSlider', version: '<5.5.2' });
-
-  whereContent('adapt-contrib-confidenceSlider - where confidenceSlider', async content => {
-    confidenceSliders = getComponents('confidenceSlider');
-    return confidenceSliders.length;
+  testSuccessWhere('non/configured confidenceSlider component with empty course', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.3' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course' }
+    ]
   });
 
-  /**
-   * * Add JSON field to component and set attribute.
-   */
-  mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider._scaleEnd', async () => {
-    confidenceSliders.forEach(confidenceSlider => {
-      if (confidenceSlider._scaleEnd === 1) {
-        confidenceSlider._scaleEnd = 10;
-      }
-    });
-    return true;
+  testSuccessWhere('non/configured confidenceSlider component with empty course._globals', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.3' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course', _globals: { _components: { _confidenceSlider: {} } } }
+    ]
   });
 
-  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._scaleEnd attribute', async () => {
-    const isValid = confidenceSliders.every(({ _scaleEnd }) => _scaleEnd !== null);
-    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _scaleEnd not added to every instance of confidenceSlider');
-    return true;
+  testSuccessWhere('non/configured confidenceSlider component with course._globals', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.3' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
+      { _id: 'c-105', _component: 'confidenceSlider' },
+      { _type: 'course', _globals: { _components: { _confidenceSlider: { labelStart: 1, labelEnd: 1 } } } }
+    ]
   });
 
-  updatePlugin('adapt-contrib-confidenceSlider - update to v5.5.2', { name: 'adapt-contrib-confidenceSlider', version: '5.5.2', framework: '>=5.19.1' });
+  testStopWhere('no confidenceSlider components', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.3' }],
+    content: [
+      { _component: 'other' },
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.4' }]
+  });
 });
