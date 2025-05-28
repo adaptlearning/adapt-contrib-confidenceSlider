@@ -22,7 +22,7 @@
         "_comment": "ONLY ADD _linkedToId PROPERTY IF THIS SLIDER LINKS TO ANOTHER",
         "_linkedToId": "",
         "ariaScaleName": "confidence",
-        "labelStart": "Not confidence",
+        "labelStart": "Not confident",
         "labelEnd": "Confident",
         "_scaleStart": 1,
         "_scaleEnd": 10,
