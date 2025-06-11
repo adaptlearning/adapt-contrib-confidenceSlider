@@ -343,6 +343,66 @@ describe('adapt-contrib-confidenceSlider - @@CURRENT_VERSION > @@RELEASE_VERSION
 
   whereFromPlugin('adapt-contrib-confidenceSlider - from @@CURRENT_VERSION', { name: 'adapt-contrib-confidenceSlider', version: '<@@RELEASE_VERSION' });
 
+  mutateContent('adapt-contrib-confidenceSlider - delete confidenceSlider._correctAnswer', async () => {
+    confidenceSliders.forEach(confidenceSlider => {
+      if (_.has(confidenceSlider, '_correctAnswer')) {
+        delete confidenceSlider._correctAnswer;
+      }
+    });
+    return true;
+  });
+
+  mutateContent('adapt-contrib-confidenceSlider - delete confidenceSlider._correctRange', async () => {
+    confidenceSliders.forEach(confidenceSlider => {
+      if (_.has(confidenceSlider, '_correctRange')) {
+        delete confidenceSlider._correctRange;
+      }
+    });
+    return true;
+  });
+
+  mutateContent('adapt-contrib-confidenceSlider - delete confidenceSlider._showCorrectAnswer', async () => {
+    confidenceSliders.forEach(confidenceSlider => {
+      if (_.has(confidenceSlider, '_showCorrectAnswer')) {
+        delete confidenceSlider._showCorrectAnswer;
+      }
+    });
+    return true;
+  });
+
+  mutateContent('adapt-contrib-confidenceSlider - delete confidenceSlider._hideCorrectAnswer', async () => {
+    confidenceSliders.forEach(confidenceSlider => {
+      if (_.has(confidenceSlider, '_hideCorrectAnswer')) {
+        delete confidenceSlider._hideCorrectAnswer;
+      }
+    });
+    return true;
+  });
+
+  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._correctAnswer is deleted', async () => {
+    const isValid = confidenceSliders.every(({ _correctAnswer }) => _correctAnswer === null);
+    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _correctAnswer not deleted from every instance of confidenceSlider');
+    return true;
+  });
+
+  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._correctRange is deleted', async () => {
+    const isValid = confidenceSliders.every(({ _correctRange }) => _correctRange === null);
+    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _correctRange not deleted from every instance of confidenceSlider');
+    return true;
+  });
+
+  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._showCorrectAnswer is deleted', async () => {
+    const isValid = confidenceSliders.every(({ _showCorrectAnswer }) => _showCorrectAnswer === null);
+    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _showCorrectAnswer not deleted from every instance of confidenceSlider');
+    return true;
+  });
+
+  checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._hideCorrectAnswer is deleted', async () => {
+    const isValid = confidenceSliders.every(({ _hideCorrectAnswer }) => _hideCorrectAnswer === null);
+    if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _hideCorrectAnswer not deleted from every instance of confidenceSlider');
+    return true;
+  });
+
   updatePlugin('adapt-contrib-confidenceSlider - update to @@RELEASE_VERSION', { name: 'adapt-contrib-confidenceSlider', version: '@@RELEASE_VERSION', framework: '>=5.19.1' });
 
   testSuccessWhere('non/configured confidenceSlider component with empty course', {
