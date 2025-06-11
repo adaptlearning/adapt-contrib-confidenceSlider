@@ -49,7 +49,7 @@
         "_attempts": {
           "type": "number",
           "title": "Attempts",
-          "description": "How many attempts the learner is allowed",
+          "description": "How many attempts the learner is allowed. The default is 1 and must be left at this value.",
           "default": 1,
           "properties": {}
         },
@@ -151,34 +151,6 @@
           "exclusiveMinimum": 0,
           "properties": {}
         },
-        "_correctAnswer": {
-          "type": "string",
-          "title": "Correct Answer",
-          "description": "Correct answer on the scale",
-          "default": "",
-          "properties": {}
-        },
-        "_correctRange": {
-          "type": "object",
-          "title": "Correct range",
-          "default": {},
-          "properties": {
-            "_bottom": {
-              "type": "number",
-              "title": "Correct Range - Bottom",
-              "description": "Correct bottom range answer on the scale -- ignored when 'Correct Answer' is set",
-              "default": 0,
-              "properties": {}
-            },
-            "_top": {
-              "type": "number",
-              "title": "Correct Range - Top",
-              "description": "Correct top range answer on the scale -- ignored when 'Correct Answer' is set",
-              "default": 0,
-              "properties": {}
-            }
-          }
-        },
         "_showNumber": {
           "type": "boolean",
           "title": "Show number on indicator",
@@ -243,13 +215,14 @@
             },
             "_comparison": {
               "type": "object",
-              "title": "Incorrect Feedback",
+              "title": "Feedback",
+              "description": "Text that will be shown on submission if the slider has been linked to another slider.",
               "default": {},
               "properties": {
                 "lower": {
                   "type": "string",
                   "title": "Lower",
-                  "description": "Lower",
+                  "description": "This text will be shown if the user has selected a lower value than was chosen on the linked slider.",
                   "default": "",
                   "properties": {},
                   "_adapt": {
@@ -260,7 +233,7 @@
                 "same": {
                   "type": "string",
                   "title": "Same",
-                  "description": "Same",
+                  "description": "This text will be shown if both values are the same.",
                   "default": "",
                   "properties": {},
                   "_adapt": {
@@ -271,7 +244,7 @@
                 "higher": {
                   "type": "string",
                   "title": "Higher",
-                  "description": "Higher",
+                  "description": "This text will be shown if the user has selected a higher value than was chosen on the linked slider.",
                   "default": "",
                   "properties": {},
                   "_adapt": {
@@ -284,6 +257,7 @@
             "_threshold": {
               "type": "array",
               "title": "Threshold",
+              "description": "Each item represents the feedback for a range of slider values.",
               "items": {
                 "type": "object",
                 "properties": {
@@ -373,60 +347,6 @@
                   "type": "string",
                   "title": "Aria label",
                   "description": "Aria label for the reset button",
-                  "default": "",
-                  "properties": {},
-                  "_adapt": {
-                    "translatable": true
-                  }
-                }
-              }
-            },
-            "_showCorrectAnswer": {
-              "type": "object",
-              "title": "Show Correct Answer",
-              "default": {},
-              "properties": {
-                "buttonText": {
-                  "type": "string",
-                  "title": "Button text",
-                  "description": "Button label text to show the model answer",
-                  "default": "",
-                  "properties": {},
-                  "_adapt": {
-                    "translatable": true
-                  }
-                },
-                "ariaLabel": {
-                  "type": "string",
-                  "title": "Aria label",
-                  "description": "Aria label for the show model answer button",
-                  "default": "",
-                  "properties": {},
-                  "_adapt": {
-                    "translatable": true
-                  }
-                }
-              }
-            },
-            "_hideCorrectAnswer": {
-              "type": "object",
-              "title": "Hide Correct Answer",
-              "default": {},
-              "properties": {
-                "buttonText": {
-                  "type": "string",
-                  "title": "Button text",
-                  "description": "Button label text to hide the model answer",
-                  "default": "",
-                  "properties": {},
-                  "_adapt": {
-                    "translatable": true
-                  }
-                },
-                "ariaLabel": {
-                  "type": "string",
-                  "title": "Aria label",
-                  "description": "Aria label for the hide model answer button",
                   "default": "",
                   "properties": {},
                   "_adapt": {
