@@ -1,7 +1,7 @@
 import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, getCourse, getComponents, testStopWhere, testSuccessWhere } from 'adapt-migrations';
 import _ from 'lodash';
 
-describe('adapt-contrib-confidenceSlider - v4.0.0 > v5.2.0', async () => {
+describe('adapt-contrib-confidenceSlider - v4.0.0 to v5.2.0', async () => {
   let course, courseConfidenceSliderGlobals, confidenceSliders;
   const ariaUserAnswer = 'Earlier in the course, you provided {{{linkedValue}}} as an answer to this question.';
 
@@ -59,7 +59,7 @@ describe('adapt-contrib-confidenceSlider - v4.0.0 > v5.2.0', async () => {
   });
 });
 
-describe('adapt-contrib-confidenceSlider - v5.2.0 > v5.2.3', async () => {
+describe('adapt-contrib-confidenceSlider - v5.2.0 to v5.2.3', async () => {
   let confidenceSliders;
 
   whereFromPlugin('adapt-contrib-confidenceSlider - from v5.2.0', { name: 'adapt-contrib-confidenceSlider', version: '<5.2.3' });
@@ -128,7 +128,7 @@ describe('adapt-contrib-confidenceSlider - v5.2.0 > v5.2.3', async () => {
   });
 });
 
-describe('adapt-contrib-confidenceSlider - v5.2.3 > v5.2.4', async () => {
+describe('adapt-contrib-confidenceSlider - v5.2.3 to v5.2.4', async () => {
   let confidenceSliders;
 
   whereFromPlugin('adapt-contrib-confidenceSlider - from v5.2.3', { name: 'adapt-contrib-confidenceSlider', version: '<5.2.4' });
@@ -188,7 +188,7 @@ describe('adapt-contrib-confidenceSlider - v5.2.3 > v5.2.4', async () => {
   });
 });
 
-describe('adapt-contrib-confidenceSlider - v5.2.4 > v5.4.4', async () => {
+describe('adapt-contrib-confidenceSlider - v5.2.4 to v5.4.4', async () => {
   let course, courseConfidenceSliderGlobals, confidenceSliders;
   const newLabelStart = 'Start of the scale';
   const newLabelEnd = 'End of the scale';
@@ -273,7 +273,7 @@ describe('adapt-contrib-confidenceSlider - v5.2.4 > v5.4.4', async () => {
   });
 });
 
-describe('adapt-contrib-confidenceSlider - v5.4.4 > v5.4.6', async () => {
+describe('adapt-contrib-confidenceSlider - v5.4.4 to v5.4.6', async () => {
   let confidenceSliders;
 
   whereFromPlugin('adapt-contrib-confidenceSlider - from v5.4.4', { name: 'adapt-contrib-confidenceSlider', version: '<5.4.6' });
@@ -338,7 +338,7 @@ describe('adapt-contrib-confidenceSlider - v5.4.4 > v5.4.6', async () => {
   });
 });
 
-describe('adapt-contrib-confidenceSlider - @@CURRENT_VERSION > @@RELEASE_VERSION', async () => {
+describe('adapt-contrib-confidenceSlider - @@CURRENT_VERSION to @@RELEASE_VERSION', async () => {
   let confidenceSliders;
 
   whereFromPlugin('adapt-contrib-confidenceSlider - from @@CURRENT_VERSION', { name: 'adapt-contrib-confidenceSlider', version: '<@@RELEASE_VERSION' });
