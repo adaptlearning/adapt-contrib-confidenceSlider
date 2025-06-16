@@ -83,7 +83,7 @@
       "title": "Attempts",
       "inputType": "Number",
       "validators": ["required", "number"],
-      "help": "How many attempts the learner is allowed"
+      "help": "How many attempts the learner is allowed. The default is 1 and must be left at this value."
     },
     "_shouldDisplayAttempts": {
       "type": "boolean",
@@ -200,35 +200,6 @@
       "validators": ["number"],
       "help": "The amount the scale should increment by"
     },
-    "_correctAnswer": {
-      "type": "string",
-      "default": "",
-      "title": "Correct Answer",
-      "inputType": "Text",
-      "validators": [],
-      "help": "Correct answer on the scale"
-    },
-    "_correctRange": {
-      "type": "object",
-      "properties": {
-        "_bottom": {
-          "type": "number",
-          "default": 0,
-          "title": "Correct Range - Bottom",
-          "inputType": "Number",
-          "validators": ["number"],
-          "help": "Correct bottom range answer on the scale -- ignored when 'Correct Answer' is set"
-        },
-        "_top": {
-          "type": "number",
-          "default": 0,
-          "title": "Correct Range - Top",
-          "inputType": "Number",
-          "validators": ["number"],
-          "help": "Correct top range answer on the scale -- ignored when 'Correct Answer' is set"
-        }
-      }
-    },
     "_showNumber": {
       "type": "boolean",
       "required": true,
@@ -303,7 +274,8 @@
         "_comparison": {
           "type": "object",
           "required": true,
-          "title": "Incorrect Feedback",
+          "title": "Feedback",
+          "help": "Text that will be shown on submission if the slider has been linked to another slider.",
           "properties": {
             "lower": {
               "type": "string",
@@ -312,7 +284,7 @@
               "title": "Lower",
               "inputType": "TextArea",
               "validators": [],
-              "help": "Lower",
+              "help": "This text will be shown if the user has selected a lower value than was chosen on the linked slider.",
               "translatable": true
             },
             "same": {
@@ -322,7 +294,7 @@
               "title": "Same",
               "inputType": "TextArea",
               "validators": [],
-              "help": "Same",
+              "help": "This text will be shown if both values are the same.",
               "translatable": true
             },
             "higher": {
@@ -332,7 +304,7 @@
               "title": "Higher",
               "inputType": "TextArea",
               "validators": [],
-              "help": "Higher",
+              "help": "This text will be shown if the user has selected a higher value than was chosen on the linked slider.",
               "translatable": true
             }
           }
@@ -341,6 +313,7 @@
           "type": "array",
           "required": true,
           "title": "Threshold",
+          "help": "Each item represents the feedback for a range of slider values.",
           "items": {
             "type": "object",
             "required": true,
@@ -431,58 +404,6 @@
               "inputType": "QuestionButton",
               "validators": [],
               "help": "Aria label for the reset button",
-              "translatable": true
-            }
-          }
-        },
-        "_showCorrectAnswer": {
-          "type": "object",
-          "title": "Show Correct Answer",
-          "properties": {
-            "buttonText": {
-              "type": "string",
-              "required": false,
-              "default": "",
-              "title": "",
-              "inputType": "QuestionButton",
-              "validators": [],
-              "help": "Button label text to show the model answer",
-              "translatable": true
-            },
-            "ariaLabel": {
-              "type": "string",
-              "required": false,
-              "default": "",
-              "title": "",
-              "inputType": "QuestionButton",
-              "validators": [],
-              "help": "Aria label for the show model answer button",
-              "translatable": true
-            }
-          }
-        },
-        "_hideCorrectAnswer": {
-          "type": "object",
-          "title": "Hide Correct Answer",
-          "properties": {
-            "buttonText": {
-              "type": "string",
-              "required": false,
-              "default": "",
-              "title": "",
-              "inputType": "QuestionButton",
-              "validators": [],
-              "help": "Button label text to hide the model answer",
-              "translatable": true
-            },
-            "ariaLabel": {
-              "type": "string",
-              "required": false,
-              "default": "",
-              "title": "",
-              "inputType": "QuestionButton",
-              "validators": [],
-              "help": "Aria label for the hide model answer button",
               "translatable": true
             }
           }

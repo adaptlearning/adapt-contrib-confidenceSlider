@@ -80,7 +80,7 @@ guide the learner’s interaction with the component.
 
 **_shouldStoreResponses** (boolean): Optional. You can use this to track the user's responses to a particular Confidence Slider component. This functionality requires the Spoor extension to be installed and **\_spoor.\_tracking.\_shouldStoreResponses** (see *config.json*) set to `true`.
 
-**\_feedback** (object): If the [**Tutor** extension](https://github.com/adaptlearning/adapt-contrib-tutor) is enabled, these various texts will be displayed depending on the submitted answer. **\_feedback** contains values for three seperate elements: generic, comparison and threshold feedback. Generic feedback is always presented to the user. Comparison feedback is presented on submission if the slider has been linked to another slider. Threshold feedback is determined according to the range in which the user's selection falls. All feedback elements are optional. Each element can be separated by one or more characters (such as a space) or, more commonly, by some HTML markup.
+**\_feedback** (object): If the [**Tutor** extension](https://github.com/adaptlearning/adapt-contrib-tutor) is enabled, these various texts will be displayed depending on the submitted answer. **\_feedback** contains values for three separate elements: generic, comparison and threshold feedback. Generic feedback is always presented to the user. Comparison feedback is presented on submission if the slider has been linked to another slider. Threshold feedback is determined according to the range in which the user's selection falls. All feedback elements are optional. Each element can be separated by one or more characters (such as a space) or, more commonly, by some HTML markup.
 
 >**title** (string): The text used as the feedback title. Leave empty if no display title is required.
 
@@ -121,4 +121,4 @@ Does not currently support a descending step value.
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-confidenceSlider/graphs/contributors)<br>
 **Accessibility support:** WAI AA<br>
 **RTL support:** Yes<br>
-**Cross-platform coverage:** Chrome, Chrome for Android, Firefox (ESR + latest version), Edge, IE11, Safari 12+13 for macOS/iOS/iPadOS, Opera<br>
+**Cross-platform coverage:** Chrome, Chrome for Android, Firefox (ESR + latest version), Edge, Safari 14 for macOS/iOS/iPadOS, Opera<br>
