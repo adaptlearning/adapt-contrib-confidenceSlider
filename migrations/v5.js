@@ -343,6 +343,11 @@ describe('adapt-contrib-confidenceSlider - 5.7.0 to 5.8.0', async () => {
 
   whereFromPlugin('adapt-contrib-confidenceSlider - from 5.7.0', { name: 'adapt-contrib-confidenceSlider', version: '<5.8.0' });
 
+  whereContent('adapt-contrib-confidenceSlider - where confidenceSlider', async content => {
+    confidenceSliders = getComponents('confidenceSlider');
+    return confidenceSliders.length;
+  });
+
   mutateContent('adapt-contrib-confidenceSlider - delete confidenceSlider._correctAnswer', async () => {
     confidenceSliders.forEach(confidenceSlider => {
       if (_.has(confidenceSlider, '_correctAnswer')) {
@@ -380,25 +385,25 @@ describe('adapt-contrib-confidenceSlider - 5.7.0 to 5.8.0', async () => {
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._correctAnswer is deleted', async () => {
-    const isValid = confidenceSliders.every(({ _correctAnswer }) => _correctAnswer === null);
+    const isValid = confidenceSliders.every(confidenceSlider => !_.has(confidenceSlider, '_correctAnswer'));
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _correctAnswer not deleted from every instance of confidenceSlider');
     return true;
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._correctRange is deleted', async () => {
-    const isValid = confidenceSliders.every(({ _correctRange }) => _correctRange === null);
+    const isValid = confidenceSliders.every(confidenceSlider => !_.has(confidenceSlider, '_correctRange'));
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _correctRange not deleted from every instance of confidenceSlider');
     return true;
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._showCorrectAnswer is deleted', async () => {
-    const isValid = confidenceSliders.every(({ _showCorrectAnswer }) => _showCorrectAnswer === null);
+    const isValid = confidenceSliders.every(confidenceSlider => !_.has(confidenceSlider, '_showCorrectAnswer'));
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _showCorrectAnswer not deleted from every instance of confidenceSlider');
     return true;
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._hideCorrectAnswer is deleted', async () => {
-    const isValid = confidenceSliders.every(({ _hideCorrectAnswer }) => _hideCorrectAnswer === null);
+    const isValid = confidenceSliders.every(confidenceSlider => !_.has(confidenceSlider, '_hideCorrectAnswer'));
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _hideCorrectAnswer not deleted from every instance of confidenceSlider');
     return true;
   });
