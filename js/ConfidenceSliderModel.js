@@ -91,15 +91,15 @@ export default class ConfidenceSliderModel extends SliderModel {
   /* override */
   getFeedback(_feedback = this.get('_feedback')) {
     if (!_feedback) return {};
-    const {
-      altTitle = Adapt.course.get('_globals')._accessibility.altFeedbackTitle || '',
-      title,
-      _classes
-    } = _feedback;
+    // the title as core's QuestionModel resolves it: an empty feedback title falls back to the component's
+    const altFeedbackTitle = Adapt.course.get('_globals')._accessibility.altFeedbackTitle;
+    const hasTitle = Boolean(_feedback.title || this.get('title'));
+    const isAltTitle = Boolean(_feedback.altTitle) || (!hasTitle && Boolean(altFeedbackTitle));
+    const title = _feedback.altTitle || _feedback.title || this.get('title') || altFeedbackTitle || '';
     return {
-      altTitle,
-      title,
-      _classes,
+      isAltTitle,
+      title: Handlebars.compile(title)(this.toJSON()),
+      _classes: _feedback._classes,
       body: this.getFeedbackString()
     };
   }
