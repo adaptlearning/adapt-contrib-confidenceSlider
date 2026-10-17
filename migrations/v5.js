@@ -69,28 +69,37 @@ describe('adapt-contrib-confidenceSlider - v5.2.0 to v5.2.3', async () => {
     return confidenceSliders.length;
   });
 
+  // Before v5.2.3 the feedback popup took the component's title; from v5.2.3 it shows _feedback.title,
+  // and an empty one means no visible title. Carry the component's title across so migrated
+  // components keep their heading. A feedback title or alternative title already set is kept.
+  const expectedTitle = ({ _feedback, title }) => _feedback.title || title || '';
+  const expectedAltTitle = ({ _feedback }) => _feedback.altTitle || '';
+  let expectedTitles, expectedAltTitles;
+
   mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider._feedback.title', async () => {
-    confidenceSliders.forEach(confidenceSlider => {
-      confidenceSlider._feedback.title = '';
+    expectedTitles = confidenceSliders.map(expectedTitle);
+    confidenceSliders.forEach((confidenceSlider, index) => {
+      confidenceSlider._feedback.title = expectedTitles[index];
     });
     return true;
   });
 
   mutateContent('adapt-contrib-confidenceSlider - add confidenceSlider._feedback.altTitle', async () => {
-    confidenceSliders.forEach(confidenceSlider => {
-      confidenceSlider._feedback.altTitle = '';
+    expectedAltTitles = confidenceSliders.map(expectedAltTitle);
+    confidenceSliders.forEach((confidenceSlider, index) => {
+      confidenceSlider._feedback.altTitle = expectedAltTitles[index];
     });
     return true;
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.title attribute', async () => {
-    const isValid = confidenceSliders.every(({ _feedback }) => _feedback.title === '');
+    const isValid = confidenceSliders.every(({ _feedback }, index) => _feedback.title === expectedTitles[index]);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _feedback.title not added to every instance of confidenceSlider');
     return true;
   });
 
   checkContent('adapt-contrib-confidenceSlider - check confidenceSlider._feedback.altTitle attribute', async () => {
-    const isValid = confidenceSliders.every(({ _feedback }) => _feedback.altTitle === '');
+    const isValid = confidenceSliders.every(({ _feedback }, index) => _feedback.altTitle === expectedAltTitles[index]);
     if (!isValid) throw new Error('adapt-contrib-confidenceSlider - _feedback.altTitle not added to every instance of confidenceSlider');
     return true;
   });
@@ -112,6 +121,22 @@ describe('adapt-contrib-confidenceSlider - v5.2.0 to v5.2.3', async () => {
       { _id: 'c-100', _component: 'confidenceSlider', _feedback: {} },
       { _id: 'c-105', _component: 'confidenceSlider' },
       { _type: 'course', _globals: { _components: { _confidenceSlider: {} } } }
+    ]
+  });
+
+  testSuccessWhere('confidenceSlider with a component title, the heading its feedback showed', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '3.0.0' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', title: 'How confident are you?', _feedback: { generic: 'Thanks' } },
+      { _type: 'course' }
+    ]
+  });
+
+  testSuccessWhere('confidenceSlider with a feedback title and alternative title already set', {
+    fromPlugins: [{ name: 'adapt-contrib-confidenceSlider', version: '5.2.0' }],
+    content: [
+      { _id: 'c-100', _component: 'confidenceSlider', title: 'Component title', _feedback: { title: 'Your result', altTitle: 'Result' } },
+      { _type: 'course' }
     ]
   });
 
